@@ -92,6 +92,7 @@ namespace Castaway.Native
         private delegate int getAttribLocation(uint p, [MarshalAs(LPStr)] string name);
         private delegate void vertexAttribPointer(int i, int s, uint t, uint n, uint stride, [MarshalAs(SysUInt)] uint ptr);
         private delegate void getShaderInfoLog(uint s, uint l, uint* ol, char* log);
+        private delegate void drawArrays(uint m, int f, uint c);
         
         #endregion
         
@@ -112,6 +113,7 @@ namespace Castaway.Native
         public static void GenBuffers(uint c, uint* p) => Fn<gen>("glGenBuffers")(c, p);
         public static void BindBuffer(uint p, uint b) => Fn<uint2>("glBindBuffer")(p, b);
         public static void BufferData(uint p, uint s, void* d, uint m) => Fn<bufferData>("glBufferData")(p, s, d, m);
+        public static void DrawArrays(uint m, int f, uint c) => Fn<drawArrays>("glDrawArrays")(m, f, c);
         
         public static uint CreateShader(uint m) => Fn<create1>("glCreateShader")(m);
         public static void DeleteShader(uint s) => Fn<uint1>("glDeleteShader")(s);

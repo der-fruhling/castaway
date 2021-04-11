@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Castaway.Native;
 
 namespace Castaway.Render
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public unsafe class VBO : VertexBuffer
     {
         private readonly List<Vertex> _vertices = new List<Vertex>();
@@ -16,24 +20,47 @@ namespace Castaway.Render
 
         public void Draw()
         {
-            var vbo = new float[Vertex.VBOFloatCount * _vertices.Count];
-            for (var i = 0; i < _vertices.Count; i++)
+            var size = ShaderManager.ActiveHandle.Attributes.Aggregate(0, (c, a) => c + a.Value switch
+                {
+                    VertexAttribInfo.AttribValue.Position => 3,
+                    VertexAttribInfo.AttribValue.Color => 4,
+                    VertexAttribInfo.AttribValue.Normal => 3,
+                    VertexAttribInfo.AttribValue.Texture => 3,
+                    _ => throw new ArgumentOutOfRangeException()
+                });
+            var vbo = new float[size * _vertices.Count];
+            var j = 0;
+            foreach (var v in _vertices)
             {
-                var j = i * Vertex.VBOFloatCount;
-                var v = _vertices[i];
-                vbo[j + 0] = v.Position.X;
-                vbo[j + 1] = v.Position.Y;
-                vbo[j + 2] = v.Position.Z;
-                vbo[j + 3] = v.Normal.X;
-                vbo[j + 4] = v.Normal.Y;
-                vbo[j + 5] = v.Normal.Z;
-                vbo[j + 6] = v.Texture.X;
-                vbo[j + 7] = v.Texture.Y;
-                vbo[j + 8] = v.Texture.Z;
-                vbo[j + 9] = v.Color.R;
-                vbo[j + 10] = v.Color.G;
-                vbo[j + 11] = v.Color.B;
-                vbo[j + 12] = v.Color.A;
+                foreach (var a in ShaderManager.ActiveHandle.Attributes)
+                {
+                    switch (a.Value)
+                    {
+                        case VertexAttribInfo.AttribValue.Position:
+                            vbo[j++] = v.Position.X;
+                            vbo[j++] = v.Position.Y;
+                            vbo[j++] = v.Position.Z;
+                            break;
+                        case VertexAttribInfo.AttribValue.Color:
+                            vbo[j++] = v.Color.R;
+                            vbo[j++] = v.Color.G;
+                            vbo[j++] = v.Color.B;
+                            vbo[j++] = v.Color.A;
+                            break;
+                        case VertexAttribInfo.AttribValue.Normal:
+                            vbo[j++] = v.Normal.X;
+                            vbo[j++] = v.Normal.Y;
+                            vbo[j++] = v.Normal.Z;
+                            break;
+                        case VertexAttribInfo.AttribValue.Texture:
+                            vbo[j++] = v.Texture.X;
+                            vbo[j++] = v.Texture.Y;
+                            vbo[j++] = v.Texture.Z;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
             }
             
             uint buf;
@@ -41,6 +68,8 @@ namespace Castaway.Render
             GL.BindBuffer(GL.ARRAY_BUFFER, buf);
             fixed (float* p = vbo)
                 GL.BufferData(GL.ARRAY_BUFFER, (uint) (vbo.Length * sizeof(float)), p, GL.STATIC_DRAW);
+            ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
+            GL.DrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
         }
     }
 }
