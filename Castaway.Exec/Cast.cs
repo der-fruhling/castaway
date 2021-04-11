@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Input;
@@ -54,14 +55,17 @@ namespace Castaway.Exec
             if(!DebugMode) return;
         }
         
-        public static void Start()
+        public static async Task Start()
         {
-            Modules.Use<AssetsModule>();
-            Modules.Use<RenderModule>();
-            Events.PreInit += SetupProperties;
-            Events.PreInit += SetupWindow;
-            Events.CloseNormally += GLFW.glfwTerminate;
-            Events.Loop();
+            await Task.Run(() =>
+            {
+                Modules.Use<AssetsModule>();
+                Modules.Use<RenderModule>();
+                Events.PreInit += SetupProperties;
+                Events.PreInit += SetupWindow;
+                Events.CloseNormally += GLFW.glfwTerminate;
+                Events.Loop();
+            });
         }
     }
 }

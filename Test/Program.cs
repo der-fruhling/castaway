@@ -10,23 +10,27 @@ internal static class Program
     
     private static void Main(string[] args)
     {
-        Events.Init += () =>
-        {
-            _shaderHandle = AssetManager.Get<LoadedShader>("/test.shdr")?.ToHandle();
-            if (_shaderHandle == null) throw new ApplicationException("Shader failed to read");
-            _shaderHandle.Use();
-        };
-        Events.Draw += () =>
-        {
-            var vbo = new VBO();
-            vbo.Add(0, 0, r: 1, g: 0, b: 0);
-            vbo.Add(0, 1, r: 0, g: 1, b: 0);
-            vbo.Add(1, 0, r: 0, g: 0, b: 1);
-            vbo.Add(1, 1, r: 1, g: 1, b: 1);
-            vbo.Add(0, 1, r: 0, g: 1, b: 0);
-            vbo.Add(1, 0, r: 0, g: 0, b: 1);
-            vbo.Draw();
-        };
-        Cast.Start();
+        Events.Init += Init;
+        Events.Draw += Draw;
+        Cast.Start().Wait();
+    }
+
+    private static void Draw()
+    {
+        var vbo = new VBO();
+        vbo.Add(-1, -1, r: 1, g: 0, b: 0);
+        vbo.Add(-1, 1, r: 0, g: 1, b: 0);
+        vbo.Add(1, -1, r: 0, g: 0, b: 1);
+        vbo.Add(1, 1, r: 1, g: 1, b: 1);
+        vbo.Add(-1, 1, r: 0, g: 1, b: 0);
+        vbo.Add(1, -1, r: 0, g: 0, b: 1);
+        vbo.Draw();
+    }
+
+    private static void Init()
+    {
+        _shaderHandle = AssetManager.Get<LoadedShader>("/test.shdr")?.ToHandle();
+        if (_shaderHandle == null) throw new ApplicationException("Shader failed to read");
+        _shaderHandle.Use();
     }
 }
