@@ -29,7 +29,7 @@ namespace Castaway.Exec
         Finish
     }
 
-    internal static class LoadableModules
+    internal static class CModules
     {
         private static readonly List<CModule> Loaded = new List<CModule>();
         

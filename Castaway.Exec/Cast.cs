@@ -157,7 +157,7 @@ namespace Castaway.Exec
                 var attrs = type.GetCustomAttributes<RequiresModulesAttribute>()!;
                 foreach(var attr in attrs) 
                     foreach(var m in attr.Modules)
-                        LoadableModules.Load(m);
+                        CModules.Load(m);
             }
 
             Start().Wait();

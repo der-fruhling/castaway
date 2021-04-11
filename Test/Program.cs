@@ -5,7 +5,7 @@ using Castaway.Render;
 
 [RequiresModules(CModule.Assets, CModule.Render)]
 [Entrypoint]
-internal class Program
+internal class ProgramEntrypoint
 {
     private ShaderHandle _shaderHandle;
 
