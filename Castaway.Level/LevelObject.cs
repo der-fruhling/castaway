@@ -19,15 +19,7 @@ namespace Castaway.Level
         private readonly List<Controller> _controllers = new List<Controller>();
         private bool _running;
 
-        public void Add<T>() where T : Controller, new()
-        {
-            if (_controllers.Any(c => c.GetType() == typeof(T)))
-                throw new ControllerException("Cannot have more than one controller of the same type.");
-            var t = new T();
-            var index = _controllers.Count;
-            _controllers.Add(t);
-            if (_running) _controllers[index].OnBegin();
-        }
+        public void Add<T>() where T : Controller, new() => Add(new T());
         
         public void Add(Controller controller)
         {
