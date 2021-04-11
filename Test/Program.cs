@@ -57,12 +57,12 @@ internal static class Program
         Events.Draw += () =>
         {
             var vbo = new VBO();
-            vbo.Add(0, 0, 0);
-            vbo.Add(0, 1, 0);
-            vbo.Add(1, 0, 0);
-            vbo.Add(1, 1, 0);
-            vbo.Add(0, 1, 0);
-            vbo.Add(1, 0, 0);
+            vbo.Add(0, 0, r: 1, g: 0, b: 0);
+            vbo.Add(0, 1, r: 0, g: 1, b: 0);
+            vbo.Add(1, 0, r: 0, g: 0, b: 1);
+            vbo.Add(1, 1, r: 1, g: 1, b: 1);
+            vbo.Add(0, 1, r: 0, g: 1, b: 0);
+            vbo.Add(1, 0, r: 0, g: 0, b: 1);
             vbo.Draw();
         };
         Events.CloseNormally += level.Deactivate;
