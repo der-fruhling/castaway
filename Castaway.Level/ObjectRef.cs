@@ -1,5 +1,3 @@
-using System;
-
 namespace Castaway.Level
 {
     public struct ObjectRef<T> where T : LevelObject

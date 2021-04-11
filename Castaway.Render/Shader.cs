@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Castaway.Native;
 using static Castaway.Render.VertexAttribInfo.AttribValue;
 
@@ -115,7 +116,29 @@ namespace Castaway.Render
             GL.ShaderSource(shader, 1, &ptr, null);
             
             GL.CompileShader(shader);
-            // TODO: Error checking.
+            
+            uint logLen;
+            var log = stackalloc char[8192];
+            GL.GetShaderInfo(shader, 8192, &logLen, log);
+            var t = type switch
+            {
+                GL.VERTEX_SHADER => "Vertex",
+                GL.FRAGMENT_SHADER => "Fragment",
+                _ => "Weird"
+            };
+            if (logLen > 0)
+            {
+                
+                Console.WriteLine($"{t} shader log:");
+                Console.WriteLine(Marshal.PtrToStringAnsi(new IntPtr(log), (int) logLen));
+            }
+            
+            int val;
+            GL.GetShaderValue(shader, GL.COMPILE_STATUS, &val);
+            if (val != 1)
+            {
+                throw new ApplicationException($"{t} shader failed to compile.");
+            }
 
             return shader;
         }

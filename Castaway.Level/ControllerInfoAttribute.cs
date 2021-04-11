@@ -1,6 +1,6 @@
 using System;
 
-namespace Castaway.Core
+namespace Castaway.Level
 {
     public class ControllerInfoAttribute : Attribute
     {

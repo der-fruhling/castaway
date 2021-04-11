@@ -91,6 +91,7 @@ namespace Castaway.Native
         private delegate void bindFragDataLocation(uint p, uint o, [MarshalAs(LPStr)] string name);
         private delegate int getAttribLocation(uint p, [MarshalAs(LPStr)] string name);
         private delegate void vertexAttribPointer(int i, int s, uint t, uint n, uint stride, [MarshalAs(SysUInt)] uint ptr);
+        private delegate void getShaderInfoLog(uint s, uint l, uint* ol, char* log);
         
         #endregion
         
@@ -117,6 +118,7 @@ namespace Castaway.Native
         public static void ShaderSource(uint s, uint c, char** src, uint* len) => Fn<shaderSource>("glShaderSource")(s, c, src, len);
         public static void CompileShader(uint s) => Fn<uint1>("glCompileShader")(s);
         public static void GetShaderValue(uint s, uint t, int* p) => Fn<getShaderiv>("glGetShaderiv")(s, t, p);
+        public static void GetShaderInfo(uint s, uint l, uint* ol, char* log) => Fn<getShaderInfoLog>("glGetShaderInfoLog")(s, l, ol, log);
 
         public static uint CreateProgram() => Fn<create0>("glCreateProgram")();
         public static void DeleteProgram(uint p) => Fn<uint1>("glDeleteProgram")(p);

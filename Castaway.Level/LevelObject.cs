@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castaway.Core;
 using Castaway.Math;
 
 namespace Castaway.Level

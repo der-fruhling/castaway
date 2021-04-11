@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Castaway.Native;
 using static Castaway.Native.GLFW;
 
 namespace Castaway.Window
