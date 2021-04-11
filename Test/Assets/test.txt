@@ -1,0 +1,2 @@
+ShouldCat=true
+MeowType=simon

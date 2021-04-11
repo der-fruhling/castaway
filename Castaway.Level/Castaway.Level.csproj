@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Castaway.Core\Castaway.Core.csproj" />
+      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
+    </ItemGroup>
+
+</Project>

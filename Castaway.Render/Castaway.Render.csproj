@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Castaway.Core\Castaway.Core.csproj" />
+      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
+      <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
+    </ItemGroup>
+
+</Project>
