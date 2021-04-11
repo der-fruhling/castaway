@@ -9,6 +9,8 @@ namespace Castaway.Assets
         private static List<string?> _names = new List<string?>();
         private static Dictionary<int, object?> _objects = new Dictionary<int, object?>();
         private static List<IAssetLoader> _loaders = new List<IAssetLoader>();
+
+        public const string AssetFolderPath = "Assets";
         
         public static int Index(string name)
         {

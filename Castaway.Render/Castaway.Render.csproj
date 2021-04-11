@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
       <ProjectReference Include="..\Castaway.Core\Castaway.Core.csproj" />
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />

@@ -22,6 +22,12 @@ namespace Castaway.Render
 
         public AttribValue Value;
         public string Name;
+
+        public VertexAttribInfo(AttribValue value, string name)
+        {
+            Value = value;
+            Name = name;
+        }
     }
     
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -48,6 +54,7 @@ namespace Castaway.Render
         public void Destroy() => ShaderManager.Destroy(this);
         public void BindFragmentLocation(uint location, string name) =>
             ShaderManager.BindFragmentLocation(this, location, name);
+        public void Finish() => ShaderManager.FinishLinkingProgram(GLProgram);
 
         protected bool Equals(ShaderHandle other)
         {
@@ -79,13 +86,14 @@ namespace Castaway.Render
         {
             return !Equals(left, right);
         }
+
     }
     
     public static unsafe class ShaderManager
     {
         public static ShaderHandle ActiveHandle { get; internal set; }
         
-        private static List<uint> _used = new List<uint>();
+        private static readonly List<uint> Used = new List<uint>();
 
         internal static uint CreateProgram(params uint[] shaders)
         {
@@ -94,8 +102,15 @@ namespace Castaway.Render
             {
                 GL.AttachToProgram(p, shader);
             }
-            GL.LinkProgram(p);
             return p;
+        }
+
+        internal static void FinishLinkingProgram(uint program)
+        {
+            GL.LinkProgram(program);
+            var ptr = Marshal.AllocHGlobal(8192);
+            GL.GetProgramInfo(program, 8192, null, ptr);
+            Console.Write(Marshal.PtrToStringAnsi(ptr));
         }
 
         internal static void Use(uint program)
@@ -112,27 +127,26 @@ namespace Castaway.Render
         internal static uint CreateShader(uint type, string source)
         {
             var shader = GL.CreateShader(type);
-            
-            var ptr = stackalloc char[source.Length];
-            for (var i = 0; i < source.Length; i++) ptr[i] = source[i];
-            GL.ShaderSource(shader, 1, &ptr, null);
+
+            var len = (uint) source.Length;
+            var ptr = Marshal.StringToHGlobalAnsi(source);
+            GL.ShaderSource(shader, 1, &ptr, &len);
             
             GL.CompileShader(shader);
             
-            uint logLen;
-            var log = stackalloc char[8192];
-            GL.GetShaderInfo(shader, 8192, &logLen, log);
+            var log = Marshal.AllocHGlobal(8192);
+            GL.GetShaderInfo(shader, 8192, null, log);
+            var logStr = Marshal.PtrToStringAnsi(log);
             var t = type switch
             {
                 GL.VERTEX_SHADER => "Vertex",
                 GL.FRAGMENT_SHADER => "Fragment",
                 _ => "Weird"
             };
-            if (logLen > 0)
+            if (!string.IsNullOrEmpty(logStr))
             {
-                
                 Console.WriteLine($"{t} shader log:");
-                Console.WriteLine(Marshal.PtrToStringAnsi(new IntPtr(log), (int) logLen));
+                Console.WriteLine(logStr);
             }
             
             int val;
@@ -145,7 +159,7 @@ namespace Castaway.Render
             return shader;
         }
 
-        public static ShaderHandle CreateShader(string vert, string frag, params VertexAttribInfo[] attributes)
+        public static ShaderHandle CreateShader(string vert, string frag, VertexAttribInfo[] attributes)
         {
             var v = CreateShader(GL.VERTEX_SHADER, vert);
             var f = CreateShader(GL.FRAGMENT_SHADER, frag);
@@ -154,12 +168,12 @@ namespace Castaway.Render
             var free = uint.MaxValue;
             for (uint i = 0; i < 256; i++)
             {
-                if (_used.Contains(i)) continue;
+                if (Used.Contains(i)) continue;
                 free = i;
                 break;
             }
             if (free >= 256) throw new ApplicationException("Ran out of shader slots.");
-            _used.Add(free);
+            Used.Add(free);
             
             return new ShaderHandle(free, p, f, v, attributes);
         }
@@ -188,6 +202,7 @@ namespace Castaway.Render
 
         public static void SetupAttributes(ShaderHandle handle)
         {
+            handle.Use();
             var sizes = new int[handle.Attributes.Length];
             for (var i = 0; i < handle.Attributes.Length; i++)
             {
@@ -205,8 +220,8 @@ namespace Castaway.Render
             {
                 var attr = GL.GetAttributeLocation(handle.GLProgram, handle.Attributes[i].Name);
                 GL.SetAttribPointer(attr, sizes[i], GL.FLOAT, 0, 
-                    (uint) (all * sizeof(float)), 
-                    (uint) (sizes[..i].Aggregate((a, b) => a + b) * sizeof(float)));
+                    (uint) (all * sizeof(float)),
+                    (ulong) (i == 0 ? 0 : sizes[..i].Aggregate((a, b) => a + b) * sizeof(float)));
                 GL.EnableAttribute(attr);
             }
         }

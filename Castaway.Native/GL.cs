@@ -15,6 +15,9 @@ namespace Castaway.Native
         
         [DllImport("libGLX.so")]
         private static extern IntPtr glXGetProcAddress([MarshalAs(LPStr)] string name);
+        
+        [DllImport("libGLU.so")]
+        private static extern IntPtr gluErrorString(uint err);
 
         private static T Fn<T>(string name)
         {
@@ -84,56 +87,231 @@ namespace Castaway.Native
         private delegate void gen(uint c, uint* o);
         private delegate uint create1(uint m);
         private delegate uint create0();
+        private delegate bool isChecker(uint o);
         
         private delegate void bufferData(uint p, uint s, void* d, uint m);
-        private delegate void shaderSource(uint s, uint c, char** src, uint* len);
+        private delegate void shaderSource(uint s, uint c, IntPtr* src, uint* len);
         private delegate void getShaderiv(uint s, uint t, int* p);
         private delegate void bindFragDataLocation(uint p, uint o, [MarshalAs(LPStr)] string name);
         private delegate int getAttribLocation(uint p, [MarshalAs(LPStr)] string name);
-        private delegate void vertexAttribPointer(int i, int s, uint t, uint n, uint stride, [MarshalAs(SysUInt)] uint ptr);
-        private delegate void getShaderInfoLog(uint s, uint l, uint* ol, char* log);
+        private delegate void vertexAttribPointer(int i, int s, uint t, uint n, uint stride, [MarshalAs(U8)] ulong ptr);
+        private delegate void getInfoLog(uint s, uint l, uint* ol, IntPtr log);
         private delegate void drawArrays(uint m, int f, uint c);
         
         #endregion
         
         #region Functions
         
-        public static void Begin(uint a) => Fn<uint1>("glBegin")(a);
-        public static void End() => Fn<none>("glEnd")();
-        public static void Vertex(float x, float y) => Fn<float2>("glVertex2f")(x, y);
-        public static void Vertex(float x, float y, float z) => Fn<float3>("glVertex3f")(x, y, z);
-        public static void Vertex(float x, float y, float z, float w) => Fn<float4>("glVertex4f")(x, y, z, w);
-        public static void Color(float r, float g, float b) => Fn<float3>("glColor3f")(r, g, b);
-        public static void Color(float r, float g, float b, float a) => Fn<float4>("glColor4f")(r, g, b, a);
-        public static void TexCoord(float x, float y) => Fn<float2>("glTexCoord2f")(x, y);
-        public static void TexCoord(float x, float y, float z) => Fn<float3>("glTexCoord3f")(x, y, z);
-        
-        public static void Clear(uint a) => Fn<uint1>("glClear")(a);
-        
-        public static void GenBuffers(uint c, uint* p) => Fn<gen>("glGenBuffers")(c, p);
-        public static void BindBuffer(uint p, uint b) => Fn<uint2>("glBindBuffer")(p, b);
-        public static void BufferData(uint p, uint s, void* d, uint m) => Fn<bufferData>("glBufferData")(p, s, d, m);
-        public static void DrawArrays(uint m, int f, uint c) => Fn<drawArrays>("glDrawArrays")(m, f, c);
-        
-        public static uint CreateShader(uint m) => Fn<create1>("glCreateShader")(m);
-        public static void DeleteShader(uint s) => Fn<uint1>("glDeleteShader")(s);
-        public static void ShaderSource(uint s, uint c, char** src, uint* len) => Fn<shaderSource>("glShaderSource")(s, c, src, len);
-        public static void CompileShader(uint s) => Fn<uint1>("glCompileShader")(s);
-        public static void GetShaderValue(uint s, uint t, int* p) => Fn<getShaderiv>("glGetShaderiv")(s, t, p);
-        public static void GetShaderInfo(uint s, uint l, uint* ol, char* log) => Fn<getShaderInfoLog>("glGetShaderInfoLog")(s, l, ol, log);
+        public static void Begin(uint a)
+        {
+            Fn<uint1>("glBegin")(a);
+            CheckError();
+        }
 
-        public static uint CreateProgram() => Fn<create0>("glCreateProgram")();
-        public static void DeleteProgram(uint p) => Fn<uint1>("glDeleteProgram")(p);
-        public static void AttachToProgram(uint p, uint s) => Fn<uint2>("glAttachShader")(p, s);
-        public static void DetachFromProgram(uint p, uint s) => Fn<uint2>("glDetachShader")(p, s);
-        public static void LinkProgram(uint p) => Fn<uint1>("glLinkProgram")(p);
-        public static void UseProgram(uint p) => Fn<uint1>("glUseProgram")(p);
-        public static void BindFragLocation(uint p, uint o, string name) => Fn<bindFragDataLocation>("glBindFragDataLocation")(p, o, name);
-        public static int GetAttributeLocation(uint p, string name) => Fn<getAttribLocation>("glGetAttribLocation")(p, name);
-        public static void SetAttribPointer(int i, int s, uint t, uint n, uint stride, uint ptr) => Fn<vertexAttribPointer>("glVertexAttribPointer")(i, s, t, n, stride, ptr);
-        public static void EnableAttribute(int a) => Fn<int1>("glEnableVertexAttribArray")(a);
+        public static void End()
+        {
+            Fn<none>("glEnd")();
+            CheckError();
+        }
+
+        public static void Vertex(float x, float y)
+        {
+            Fn<float2>("glVertex2f")(x, y);
+            CheckError();
+        }
+
+        public static void Vertex(float x, float y, float z)
+        {
+            Fn<float3>("glVertex3f")(x, y, z);
+            CheckError();
+        }
+
+        public static void Vertex(float x, float y, float z, float w)
+        {
+            Fn<float4>("glVertex4f")(x, y, z, w);
+            CheckError();
+        }
+
+        public static void Color(float r, float g, float b)
+        {
+            Fn<float3>("glColor3f")(r, g, b);
+            CheckError();
+        }
+
+        public static void Color(float r, float g, float b, float a)
+        {
+            Fn<float4>("glColor4f")(r, g, b, a);
+            CheckError();
+        }
+
+        public static void TexCoord(float x, float y)
+        {
+            Fn<float2>("glTexCoord2f")(x, y);
+            CheckError();
+        }
+
+        public static void TexCoord(float x, float y, float z)
+        {
+            Fn<float3>("glTexCoord3f")(x, y, z);
+            CheckError();
+        }
+
+        public static void Clear(uint a)
+        {
+            Fn<uint1>("glClear")(a);
+            CheckError();
+        }
+
+        public static void GenBuffers(uint c, uint* p)
+        {
+            Fn<gen>("glGenBuffers")(c, p);
+            CheckError();
+        }
+
+        public static void BindBuffer(uint p, uint b)
+        {
+            Fn<uint2>("glBindBuffer")(p, b);
+            CheckError();
+        }
+
+        public static void BufferData(uint p, uint s, void* d, uint m)
+        {
+            Fn<bufferData>("glBufferData")(p, s, d, m);
+            CheckError();
+        }
+
+        public static void DrawArrays(uint m, int f, uint c)
+        {
+            Fn<drawArrays>("glDrawArrays")(m, f, c);
+            CheckError();
+        }
+
+        public static uint CreateShader(uint m)
+        {
+            var a = Fn<create1>("glCreateShader")(m);
+            CheckError();
+            return a;
+        }
+
+        public static void DeleteShader(uint s)
+        {
+            Fn<uint1>("glDeleteShader")(s);
+            CheckError();
+        }
+
+        public static void ShaderSource(uint s, uint c, IntPtr* src, uint* len)
+        {
+            Fn<shaderSource>("glShaderSource")(s, c, src, len);
+            CheckError();
+        }
+
+        public static void CompileShader(uint s)
+        {
+            Fn<uint1>("glCompileShader")(s);
+            CheckError();
+        }
+
+        public static void GetShaderValue(uint s, uint t, int* p)
+        {
+            Fn<getShaderiv>("glGetShaderiv")(s, t, p);
+            CheckError();
+        }
+
+        public static void GetShaderInfo(uint s, uint l, uint* ol, IntPtr log)
+        {
+            Fn<getInfoLog>("glGetShaderInfoLog")(s, l, ol, log);
+            CheckError();
+        }
+
+        public static uint CreateProgram()
+        {
+            var a = Fn<create0>("glCreateProgram")();
+            CheckError();
+            return a;
+        }
+
+        public static void DeleteProgram(uint p)
+        {
+            Fn<uint1>("glDeleteProgram")(p);
+            CheckError();
+        }
+
+        public static void AttachToProgram(uint p, uint s)
+        {
+            Fn<uint2>("glAttachShader")(p, s);
+            CheckError();
+        }
+
+        public static void DetachFromProgram(uint p, uint s)
+        {
+            Fn<uint2>("glDetachShader")(p, s);
+            CheckError();
+        }
+
+        public static void LinkProgram(uint p)
+        {
+            Fn<uint1>("glLinkProgram")(p);
+            CheckError();
+        }
+
+        public static void UseProgram(uint p)
+        {
+            Fn<uint1>("glUseProgram")(p);
+            CheckError();
+        }
+        
+        public static void GetProgramInfo(uint p, uint l, uint* ol, IntPtr log)
+        {
+            Fn<getInfoLog>("glGetProgramInfoLog")(p, l, ol, log);
+            CheckError();
+        }
+
+        public static void BindFragLocation(uint p, uint o, string name)
+        {
+            Fn<bindFragDataLocation>("glBindFragDataLocation")(p, o, name);
+            CheckError();
+        }
+
+        public static int GetAttributeLocation(uint p, string name)
+        {
+            var a = Fn<getAttribLocation>("glGetAttribLocation")(p, name);
+            CheckError();
+            return a;
+        }
+
+        public static void SetAttribPointer(int i, int s, uint t, uint n, uint stride, ulong ptr)
+        {
+            Fn<vertexAttribPointer>("glVertexAttribPointer")(i, s, t, n, stride, ptr);
+            CheckError();
+        }
+
+        public static void EnableAttribute(int a)
+        {
+            Fn<int1>("glEnableVertexAttribArray")(a);
+            CheckError();
+        }
+
+        public static bool IsProgram(uint o)
+        {
+            var a = Fn<isChecker>("glIsProgram")(o);
+            CheckError();
+            return a;
+        }
+
+        // GetError should NOT check for errors after it executes, because
+        // that would be a recursive loop.
+        public static uint GetError() => Fn<create0>("glGetError")();
         
         #region Helpers
+
+        public static void CheckError()
+        {
+            var e = GetError();
+            if (e != 0)
+            {
+                /*throw new ApplicationException*/ Console.WriteLine($"OpenGL Error {e} ({Marshal.PtrToStringAnsi(gluErrorString(e))})");
+            }
+        }
         
         public static void Vertex(Vector2 v) => Vertex(v.X, v.Y);
         public static void Vertex(Vector3 v) => Vertex(v.X, v.Y, v.Z);

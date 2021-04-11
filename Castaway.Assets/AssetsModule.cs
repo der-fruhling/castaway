@@ -16,7 +16,7 @@ namespace Castaway.Assets
         protected override void PreInit()
         {
             base.PreInit();
-            var assetFolderPath = "Assets";
+            var assetFolderPath = AssetManager.AssetFolderPath;
 
             var gameFolder = Environment.GetEnvironmentVariable("GAME_FOLDER");
             if (gameFolder != null)
