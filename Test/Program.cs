@@ -11,14 +11,10 @@ internal class ProgramEntrypoint
 
     /*
      * The [EventHandler(...)] attribute allows defining a method in an
-     * Entrypoint class as an EventHandler. It takes a parameter of
+     * Entrypoint class as an event handler. It takes a parameter of
      * enum EventType.
      *
-     * Draw events will be called every frame, after all Update events are
-     * finished. After all Draw events are finished, Finish tasks will be
-     * run.
-     *
-     * Here are all the events that are usable.
+     * Here are all the usable events.
      * |  PreInit(), Init(), PostInit()
      * |  while window is open {
      * |      PreUpdate(), Update(), PostUpdate()
@@ -30,6 +26,7 @@ internal class ProgramEntrypoint
     public void Draw()
     {
         // This function draws a full screen RGB rectangle.
+        // (definitely does not include white on a corner)
         
         // Create a new VBO
         var vbo = new VBO();
@@ -40,7 +37,7 @@ internal class ProgramEntrypoint
         vbo.Add(1, -1, r: 0, g: 0, b: 1);
         
         // Top right triangle.
-        vbo.Add(1, 1, r: 1, g: 1, b: 1);
+        vbo.Add(1, 1, r: 1, g: 1, b: 1); // nothing to see here
         vbo.Add(-1, 1, r: 0, g: 1, b: 0);
         vbo.Add(1, -1, r: 0, g: 0, b: 1);
         
