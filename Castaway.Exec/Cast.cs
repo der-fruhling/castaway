@@ -134,19 +134,24 @@ namespace Castaway.Exec
                     }
 
                     var type = m.GetCustomAttribute<EventHandlerAttribute>()!.EventType;
+                    if (type == EventType.UseMethodName)
+                        if (!Enum.TryParse(m.Name, out type))
+                            throw new ApplicationException($"Invalid EventType name: {m.Name}");
+                    
+                    // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
                     switch (type)
                     {
-                        case EventType.PreInit: Events.PreInit += () => m!.Invoke(obj, null); break;
-                        case EventType.Init: Events.Init += () => m!.Invoke(obj, null); break;
-                        case EventType.PostInit: Events.PostInit += () => m!.Invoke(obj, null); break;
-                        case EventType.PreDraw: Events.PreDraw += () => m!.Invoke(obj, null); break;
-                        case EventType.Draw: Events.Draw += () => m!.Invoke(obj, null); break;
-                        case EventType.PostDraw: Events.PostDraw += () => m!.Invoke(obj, null); break;
-                        case EventType.PreUpdate: Events.PreUpdate += () => m!.Invoke(obj, null); break;
-                        case EventType.Update: Events.Update += () => m!.Invoke(obj, null); break;
-                        case EventType.PostUpdate: Events.PostUpdate += () => m!.Invoke(obj, null); break;
-                        case EventType.Finish: Events.Finish += () => m!.Invoke(obj, null); break;
-                        default: throw new ArgumentOutOfRangeException();
+                        case EventType.PreInit: Events.PreInit += () => m.Invoke(obj, null); break;
+                        case EventType.Init: Events.Init += () => m.Invoke(obj, null); break;
+                        case EventType.PostInit: Events.PostInit += () => m.Invoke(obj, null); break;
+                        case EventType.PreDraw: Events.PreDraw += () => m.Invoke(obj, null); break;
+                        case EventType.Draw: Events.Draw += () => m.Invoke(obj, null); break;
+                        case EventType.PostDraw: Events.PostDraw += () => m.Invoke(obj, null); break;
+                        case EventType.PreUpdate: Events.PreUpdate += () => m.Invoke(obj, null); break;
+                        case EventType.Update: Events.Update += () => m.Invoke(obj, null); break;
+                        case EventType.PostUpdate: Events.PostUpdate += () => m.Invoke(obj, null); break;
+                        case EventType.Finish: Events.Finish += () => m.Invoke(obj, null); break;
+                        default: throw new ApplicationException($"Bad event type: {type}");
                     }
                 }
             }

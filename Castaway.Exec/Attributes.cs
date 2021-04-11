@@ -14,6 +14,8 @@ namespace Castaway.Exec
 
     public enum EventType
     {
+        UseMethodName,
+        
         PreInit,
         Init,
         PostInit,
@@ -75,7 +77,7 @@ namespace Castaway.Exec
     {
         public readonly EventType EventType;
 
-        public EventHandlerAttribute(EventType eventType)
+        public EventHandlerAttribute(EventType eventType = EventType.UseMethodName)
         {
             EventType = eventType;
         }
