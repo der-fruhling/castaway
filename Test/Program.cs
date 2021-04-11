@@ -2,9 +2,7 @@
 using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Exec;
-using Castaway.Level;
 using Castaway.Render;
-using static Castaway.Render.VertexAttribInfo.AttribValue;
 
 internal static class Program
 {
