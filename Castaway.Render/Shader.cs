@@ -46,6 +46,8 @@ namespace Castaway.Render
 
         public void Use() => ShaderManager.Use(this);
         public void Destroy() => ShaderManager.Destroy(this);
+        public void BindFragmentLocation(uint location, string name) =>
+            ShaderManager.BindFragmentLocation(this, location, name);
 
         protected bool Equals(ShaderHandle other)
         {
@@ -209,6 +211,7 @@ namespace Castaway.Render
             }
         }
 
-        public static void SetupAttributes() => SetupAttributes(ActiveHandle);
+        public static void BindFragmentLocation(ShaderHandle handle, uint location, string name)
+            => GL.BindFragLocation(handle.GLProgram, location, name);
     }
 }
