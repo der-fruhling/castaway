@@ -5,31 +5,52 @@ using Castaway.Math;
 
 namespace Castaway.Level
 {
-    internal class ControllerException : ApplicationException
-    {
-        public ControllerException() { }
-        public ControllerException(string message) : base(message) { }
-        public ControllerException(string message, Exception innerException) : base(message, innerException) { }
-    }
-    
+    /// <summary>
+    /// An object in a <see cref="Level"/>.
+    /// </summary>
     public class LevelObject
     {
-        public Vector3 Position, Rotation, Scale;
-        
+        /// <summary>
+        /// Position of this object. Z is up.
+        /// </summary>
+        public Vector3 Position;
+
+        /// <summary>
+        /// Rotation of this object, in euler angles.
+        /// </summary>
+        public Vector3 Rotation;
+
+        /// <summary>
+        /// Scale multiplier of this object.
+        /// </summary>
+        public Vector3 Scale;
+
         private readonly List<Controller> _controllers = new List<Controller>();
         private bool _running;
 
+        /// <summary>
+        /// Adds a controller of the specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of the controller to add.</typeparam>
         public void Add<T>() where T : Controller, new() => Add(new T());
         
+        /// <summary>
+        /// Adds a controller by an instance.
+        /// </summary>
+        /// <param name="controller">Controller to add.</param>
         public void Add(Controller controller)
         {
             if (_controllers.Any(c => c.GetType() == controller.GetType()))
-                throw new ControllerException("Cannot have more than one controller of the same type.");
+                throw new ApplicationException("Cannot have more than one controller of the same type.");
             var index = _controllers.Count;
             _controllers.Add(controller);
             if (_running) _controllers[index].OnBegin();
         }
 
+        /// <summary>
+        /// Removes a controller of the specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of the controller to remove.</typeparam>
         public void Remove<T>() where T : Controller, new()
         {
             var index = _controllers.FindIndex(c => c.GetType() == typeof(T));
@@ -37,6 +58,9 @@ namespace Castaway.Level
             _controllers.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Starts executing this object.
+        /// </summary>
         public void Start()
         {
             if(_running) return;
@@ -45,6 +69,9 @@ namespace Castaway.Level
             _running = true;
         }
 
+        /// <summary>
+        /// Stops executing this object.
+        /// </summary>
         public void Stop()
         {
             if(!_running) return;

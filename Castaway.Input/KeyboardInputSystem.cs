@@ -3,6 +3,9 @@ using static Castaway.Input.Keys;
 
 namespace Castaway.Input
 {
+    /// <summary>
+    /// Enum of all valid GLFW keys.
+    /// </summary>
     public enum Keys
     {
         Unknown,
@@ -42,6 +45,11 @@ namespace Castaway.Input
         PrintScreen
     }
     
+    /// <summary>
+    /// Processes keyboard input.
+    /// </summary>
+    /// <seealso cref="InputSystem"/>
+    /// <seealso cref="Keys"/>
     public class KeyboardInputSystem : IInputSystem<Keys>
     {
         private readonly List<Keys> _pressed = new List<Keys>();
@@ -70,6 +78,9 @@ namespace Castaway.Input
             _notPressed.Clear();
         }
 
+        /// <summary>
+        /// GLFW Keyboard handler.
+        /// </summary>
         public unsafe void Handler(void* window, int key, int scan, int action, int mods)
         {
             var k = key switch
@@ -101,7 +112,7 @@ namespace Castaway.Input
                 71 => G,
                 72 => H,
                 73 => I,
-                74 => G,
+                74 => J,
                 75 => K,
                 76 => L,
                 77 => M,

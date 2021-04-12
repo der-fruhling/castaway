@@ -6,6 +6,9 @@ using Castaway.Assets;
 
 namespace Castaway.Render
 {
+    /// <summary>
+    /// Loads GLSL shaders from a folder.
+    /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class GLSLShaderAssetLoader : IAssetLoader
     {

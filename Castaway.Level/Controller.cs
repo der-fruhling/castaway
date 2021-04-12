@@ -1,20 +1,25 @@
 namespace Castaway.Level
 {
+    /// <summary>
+    /// A controller that can be attached to a <see cref="LevelObject"/>.
+    /// </summary>
     public abstract class Controller
     {
-        // ReSharper disable InconsistentNaming
-        protected ObjectRef<LevelObject> parent;
+        protected ObjectRef<LevelObject> Parent;
 
-        protected LevelObject parentObject
+        protected LevelObject ParentObject
         {
-            get => parent.Object;
-            set => parent.Object = value;
+            get => Parent.Object;
+            set => Parent.Object = value;
         }
-        // ReSharper restore InconsistentNaming
 
+        /// <summary>
+        /// Sets the parent of this controller.
+        /// </summary>
+        /// <param name="p">A reference to the new parent object.</param>
         public virtual void SetParent(ObjectRef<LevelObject> p)
         {
-            parent = p;
+            Parent = p;
         }
         
         public virtual void OnBegin() {}

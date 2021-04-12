@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Castaway.Native;
 
 namespace Castaway.Render
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    /// <summary>
+    /// Old OpenGL Vertex Buffer. Prefer new <see cref="VBO"/>s.
+    /// </summary>
+    [Obsolete, SuppressMessage("ReSharper", "InconsistentNaming")]
     public class GLVertexBuffer : VertexBuffer
     {
         private readonly List<Vertex> _vertices = new List<Vertex>();

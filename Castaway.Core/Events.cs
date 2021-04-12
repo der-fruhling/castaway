@@ -1,5 +1,9 @@
 namespace Castaway.Core
 {
+    /// <summary>
+    /// Contains all events run in the event loop, and the event loop
+    /// itself.
+    /// </summary>
     public static class Events
     {
         public delegate void GenericHandler();
@@ -17,8 +21,15 @@ namespace Castaway.Core
         public static event GenericHandler Finish;
         public static event GenericHandler CloseNormally;
 
+        /// <summary>
+        /// Used by <see cref="Loop"/> to determine whether it should keep
+        /// running.
+        /// </summary>
         public static BoolExpression ShouldClose = () => false;
 
+        /// <summary>
+        /// Starts the event loop.
+        /// </summary>
         public static void Loop()
         {
             PreInit?.Invoke();

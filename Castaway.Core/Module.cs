@@ -2,22 +2,16 @@ using System;
 
 namespace Castaway.Core
 {
+    /// <summary>
+    /// Base class for Castaway modules that can be activated with
+    /// <see cref="Modules.Use{T}"/>.
+    /// </summary>
     public abstract class Module
     {
-        protected enum Event
-        {
-            PreInit,
-            Init,
-            PostInit,
-            PreDraw,
-            Draw,
-            PostDraw,
-            PreUpdate,
-            Update,
-            PostUpdate
-        }
-
-        public void Activate()
+        /// <summary>
+        /// Enables this module.
+        /// </summary>
+        internal void Activate()
         {
             Start();
             Events.PreInit += PreInit;
@@ -42,41 +36,5 @@ namespace Castaway.Core
         protected virtual void PreUpdate() {}
         protected virtual void Update() {}
         protected virtual void PostUpdate() {}
-
-        protected void Subscribe(Event e, Events.GenericHandler d)
-        {
-            switch (e)
-            {
-                case Event.PreInit:
-                    Events.PreInit += d;
-                    break;
-                case Event.Init:
-                    Events.Init += d;
-                    break;
-                case Event.PostInit:
-                    Events.PostInit += d;
-                    break;
-                case Event.PreDraw:
-                    Events.PreDraw += d;
-                    break;
-                case Event.Draw:
-                    Events.Draw += d;
-                    break;
-                case Event.PostDraw:
-                    Events.PostDraw += d;
-                    break;
-                case Event.PreUpdate:
-                    Events.PreUpdate += d;
-                    break;
-                case Event.Update:
-                    Events.Update += d;
-                    break;
-                case Event.PostUpdate:
-                    Events.PostUpdate += d;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(e), e, null);
-            }
-        }
     }
 }

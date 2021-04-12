@@ -5,6 +5,10 @@ using Castaway.Core;
 
 namespace Castaway.Assets
 {
+    /// <summary>
+    /// Module to initialize the assets system.
+    /// </summary>
+    /// <seealso cref="AssetManager"/>
     public class AssetsModule : Module
     {
         protected override void Start()
@@ -25,6 +29,12 @@ namespace Castaway.Assets
             EnumerateFolder(AssetManager.AssetLoaders, assetFolderPath, assetFolderPath);
         }
 
+        /// <summary>
+        /// Recursively enumerates folders, looking for assets.
+        /// </summary>
+        /// <param name="loaders">List of all loaders.</param>
+        /// <param name="path">Path to search.</param>
+        /// <param name="assetPath">Original path searched.</param>
         private static void EnumerateFolder(IAssetLoader[] loaders, string path, string assetPath)
         {
             var files = Directory.GetFiles(path);
@@ -38,7 +48,6 @@ namespace Castaway.Assets
                     AssetManager.Create(assetName, o);
                     goto loaderLoopExit;
                 }
-                
                 AssetManager.Create(assetName, File.ReadAllBytes(file));
                 
                 loaderLoopExit: ;

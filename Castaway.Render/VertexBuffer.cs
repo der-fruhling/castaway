@@ -2,8 +2,16 @@ using Castaway.Math;
 
 namespace Castaway.Render
 {
+    /// <summary>
+    /// Base class for vertex buffers.
+    /// </summary>
+    /// <seealso cref="GLVertexBuffer"/>
+    /// <seealso cref="VBO"/>
     public abstract class VertexBuffer
     {
+        /// <summary>
+        /// Structure representing a vertex.
+        /// </summary>
         public struct Vertex
         {
             public Vector3 Position, Normal, Texture;
@@ -21,9 +29,17 @@ namespace Castaway.Render
             }
         }
         
+        /// <summary>
+        /// Gets all vertices.
+        /// </summary>
         public abstract Vertex[] Vertices { get; }
 
+        /// <summary>
+        /// Adds a new Vertex to the buffer.
+        /// </summary>
+        /// <param name="vertex">Vertex to add.</param>
         public abstract void Add(Vertex vertex);
+        
         public void Add(Vector3 pos, Vector3 norm, Vector3 tex, Vector4 col)
             => Add(new Vertex(pos, norm, tex, col));
 

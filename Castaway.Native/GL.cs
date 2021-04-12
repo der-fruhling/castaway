@@ -8,6 +8,9 @@ using static System.Runtime.InteropServices.UnmanagedType;
 
 namespace Castaway.Native
 {
+    /// <summary>
+    /// Various native functions relating to OpenGL.
+    /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static unsafe class GL
     {

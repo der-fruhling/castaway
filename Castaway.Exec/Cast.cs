@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,15 +8,22 @@ using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Input;
 using Castaway.Native;
-using Castaway.Render;
 using Castaway.Window;
 using static Castaway.Assets.Properties<Castaway.Exec.Cast.CastProperty>;
 using static Castaway.Exec.Cast.CastProperty;
 
 namespace Castaway.Exec
 {
+    /// <summary>
+    /// Main execution class for Castaway. Supports loading separate
+    /// assemblies for execution, along with some attributes.
+    /// </summary>
     public static class Cast
     {
+        /// <summary>
+        /// Properties used in Cast.properties.txt. This file is required
+        /// and tells Cast how some things need to be set up.
+        /// </summary>
         public enum CastProperty
         {
             DefaultWindowWidth,
@@ -26,10 +32,26 @@ namespace Castaway.Exec
             Fullscreen,
         }
 
+        /// <summary>
+        /// Stores all properties in Cast.properties.txt.
+        /// </summary>
+        /// <seealso cref="CastProperty"/>
         public static Properties<CastProperty> Properties;
+        
+        /// <summary>
+        /// Main GLFW window opened by Cast. Window parameters are configured
+        /// in the properties.
+        /// </summary>
+        /// <seealso cref="GLFWWindow"/>
         public static GLFWWindow Window;
-        public static bool DebugMode { get; set; }
+        
+        private static bool DebugMode { get; set; }
 
+        /// <summary>
+        /// Sets up the property settings and loads the Cast.properties.txt
+        /// file.
+        /// </summary>
+        /// <seealso cref="Start"/>
         private static void SetupProperties()
         {
             var settings = new Dictionary<CastProperty, Settings>
@@ -42,6 +64,11 @@ namespace Castaway.Exec
             Properties.Load(AssetManager.Get<string>("/Cast.properties.txt")!.Split('\n'));
         }
         
+        /// <summary>
+        /// Opens the window used by Castaway.
+        /// </summary>
+        /// <seealso cref="Window"/>
+        /// <seealso cref="Start"/>
         private static void SetupWindow()
         {
             GLFWWindow.Init();
@@ -58,8 +85,12 @@ namespace Castaway.Exec
         private static void DrawDebugMode()
         {
             if(!DebugMode) return;
+            // TODO
         }
         
+        /// <summary>
+        /// Sets up some events and starts Castaway.
+        /// </summary>
         public static async Task Start()
         {
             await Task.Run(() =>

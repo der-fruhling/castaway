@@ -23,6 +23,9 @@ namespace Castaway.Math
         public float O { get => _array[14]; set => _array[14] = value; }
         public float P { get => _array[15]; set => _array[15] = value; }
 
+        /// <summary>
+        /// Identity matrix.
+        /// </summary>
         public static Matrix4 Identity => new Matrix4(new float[] {1,0,0,0,
                                                                         0,1,0,0,
                                                                         0,0,1,0,
@@ -37,6 +40,12 @@ namespace Castaway.Math
         
         private Matrix4() { }
         
+        /// <summary>
+        /// Adds the values of 2 matrices.
+        /// </summary>
+        /// <param name="a">Left.</param>
+        /// <param name="b">Right.</param>
+        /// <returns>New matrix.</returns>
         public static Matrix4 operator +(Matrix4 a, Matrix4 b)
         {
             var m = new Matrix4();
@@ -46,7 +55,13 @@ namespace Castaway.Math
 
             return m;
         }
-
+        
+        /// <summary>
+        /// Subtracts the values of 2 matrices.
+        /// </summary>
+        /// <param name="a">Left.</param>
+        /// <param name="b">Right.</param>
+        /// <returns>New matrix.</returns>
         public static Matrix4 operator -(Matrix4 a, Matrix4 b)
         {
             var m = new Matrix4();
@@ -57,6 +72,12 @@ namespace Castaway.Math
             return m;
         }
 
+        /// <summary>
+        /// Multiplies a matrix by a scalar.
+        /// </summary>
+        /// <param name="a">Left.</param>
+        /// <param name="b">Right.</param>
+        /// <returns>New matrix.</returns>
         public static Matrix4 operator *(Matrix4 a, float b)
         {
             var m = new Matrix4();
@@ -67,6 +88,12 @@ namespace Castaway.Math
             return m;
         }
 
+        /// <summary>
+        /// Applies this matrix to a vector
+        /// </summary>
+        /// <param name="a">Left.</param>
+        /// <param name="b">Right.</param>
+        /// <returns>Magicked vector.</returns>
         public static Vector4 operator *(Matrix4 a, Vector4 b)
         {
             return new Vector4
@@ -78,6 +105,10 @@ namespace Castaway.Math
             };
         }
 
+        /// <summary>
+        /// Shorthand for <c>a * new Vector4(b, 1)</c>.
+        /// </summary>
+        /// <inheritdoc cref="op_Multiply(Castaway.Math.Matrix4,Castaway.Math.Vector4)"/>
         public static Vector3 operator *(Matrix4 a, Vector3 b)
         {
             var b1 = new Vector4(b, 1);
@@ -102,6 +133,11 @@ namespace Castaway.Math
             return _array != null ? _array.GetHashCode() : 0;
         }
 
+        /// <summary>
+        /// Translates this matrix by <paramref name="v"/>
+        /// </summary>
+        /// <param name="v">Vector to translate by.</param>
+        /// <returns>New matrix.</returns>
         public Matrix4 Translate(Vector3 v)
         {
             return new Matrix4(_array)
