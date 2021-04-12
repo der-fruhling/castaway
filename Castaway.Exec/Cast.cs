@@ -37,6 +37,12 @@ namespace Castaway.Exec
         /// </summary>
         /// <seealso cref="CastProperty"/>
         public static Properties<CastProperty> Properties;
+
+        /// <summary>
+        /// Asset index of the <c>Cast.properties.txt</c> file. Initialized
+        /// by <see cref="SetupProperties"/>, in <see cref="Events.PreInit"/>.
+        /// </summary>
+        public static int PropertiesAsset { get; private set; }
         
         /// <summary>
         /// Main GLFW window opened by Cast. Window parameters are configured
@@ -61,7 +67,8 @@ namespace Castaway.Exec
                 [WindowTitle] = new Settings(PropertyReaders.String)
             };
             Properties = new Properties<CastProperty>(settings);
-            Properties.Load(AssetManager.Get<string>("/Cast.properties.txt")!.Split('\n'));
+            PropertiesAsset = AssetManager.Index("/Cast.properties.txt");
+            Properties.Load(AssetManager.Get<string>(PropertiesAsset)!.Split('\n'));
         }
         
         /// <summary>
