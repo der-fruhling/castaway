@@ -36,7 +36,7 @@ namespace Castaway.Exec
         /// Stores all properties in Cast.properties.txt.
         /// </summary>
         /// <seealso cref="CastProperty"/>
-        public static Properties<CastProperty> Properties;
+        public static Properties<CastProperty>? Properties;
 
         /// <summary>
         /// Asset index of the <c>Cast.properties.txt</c> file. Initialized
@@ -49,9 +49,13 @@ namespace Castaway.Exec
         /// in the properties.
         /// </summary>
         /// <seealso cref="GLFWWindow"/>
-        public static GLFWWindow Window;
-        
-        private static bool DebugMode { get; set; }
+        public static GLFWWindow? Window;
+
+        /// <summary>
+        /// Enables debug rendering.
+        /// </summary>
+        /// TODO
+        public static bool DebugMode;
 
         /// <summary>
         /// Sets up the property settings and loads the Cast.properties.txt
@@ -80,7 +84,7 @@ namespace Castaway.Exec
         {
             GLFWWindow.Init();
             Window = GLFWWindow.Windowed(
-                Properties.Get<int>(DefaultWindowWidth),
+                Properties!.Get<int>(DefaultWindowWidth),
                 Properties.Get<int>(DefaultWindowHeight),
                 Properties.Get<string>(WindowTitle));
             Events.Finish += DrawDebugMode;

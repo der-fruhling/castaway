@@ -8,6 +8,7 @@ using Castaway.Render;
 internal class ProgramEntrypoint
 {
     private ShaderHandle _shaderHandle;
+    private int _shaderHandleAsset;
 
     /*
      * The [EventHandler(...)] attribute allows defining a method in an
@@ -61,7 +62,8 @@ internal class ProgramEntrypoint
         //                           for each pixel.
         // /test.shdr_d/shader.csh - Configuration file linking custom shaders
         //                           into the engine.
-        _shaderHandle = AssetManager.Get<LoadedShader>("/test.shdr")?.ToHandle();
+        _shaderHandleAsset = AssetManager.Index("/test.shdr");
+        _shaderHandle = AssetManager.Get<LoadedShader>(_shaderHandleAsset)?.ToHandle();
         
         // If the loader couldn't load the shader correctly, null can be
         // returned. It is much more likely that an exception will just
