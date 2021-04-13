@@ -1,6 +1,10 @@
 ﻿using System;
 using Castaway.Assets;
+using Castaway.Core;
 using Castaway.Exec;
+using Castaway.Level;
+using Castaway.Level.Controllers.Rendering2D;
+using Castaway.Math;
 using Castaway.Render;
 
 [RequiresModules(CModule.Assets, CModule.Render)]
@@ -9,6 +13,43 @@ internal class ProgramEntrypoint
 {
     private ShaderHandle _shaderHandle;
     private int _shaderHandleAsset;
+    private readonly Level _level = new Level();
+
+    private class RectController : Controller
+    {
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            var s = DateTime.Now.Millisecond / 1000f * 2 * MathF.PI;
+            parent.Rotation.Z = s;
+            parent.Position.X = MathF.Sin(s) * .5f;
+            parent.Position.Y = MathF.Cos(s) * .5f;
+        }
+
+        public override void OnDraw()
+        {
+            base.OnDraw();
+            
+            // This function draws a full screen RGB rectangle.
+            // (definitely does not include white on a corner)
+        
+            // Create a new VBO
+            var vbo = new VBO();
+        
+            // Bottom left triangle
+            vbo.Add(-1, -1, r: 1, g: 0, b: 0);
+            vbo.Add(-1, 1, r: 0, g: 1, b: 0);
+            vbo.Add(1, -1, r: 0, g: 0, b: 1);
+        
+            // Top right triangle.
+            vbo.Add(1, 1, r: 1, g: 1, b: 1); // nothing to see here
+            vbo.Add(-1, 1, r: 0, g: 1, b: 0);
+            vbo.Add(1, -1, r: 0, g: 0, b: 1);
+        
+            // Draw!
+            vbo.Draw();
+        }
+    }
 
     /*
      * The [EventHandler(...)] attribute allows defining a method in an
@@ -22,31 +63,7 @@ internal class ProgramEntrypoint
      * |      PreDraw(), Draw(), PostDraw()
      * |      Finish()
      * |  }
-     */
-    [EventHandler(EventType.Draw)]
-    public void Draw()
-    {
-        // This function draws a full screen RGB rectangle.
-        // (definitely does not include white on a corner)
-        
-        // Create a new VBO
-        var vbo = new VBO();
-        
-        // Bottom left triangle
-        vbo.Add(-1, -1, r: 1, g: 0, b: 0);
-        vbo.Add(-1, 1, r: 0, g: 1, b: 0);
-        vbo.Add(1, -1, r: 0, g: 0, b: 1);
-        
-        // Top right triangle.
-        vbo.Add(1, 1, r: 1, g: 1, b: 1); // nothing to see here
-        vbo.Add(-1, 1, r: 0, g: 1, b: 0);
-        vbo.Add(1, -1, r: 0, g: 0, b: 1);
-        
-        // Draw!
-        vbo.Draw();
-    }
-
-    /*
+     * 
      * Not specifying which event to handle will automatically parse
      * the name of the method as an EventType. *Invalid EventTypes
      * generated this way will crash the program.*
@@ -72,5 +89,15 @@ internal class ProgramEntrypoint
         
         // Activates the shader.
         _shaderHandle.Use();
+
+        var camera = _level.Create(new OrthographicCameraController(0));
+        camera.Object.Position.Z -= .25f;
+        
+        var square = _level.Create(new RectController(), new Transform2DController());
+        
+        square.Object.Scale = new Vector3(.25f, .25f, .25f);
+        
+        Events.CloseNormally += _level.Deactivate;
+        _level.Activate();
     }
 }

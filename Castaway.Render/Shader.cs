@@ -71,6 +71,7 @@ namespace Castaway.Render
         internal readonly uint GLFrag;
         internal readonly uint GLVert;
         internal readonly VertexAttribInfo[] Attributes;
+        public int TModel = -1, TView = -1, TProjection = -1;
 
         internal ShaderHandle(uint index, uint glProgram, uint glFrag, uint glVert, VertexAttribInfo[] attributes)
         {
@@ -126,6 +127,24 @@ namespace Castaway.Render
         public static bool operator !=(ShaderHandle left, ShaderHandle right)
         {
             return !Equals(left, right);
+        }
+
+        public void SetTModel(Matrix4 m)
+        {
+            if(TModel == -1) return;
+            GL.SetUniform(TModel, m);
+        }
+
+        public void SetTView(Matrix4 m)
+        {
+            if(TView == -1) return;
+            GL.SetUniform(TView, m);
+        }
+
+        public void SetTProjection(Matrix4 m)
+        {
+            if(TProjection == -1) return;
+            GL.SetUniform(TProjection, m);
         }
     }
     
@@ -362,6 +381,42 @@ namespace Castaway.Render
                     (ulong) (i == 0 ? 0 : sizes[..i].Aggregate((a, b) => a + b) * sizeof(float)));
                 GL.EnableAttribute(attr);
             }
+        }
+
+        /// <summary>
+        /// Sets a uniform value.
+        /// </summary>
+        /// <param name="handle">Handle of the shader with the uniform.</param>
+        /// <param name="name">Name of the uniform variable.</param>
+        /// <param name="floats">1..4 floats.</param>
+        public static void SetUniform(ShaderHandle handle, string name, params float[] floats)
+        {
+            var loc = GL.GetUniformLocation(handle.GLProgram, name);
+            GL.SetUniform(loc, floats);
+        }
+        
+        /// <summary>
+        /// Sets a uniform value.
+        /// </summary>
+        /// <param name="handle">Handle of the shader with the uniform.</param>
+        /// <param name="name">Name of the uniform variable.</param>
+        /// <param name="ints">1..4 ints.</param>
+        public static void SetUniform(ShaderHandle handle, string name, params int[] ints)
+        {
+            var loc = GL.GetUniformLocation(handle.GLProgram, name);
+            GL.SetUniform(loc, ints);
+        }
+
+        /// <summary>
+        /// Sets a uniform value.
+        /// </summary>
+        /// <param name="handle">Handle of the shader with the uniform.</param>
+        /// <param name="name">Name of the uniform variable.</param>
+        /// <param name="matrix">Matrix value.</param>
+        public static void SetUniform(ShaderHandle handle, string name, Matrix4 matrix)
+        {
+            var loc = GL.GetUniformLocation(handle.GLProgram, name);
+            GL.SetUniform(loc, matrix);
         }
 
         /// <summary>

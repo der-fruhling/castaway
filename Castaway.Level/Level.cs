@@ -8,6 +8,8 @@ namespace Castaway.Level
     /// </summary>
     public class Level
     {
+        public uint CurrentCamera = 0;
+        
         /// <summary>
         /// Gets a list of every object in this level.
         /// </summary>
@@ -69,7 +71,11 @@ namespace Castaway.Level
         public ObjectRef<LevelObject> Create()
         {
             var r = new ObjectRef<LevelObject>(Objects.Count, this);
-            Objects.Add(new LevelObject());
+            Objects.Add(new LevelObject
+            {
+                Ref = r,
+                Level = this
+            });
             return r;
         }
 

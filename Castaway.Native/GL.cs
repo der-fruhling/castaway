@@ -100,6 +100,17 @@ namespace Castaway.Native
         private delegate void vertexAttribPointer(int i, int s, uint t, uint n, uint stride, [MarshalAs(U8)] ulong ptr);
         private delegate void getInfoLog(uint s, uint l, uint* ol, IntPtr log);
         private delegate void drawArrays(uint m, int f, uint c);
+
+        private delegate void uniform1f(int l, float a);
+        private delegate void uniform2f(int l, float a, float b);
+        private delegate void uniform3f(int l, float a, float b, float c);
+        private delegate void uniform4f(int l, float a, float b, float c, float d);
+        private delegate void uniform1i(int l, int a);
+        private delegate void uniform2i(int l, int a, int b);
+        private delegate void uniform3i(int l, int a, int b, int c);
+        private delegate void uniform4i(int l, int a, int b, int c, int d);
+        private delegate void uniformMf(int l, uint c, bool t, float* v);
+        private delegate int getUniformLocation(uint p, [MarshalAs(LPStr)] string name);
         
         #endregion
         
@@ -297,6 +308,46 @@ namespace Castaway.Native
         public static bool IsProgram(uint o)
         {
             var a = Fn<isChecker>("glIsProgram")(o);
+            CheckError();
+            return a;
+        }
+
+        public static void SetUniform(int l, params float[] data)
+        {
+            if (data.Length > 4) throw new ApplicationException("Too many parameters. (max: 4)");
+            switch (data.Length)
+            {
+                case 1: Fn<uniform1f>("glUniform1f")(l, data[0]); break;
+                case 2: Fn<uniform2f>("glUniform2f")(l, data[0], data[1]); break;
+                case 3: Fn<uniform3f>("glUniform3f")(l, data[0], data[1], data[2]); break;
+                case 4: Fn<uniform4f>("glUniform4f")(l, data[0], data[1], data[2], data[3]); break;
+            }
+            CheckError();
+        }
+        
+        public static void SetUniform(int l, params int[] data)
+        {
+            if (data.Length > 4) throw new ApplicationException("Too many parameters. (max: 4)");
+            switch (data.Length)
+            {
+                case 1: Fn<uniform1i>("glUniform1i")(l, data[0]); break;
+                case 2: Fn<uniform2i>("glUniform2i")(l, data[0], data[1]); break;
+                case 3: Fn<uniform3i>("glUniform3i")(l, data[0], data[1], data[2]); break;
+                case 4: Fn<uniform4i>("glUniform4i")(l, data[0], data[1], data[2], data[3]); break;
+            }
+            CheckError();
+        }
+
+        public static void SetUniform(int l, Matrix4 m)
+        {
+            var a = m.Array;
+            fixed (float* p = a) Fn<uniformMf>("glUniformMatrix4fv")(l, 1, true, p);
+            CheckError();
+        }
+
+        public static int GetUniformLocation(uint p, string name)
+        {
+            var a = Fn<getUniformLocation>("glGetUniformLocation")(p, name);
             CheckError();
             return a;
         }

@@ -59,5 +59,8 @@ namespace Castaway.Native
         public delegate void GLFWKeyCallback(void* window, int key, int scancode, int action, int mods);
         [DllImport(l)]
         public static extern void glfwSetKeyCallback(void* window, GLFWKeyCallback callback);
+
+        [DllImport(l)]
+        public static extern void glfwGetWindowSize(void* window, int* width, int* height);
     }
 }

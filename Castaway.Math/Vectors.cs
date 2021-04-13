@@ -60,7 +60,7 @@ namespace Castaway.Math
         /// <summary>
         /// Vector with all components set to zero.
         /// </summary>
-        public static readonly Vector3 Zero = new Vector3(0, 0, 0);
+        public static Vector3 Zero => new Vector3(0, 0, 0);
         
         public Vector3() : base(3) { }
 
@@ -106,6 +106,23 @@ namespace Castaway.Math
         {
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
         }
+
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+            => new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Vector3 operator -(Vector3 a, Vector3 b)
+            => new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static Vector3 operator *(Vector3 a, Vector3 b)
+            => new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        public static Vector3 operator /(Vector3 a, Vector3 b)
+            => new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
+        public static Vector3 operator +(Vector3 a, float b)
+            => new Vector3(a.X + b, a.Y + b, a.Z + b);
+        public static Vector3 operator -(Vector3 a, float b)
+            => new Vector3(a.X - b, a.Y - b, a.Z - b);
+        public static Vector3 operator *(Vector3 a, float b)
+            => new Vector3(a.X * b, a.Y * b, a.Z * b);
+        public static Vector3 operator /(Vector3 a, float b)
+            => new Vector3(a.X / b, a.Y / b, a.Z / b);
     }
 
     public class Vector4 : Vector

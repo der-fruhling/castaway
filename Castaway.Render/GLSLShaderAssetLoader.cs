@@ -25,6 +25,10 @@ namespace Castaway.Render
             var vertAttrs = new Dictionary<string, VertexAttribInfo.AttribValue>();
             var fragOutputs = new Dictionary<string, uint>();
 
+            var model = "";
+            var view = "";
+            var projection = "";
+
             var lines = confSrc.Split('\n');
             foreach (var line in lines)
             {
@@ -40,12 +44,29 @@ namespace Castaway.Render
                     case "output" when cmdParts.Length == 4 && cmdParts[2] == "=":
                         fragOutputs[cmdParts[1]] = uint.Parse(cmdParts[3]);
                         break;
+                    case "transform" when cmdParts.Length == 4 && cmdParts[2] == "=":
+                        switch (cmdParts[1])
+                        {
+                            case "model":
+                                model = cmdParts[3];
+                                break;
+                            case "view":
+                                view = cmdParts[3];
+                                break;
+                            case "projection":
+                                projection = cmdParts[3];
+                                break;
+                            default:
+                                throw new InvalidOperationException(
+                                    $"Cannot set transform matrix {cmdParts[1]} to {cmdParts[3]}");
+                        }
+                        break;
                     default:
                         throw new InvalidOperationException($"Couldn't process config: Invalid line `{line}`");
                 }
             }
 
-            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc);
+            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc, model, view, projection);
         }
     }
 }

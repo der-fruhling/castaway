@@ -1,3 +1,5 @@
+using Castaway.Level.Controllers.Rendering2D;
+
 namespace Castaway.Level
 {
     /// <summary>
@@ -5,13 +7,13 @@ namespace Castaway.Level
     /// </summary>
     public abstract class Controller
     {
-        protected ObjectRef<LevelObject> Parent;
+        private ObjectRef<LevelObject> _parent;
 
-        protected LevelObject ParentObject
-        {
-            get => Parent.Object;
-            set => Parent.Object = value;
-        }
+        // ReSharper disable InconsistentNaming
+        protected Level level => parent.Level;
+        protected LevelObject parent => _parent.Object;
+        protected Transform2DController transform2d => parent.Get<Transform2DController>();
+        // ReSharper restore InconsistentNaming
 
         /// <summary>
         /// Sets the parent of this controller.
@@ -19,12 +21,16 @@ namespace Castaway.Level
         /// <param name="p">A reference to the new parent object.</param>
         public virtual void SetParent(ObjectRef<LevelObject> p)
         {
-            Parent = p;
+            _parent = p;
         }
         
         public virtual void OnBegin() {}
         public virtual void OnEnd() {}
+        public virtual void PreOnDraw() {}
         public virtual void OnDraw() {}
+        public virtual void PostOnDraw() {}
+        public virtual void PreOnUpdate() {}
         public virtual void OnUpdate() {}
+        public virtual void PostOnUpdate() {}
     }
 }

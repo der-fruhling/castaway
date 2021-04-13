@@ -6,22 +6,22 @@ namespace Castaway.Level
     /// <typeparam name="T">Type of the object this is referencing.</typeparam>
     public struct ObjectRef<T> where T : LevelObject
     {
-        private readonly int _index;
-        private readonly Level _level;
+        public readonly int Index;
+        public readonly Level Level;
 
         /// <summary>
         /// Allows getting and setting the object behind this reference.
         /// </summary>
         public T Object
         {
-            get => _level.Get<T>(_index);
-            set => _level.Set(_index, value);
+            get => Level.Get<T>(Index);
+            set => Level.Set(Index, value);
         }
         
         internal ObjectRef(int index, Level level)
         {
-            _index = index;
-            _level = level;
+            Index = index;
+            Level = level;
         }
 
         /// <summary>
@@ -30,6 +30,6 @@ namespace Castaway.Level
         /// </summary>
         /// <typeparam name="T1">New object type.</typeparam>
         /// <returns></returns>
-        public ObjectRef<T1> To<T1>() where T1 : LevelObject => new ObjectRef<T1>(_index, _level);
+        public ObjectRef<T1> To<T1>() where T1 : LevelObject => new ObjectRef<T1>(Index, Level);
     }
 }

@@ -19,6 +19,7 @@
       <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
       <ProjectReference Include="..\Castaway.Core\Castaway.Core.csproj" />
       <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj" />
+      <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
       <ProjectReference Include="..\Castaway.Render\Castaway.Render.csproj" />

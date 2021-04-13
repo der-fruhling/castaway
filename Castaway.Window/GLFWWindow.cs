@@ -11,6 +11,8 @@ namespace Castaway.Window
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public unsafe class GLFWWindow
     {
+        public static GLFWWindow Current;
+        
         /// <summary>
         /// Pointer to the <c>GLFWwindow</c> structure created by
         /// <see cref="Native.GLFW.glfwCreateWindow"/>.
@@ -76,6 +78,14 @@ namespace Castaway.Window
         public static void Init()
         {
             if (glfwInit() != 1) throw new ApplicationException("GLFW failed to initialize");
+        }
+
+        public void GetWindowSize(out int width, out int height)
+        {
+            int w, h;
+            glfwGetWindowSize(GLFW, &w, &h);
+            width = w;
+            height = h;
         }
     }
 }

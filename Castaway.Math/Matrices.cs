@@ -1,27 +1,28 @@
 using System;
+using static System.MathF;
 
 namespace Castaway.Math
 {
     public class Matrix4
     {
-        private readonly float[] _array = new float[4 * 4];
+        public float[] Array { get; } = new float[4 * 4];
         
-        public float A { get => _array[0];  set => _array[0] = value;  }
-        public float B { get => _array[1];  set => _array[1] = value;  }
-        public float C { get => _array[2];  set => _array[2] = value;  }
-        public float D { get => _array[3];  set => _array[3] = value;  }
-        public float E { get => _array[4];  set => _array[4] = value;  }
-        public float F { get => _array[5];  set => _array[5] = value;  }
-        public float G { get => _array[6];  set => _array[6] = value;  }
-        public float H { get => _array[7];  set => _array[7] = value;  }
-        public float I { get => _array[8];  set => _array[8] = value;  }
-        public float J { get => _array[9];  set => _array[9] = value;  }
-        public float K { get => _array[10]; set => _array[10] = value; }
-        public float L { get => _array[11]; set => _array[11] = value; }
-        public float M { get => _array[12]; set => _array[12] = value; }
-        public float N { get => _array[13]; set => _array[13] = value; }
-        public float O { get => _array[14]; set => _array[14] = value; }
-        public float P { get => _array[15]; set => _array[15] = value; }
+        public float A { get => Array[0 ]; set => Array[0 ] = value; }
+        public float B { get => Array[1 ]; set => Array[1 ] = value; }
+        public float C { get => Array[2 ]; set => Array[2 ] = value; }
+        public float D { get => Array[3 ]; set => Array[3 ] = value; }
+        public float E { get => Array[4 ]; set => Array[4 ] = value; }
+        public float F { get => Array[5 ]; set => Array[5 ] = value; }
+        public float G { get => Array[6 ]; set => Array[6 ] = value; }
+        public float H { get => Array[7 ]; set => Array[7 ] = value; }
+        public float I { get => Array[8 ]; set => Array[8 ] = value; }
+        public float J { get => Array[9 ]; set => Array[9 ] = value; }
+        public float K { get => Array[10]; set => Array[10] = value; }
+        public float L { get => Array[11]; set => Array[11] = value; }
+        public float M { get => Array[12]; set => Array[12] = value; }
+        public float N { get => Array[13]; set => Array[13] = value; }
+        public float O { get => Array[14]; set => Array[14] = value; }
+        public float P { get => Array[15]; set => Array[15] = value; }
 
         /// <summary>
         /// Identity matrix.
@@ -35,7 +36,7 @@ namespace Castaway.Math
         {
             if (floats.Length != 4 * 4)
                 throw new ApplicationException("Cannot initialize Matrix4 with an array that isn't 4*4 long");
-            floats.CopyTo(_array, 0);
+            floats.CopyTo(Array, 0);
         }
         
         private Matrix4() { }
@@ -50,8 +51,8 @@ namespace Castaway.Math
         {
             var m = new Matrix4();
             
-            for (var i = 0; i < m._array.Length; i++) 
-                m._array[i] = a._array[i] + b._array[i];
+            for (var i = 0; i < m.Array.Length; i++) 
+                m.Array[i] = a.Array[i] + b.Array[i];
 
             return m;
         }
@@ -66,8 +67,8 @@ namespace Castaway.Math
         {
             var m = new Matrix4();
             
-            for (var i = 0; i < m._array.Length; i++) 
-                m._array[i] = a._array[i] - b._array[i];
+            for (var i = 0; i < m.Array.Length; i++) 
+                m.Array[i] = a.Array[i] - b.Array[i];
 
             return m;
         }
@@ -82,8 +83,8 @@ namespace Castaway.Math
         {
             var m = new Matrix4();
             
-            for (var i = 0; i < m._array.Length; i++) 
-                m._array[i] = a._array[i] * b;
+            for (var i = 0; i < m.Array.Length; i++) 
+                m.Array[i] = a.Array[i] * b;
 
             return m;
         }
@@ -116,9 +117,35 @@ namespace Castaway.Math
             return new Vector3(v.X, v.Y, v.Z);
         }
 
+        public static Matrix4 operator *(Matrix4 a, Matrix4 b)
+        {
+            return new Matrix4
+            {
+                A = a.A * b.A  +  a.B * b.E  +  a.C * b.I  +  a.D * b.M,
+                B = a.A * b.B  +  a.B * b.F  +  a.C * b.J  +  a.D * b.N,
+                C = a.A * b.C  +  a.B * b.G  +  a.C * b.K  +  a.D * b.O,
+                D = a.A * b.D  +  a.B * b.H  +  a.C * b.L  +  a.D * b.P,
+                
+                E = a.E * b.A  +  a.F * b.E  +  a.G * b.I  +  a.H * b.M,
+                F = a.E * b.B  +  a.F * b.F  +  a.G * b.J  +  a.H * b.N,
+                G = a.E * b.C  +  a.F * b.G  +  a.G * b.K  +  a.H * b.O,
+                H = a.E * b.D  +  a.F * b.H  +  a.G * b.L  +  a.H * b.P,
+                
+                I = a.I * b.A  +  a.J * b.E  +  a.K * b.I  +  a.L * b.M,
+                J = a.I * b.B  +  a.J * b.F  +  a.K * b.J  +  a.L * b.N,
+                K = a.I * b.C  +  a.J * b.G  +  a.K * b.K  +  a.L * b.O,
+                L = a.I * b.D  +  a.J * b.H  +  a.K * b.L  +  a.L * b.P,
+                
+                M = a.M * b.A  +  a.N * b.E  +  a.O * b.I  +  a.P * b.M,
+                N = a.M * b.B  +  a.N * b.F  +  a.O * b.J  +  a.P * b.N,
+                O = a.M * b.C  +  a.N * b.G  +  a.O * b.K  +  a.P * b.O,
+                P = a.M * b.D  +  a.N * b.H  +  a.O * b.L  +  a.P * b.P
+            };
+        }
+
         private bool Equals(Matrix4 other)
         {
-            return Equals(_array, other._array);
+            return Equals(Array, other.Array);
         }
 
         public override bool Equals(object obj)
@@ -130,7 +157,7 @@ namespace Castaway.Math
 
         public override int GetHashCode()
         {
-            return _array != null ? _array.GetHashCode() : 0;
+            return Array != null ? Array.GetHashCode() : 0;
         }
 
         /// <summary>
@@ -138,15 +165,39 @@ namespace Castaway.Math
         /// </summary>
         /// <param name="v">Vector to translate by.</param>
         /// <returns>New matrix.</returns>
-        public Matrix4 Translate(Vector3 v)
+        public static Matrix4 Translate(Vector3 v) =>
+            new Matrix4(Identity.Array) {D = v.X, H = v.Y, L = v.Z, P = 1};
+
+        /// <summary>
+        /// Scales this matrix by <paramref name="v"/>
+        /// </summary>
+        /// <param name="v">Vector to scale by.</param>
+        /// <returns>New matrix.</returns>
+        public static Matrix4 Scale(Vector3 v) =>
+            new Matrix4(Identity.Array) {A = v.X, F = v.Y, K = v.Z, P = 1};
+
+        public static Matrix4 RotateX(float x) =>
+            new Matrix4(Identity.Array) {F = Cos(x), G = -Sin(x), J = Sin(x), K = Cos(x)};
+
+        public static Matrix4 RotateY(float x) =>
+            new Matrix4(Identity.Array) {A = Cos(x), C = Sin(x), I = -Sin(x), K = Cos(x)};
+
+        public static Matrix4 RotateZ(float x) => 
+            new Matrix4(Identity.Array) {A = Cos(x), B = -Sin(x), E = Sin(x), F = Cos(x)};
+
+        public static Matrix4 Rotate(Vector3 v) => RotateX(v.X) * RotateY(v.Y) * RotateZ(v.Z);
+
+        public static Matrix4 RotateXDeg(float x) => RotateX(x * (PI / 180f));
+        public static Matrix4 RotateYDeg(float x) => RotateY(x * (PI / 180f));
+        public static Matrix4 RotateZDeg(float x) => RotateZ(x * (PI / 180f));
+        public static Matrix4 RotateDeg(Vector3 v) => RotateXDeg(v.X) * RotateYDeg(v.Y) * RotateZDeg(v.Z);
+
+        public void Print()
         {
-            return new Matrix4(_array)
-            {
-                D = v.X,
-                H = v.Y,
-                L = v.Z,
-                P = 1
-            };
+            Console.WriteLine($"{A},{B},{C},{D}\n" +
+                              $"{E},{F},{G},{H}\n" +
+                              $"{I},{J},{K},{L}\n" +
+                              $"{M},{N},{O},{P}");
         }
     }
 }

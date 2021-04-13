@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Castaway.Math;
+using Castaway.Native;
 
 namespace Castaway.Render
 {
@@ -14,13 +16,26 @@ namespace Castaway.Render
         private readonly Dictionary<string, uint> _fragOutputs;
         private readonly string _vertSrc;
         private readonly string _fragSrc;
+        private readonly string _model;
+        private readonly string _view;
+        private readonly string _projection;
 
-        public LoadedShader(Dictionary<string, VertexAttribInfo.AttribValue> vertAttrs, Dictionary<string, uint> fragOutputs, string vertSrc, string fragSrc)
+        internal LoadedShader(
+            Dictionary<string, VertexAttribInfo.AttribValue> vertAttrs, 
+            Dictionary<string, uint> fragOutputs, 
+            string vertSrc, 
+            string fragSrc,
+            string model,
+            string view,
+            string projection)
         {
             _vertAttrs = vertAttrs;
             _fragOutputs = fragOutputs;
             _vertSrc = vertSrc;
             _fragSrc = fragSrc;
+            _model = model;
+            _view = view;
+            _projection = projection;
         }
 
         /// <summary>
@@ -38,6 +53,18 @@ namespace Castaway.Render
             var program = ShaderManager.CreateShader(_vertSrc, _fragSrc, attrList);
             foreach (var (key, value) in _fragOutputs) program.BindFragmentLocation(value, key);
             program.Finish();
+
+            if (_model.Length > 0)
+                program.TModel = GL.GetUniformLocation(program.GLProgram, _model);
+            if (_view.Length > 0)
+                program.TView = GL.GetUniformLocation(program.GLProgram, _view);
+            if (_projection.Length > 0)
+                program.TProjection = GL.GetUniformLocation(program.GLProgram, _projection);
+            
+            program.Use();
+            program.SetTModel(Matrix4.Identity);
+            program.SetTView(Matrix4.Identity);
+            program.SetTProjection(Matrix4.Identity);
 
             return program;
         }
