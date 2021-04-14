@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Castaway.Core;
+﻿using Castaway.Core;
 
 namespace Castaway.Input
 {

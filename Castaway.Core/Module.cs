@@ -1,5 +1,3 @@
-using System;
-
 namespace Castaway.Core
 {
     /// <summary>

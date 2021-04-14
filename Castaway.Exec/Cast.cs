@@ -8,7 +8,6 @@ using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Input;
 using Castaway.Native;
-using Castaway.Render;
 using Castaway.Window;
 using static Castaway.Assets.Properties<Castaway.Exec.Cast.CastProperty>;
 using static Castaway.Exec.Cast.CastProperty;
