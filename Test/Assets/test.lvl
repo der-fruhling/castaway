@@ -1,7 +1,9 @@
 # .lvl file example
 # Contains 2 objects
 
-InitialCamera 0
+Set Camera 0
+
+InitialCamera ${Camera}
 
 # Camera
 Object
@@ -13,7 +15,7 @@ Object
 	Scale 1 1 1
 	
 	Controller PerspectiveCamera
-		Id 0
+		Id ${Camera}
 		Size 2
 	End
 End

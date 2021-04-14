@@ -20,9 +20,11 @@ namespace Castaway.Serializable
                 .Where(t => t.BaseType == typeof(Controller));
         
         public IEnumerable<string> FileExtensions { get; } = new[] {"lvl"};
+        private static readonly Dictionary<string, string> Variables = new Dictionary<string, string>();
         
         public object LoadFile(string path)
         {
+            Variables.Clear();
             var level = new Level();
             var lines = File.ReadAllLines(path).Select(s => s.Trim());
             ReadLevel(ref level, lines.GetEnumerator());
@@ -35,9 +37,15 @@ namespace Castaway.Serializable
             {
                 var line = lines.Current;
                 if(line!.StartsWith('#') || line.Length == 0) continue;
-                var parts = line.Split(' ');
+                foreach (var (k, v) in Variables) line = line.Replace($"${{{k}}}", v);
+                var parts = line.Split(' ', 3);
+                
                 switch (parts[0])
                 {
+                    case "Set" when parts.Length == 3:
+                        Variables[parts[1]] = parts[2];
+                        break;
+
                     case "InitialCamera" when parts.Length == 2:
                         level.CurrentCamera = uint.Parse(parts[1]);
                         break;
@@ -63,6 +71,7 @@ namespace Castaway.Serializable
             {
                 var line = lines.Current;
                 if(line!.StartsWith('#') || line.Length == 0) continue;
+                foreach (var (k, v) in Variables) line = line.Replace($"${{{k}}}", v);
                 var parts = line.Split(' ');
                 switch (parts[0])
                 {
@@ -112,6 +121,7 @@ namespace Castaway.Serializable
             {
                 var line = lines.Current;
                 if(line!.StartsWith('#') || line.Length == 0) continue;
+                foreach (var (k, v) in Variables) line = line.Replace($"${{{k}}}", v);
                 var parts = line.Split(' ');
                 if (parts[0] == "End") return;
                 
