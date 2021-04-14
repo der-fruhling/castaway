@@ -4,17 +4,19 @@ using Castaway.Math;
 using Castaway.Render;
 using Castaway.Window;
 
-namespace Castaway.Level.Controllers.Rendering
+namespace Castaway.Levels.Controllers.Rendering
 {
     [ControllerInfo(Name = "Orthographic Camera")]
     [SuppressMessage("ReSharper", "ConvertToConstant.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class OrthographicCameraController : Controller
     {
-        public readonly uint Id;
+        public uint Id;
         public float FarClip = 100f;
         public float NearClip = .01f;
         public float Size = 4f;
+        
+        public OrthographicCameraController() {}
 
         public OrthographicCameraController(uint id)
         {

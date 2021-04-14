@@ -5,7 +5,7 @@ using System.Linq;
 using Castaway.Math;
 using Castaway.Render;
 
-namespace Castaway.Level
+namespace Castaway.Levels
 {
     /// <summary>
     /// An object in a <see cref="Level"/>.
@@ -104,7 +104,7 @@ namespace Castaway.Level
 
         public T? Get<T>() where T : Controller
         {
-            return (T?) _controllers.FirstOrDefault(c => c.GetType() == typeof(T));
+            return (T?) _controllers.FirstOrDefault(c => c is T);
         }
 
         public void Set(Controller value)

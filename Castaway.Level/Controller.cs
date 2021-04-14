@@ -1,6 +1,6 @@
-using Castaway.Level.Controllers.Rendering;
+using Castaway.Levels.Controllers.Rendering;
 
-namespace Castaway.Level
+namespace Castaway.Levels
 {
     /// <summary>
     /// A controller that can be attached to a <see cref="LevelObject"/>.

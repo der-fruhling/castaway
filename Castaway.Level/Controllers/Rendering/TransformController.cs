@@ -1,7 +1,7 @@
 using static Castaway.Math.Matrix4;
 using static Castaway.Render.ShaderManager;
 
-namespace Castaway.Level.Controllers.Rendering
+namespace Castaway.Levels.Controllers.Rendering
 {
     [ControllerInfo(Name = "Transform [2D]")]
     public class TransformController : Controller

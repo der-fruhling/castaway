@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Castaway.Core;
 
-namespace Castaway.Level
+namespace Castaway.Levels
 {
     /// <summary>
     /// A collection of <see cref="LevelObject"/>s.

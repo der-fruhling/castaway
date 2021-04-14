@@ -4,6 +4,7 @@ using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Mesh;
 using Castaway.Render;
+using Castaway.Serializable;
 
 namespace Castaway.Exec
 {
@@ -14,7 +15,8 @@ namespace Castaway.Exec
     {
         Render,
         Assets,
-        Mesh
+        Mesh,
+        Serializable
     }
 
     /// <summary>
@@ -57,6 +59,9 @@ namespace Castaway.Exec
                     break;
                 case CModule.Mesh:
                     Modules.Use<MeshModule>();
+                    break;
+                case CModule.Serializable:
+                    Modules.Use<SerializableModule>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(lm), lm, null);

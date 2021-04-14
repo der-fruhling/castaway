@@ -129,6 +129,7 @@ namespace Castaway.Exec
             }
 
             var asm = Assembly.LoadFile(args[0]);
+            CastawayCore.StartupAssembly = asm;
             var types = asm.GetTypes();
             var entrypoints = types.Where(type => type.CustomAttributes.Any(a => a.AttributeType == typeof(EntrypointAttribute)));
             var moduleRequiring = types.Where(type => type.CustomAttributes.Any(a => a.AttributeType == typeof(RequiresModulesAttribute)));

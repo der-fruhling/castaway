@@ -1,6 +1,6 @@
 using System;
 
-namespace Castaway.Level
+namespace Castaway.Levels
 {
     /// <summary>
     /// An attribute that programs can use to gather some data about a

@@ -2,14 +2,11 @@
 using Castaway.Core;
 using Castaway.Exec;
 using Castaway.Input;
-using Castaway.Level;
-using Castaway.Level.Controllers.Renderers;
-using Castaway.Level.Controllers.Rendering;
-using Castaway.Mesh;
+using Castaway.Levels;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 
-[RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh)]
+[RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable)]
 [Entrypoint]
 internal class ProgramEntrypoint
 {
@@ -28,7 +25,7 @@ internal class ProgramEntrypoint
 
     private ShaderHandle _shaderHandle;
     private int _shaderHandleAsset;
-    private readonly Level _level = new Level();
+    private Level _level;
 
     /*
      * The [EventHandler(...)] attribute allows defining a method in an
@@ -69,20 +66,8 @@ internal class ProgramEntrypoint
         // Activates the shader.
         _shaderHandle.Use();
 
-        var camera = _level.Create(new PerspectiveCameraController(0));
-        camera.Object.Position.Z -= .75f;
-
-        var m = Get<STLMesh>(Index("/test.stl"));
-        foreach (var vertex in m!.Vertices)
-        {
-            Console.WriteLine(vertex);
-        }
-        
-        var square = _level.Create(
-            new MeshRenderer(m),
-            new TransformController(),
-            new Movement2DController());
-        square.Object.Position.Z += 4f;
+        _level = Get<Level>(Index("/test.lvl"));
+        if (_level == null) throw new ApplicationException("Failed to load level");
         
         Events.CloseNormally += _level.Deactivate;
         _level.Activate();

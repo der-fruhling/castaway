@@ -1,4 +1,4 @@
-namespace Castaway.Level
+namespace Castaway.Levels
 {
     /// <summary>
     /// References an object by index and level. 

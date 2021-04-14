@@ -5,19 +5,21 @@ using Castaway.Math;
 using Castaway.Render;
 using Castaway.Window;
 
-namespace Castaway.Level.Controllers.Rendering
+namespace Castaway.Levels.Controllers.Rendering
 {
     [ControllerInfo(Name = "Perspective Camera")]
     [SuppressMessage("ReSharper", "ConvertToConstant.Global")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class PerspectiveCameraController : Controller
     {
-        public readonly uint Id;
+        public uint Id;
         public float FarClip = 100f;
         public float NearClip = .01f;
         public float Size = 1f;
         public float FOV = 60f;
 
+        public PerspectiveCameraController() {}
+        
         public PerspectiveCameraController(uint id)
         {
             Id = id;
@@ -47,7 +49,7 @@ namespace Castaway.Level.Controllers.Rendering
             ShaderManager.ActiveHandle.SetTProjection(new Matrix4(Matrix4.Identity.Array)
             {
                 A = 1f / (a * c),
-                F = 1f / c,
+                F = 1f / (b * c),
                 K = (-NearClip - FarClip) / (NearClip - FarClip),
                 L = 2 * FarClip * NearClip / (NearClip - FarClip),
                 O = 1,

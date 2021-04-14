@@ -1,0 +1,31 @@
+# .lvl file example
+# Contains 2 objects
+
+InitialCamera 0
+
+# Camera
+Object
+    Position 0 0 -0.75
+    
+    # Default Rotation is [0,0,0], so this line isn't needed.
+    Rotation 0 0 0
+    # Default Scale is [1,1,1], so this line isn't needed.
+    Scale 1 1 1
+    
+    Controller PerspectiveCamera
+        Id 0
+        Size 2
+    End
+End
+
+# Sphere
+Object
+    Position 0 0 4
+    #Rotation 0 0 0
+    #Scale 1 1 1
+    
+    Mesh /test.stl
+    Controller Transform Empty
+    Controller MeshRenderer Empty
+    Controller ProgramEntrypoint+Movement2DController Empty
+End
