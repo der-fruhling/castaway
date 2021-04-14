@@ -32,7 +32,7 @@ namespace Castaway.Render
         /// <summary>
         /// Gets all vertices.
         /// </summary>
-        public abstract Vertex[] Vertices { get; }
+        public abstract Vertex[] Vertices { get; set; }
 
         /// <summary>
         /// Adds a new Vertex to the buffer.

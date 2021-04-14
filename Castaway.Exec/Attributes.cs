@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Castaway.Assets;
 using Castaway.Core;
+using Castaway.Mesh;
 using Castaway.Render;
 
 namespace Castaway.Exec
@@ -12,7 +13,8 @@ namespace Castaway.Exec
     public enum CModule
     {
         Render,
-        Assets
+        Assets,
+        Mesh
     }
 
     /// <summary>
@@ -52,6 +54,9 @@ namespace Castaway.Exec
                     break;
                 case CModule.Render:
                     Modules.Use<RenderModule>();
+                    break;
+                case CModule.Mesh:
+                    Modules.Use<MeshModule>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(lm), lm, null);

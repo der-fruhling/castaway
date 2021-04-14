@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Castaway.Native;
 
 namespace Castaway.Render
@@ -11,9 +12,13 @@ namespace Castaway.Render
     [Obsolete, SuppressMessage("ReSharper", "InconsistentNaming")]
     public class GLVertexBuffer : VertexBuffer
     {
-        private readonly List<Vertex> _vertices = new List<Vertex>();
+        private List<Vertex> _vertices = new List<Vertex>();
         
-        public override Vertex[] Vertices => _vertices.ToArray();
+        public override Vertex[] Vertices
+        {
+            get => _vertices.ToArray();
+            set => _vertices = value.ToList();
+        }
 
         public void Draw()
         {

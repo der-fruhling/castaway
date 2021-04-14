@@ -13,11 +13,15 @@ namespace Castaway.Render
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public unsafe class VBO : VertexBuffer
     {
-        private readonly List<Vertex> _vertices = new List<Vertex>();
+        private List<Vertex> _vertices = new List<Vertex>();
         private bool _locked = false;
 
-        public override Vertex[] Vertices => _vertices.ToArray();
-        
+        public override Vertex[] Vertices
+        {
+            get => _vertices.ToArray();
+            set => _vertices = value.ToList();
+        }
+
         /// <inheritdoc cref="VertexBuffer.Add(Castaway.Render.VertexBuffer.Vertex)"/>
         /// <exception cref="ApplicationException">Thrown if this VBO is
         /// locked by <see cref="Lock"/>.</exception>
@@ -28,8 +32,8 @@ namespace Castaway.Render
         }
 
         public void Lock() => _locked = true;
-        
-        private void Setup()
+
+        public void Setup()
         {
             var size = ShaderManager.ActiveHandle.Attributes.Aggregate(0, (c, a) => c + a.Value switch
                 {
