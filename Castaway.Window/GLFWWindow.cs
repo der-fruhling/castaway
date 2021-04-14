@@ -52,12 +52,19 @@ namespace Castaway.Window
             set => glfwSetWindowShouldClose(GLFW, value ? 1 : 0);
         }
 
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+        private GLFWKeyCallback _keyCallback;
+        
         /// <summary>
         /// Sets the key callback for this window.
         /// </summary>
         public GLFWKeyCallback KeyCallback
         {
-            set => glfwSetKeyCallback(GLFW, value);
+            set
+            {
+                glfwSetKeyCallback(GLFW, value);
+                _keyCallback = value;
+            }
         }
 
         /// <summary>
