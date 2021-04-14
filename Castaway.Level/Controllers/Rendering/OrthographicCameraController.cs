@@ -1,15 +1,19 @@
+using System.Diagnostics.CodeAnalysis;
 using Castaway.Core;
 using Castaway.Math;
 using Castaway.Render;
 using Castaway.Window;
 
-namespace Castaway.Level.Controllers.Rendering2D
+namespace Castaway.Level.Controllers.Rendering
 {
     [ControllerInfo(Name = "Orthographic Camera")]
+    [SuppressMessage("ReSharper", "ConvertToConstant.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class OrthographicCameraController : Controller
     {
         public readonly uint Id;
-        public float FarClip = 100f, NearClip = .01f;
+        public float FarClip = 100f;
+        public float NearClip = .01f;
         public float Size = 4f;
 
         public OrthographicCameraController(uint id)
@@ -50,7 +54,7 @@ namespace Castaway.Level.Controllers.Rendering2D
             });
             
             ShaderManager.ActiveHandle.SetTView(
-                Matrix4.Translate(parent.Position));
+                Matrix4.Translate(parent.Position) * Matrix4.Rotate(parent.Rotation));
         }
     }
 }

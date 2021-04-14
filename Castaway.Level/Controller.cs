@@ -1,4 +1,4 @@
-using Castaway.Level.Controllers.Rendering2D;
+using Castaway.Level.Controllers.Rendering;
 
 namespace Castaway.Level
 {
@@ -12,7 +12,7 @@ namespace Castaway.Level
         // ReSharper disable InconsistentNaming
         protected Level level => parent.Level;
         protected LevelObject parent => _parent.Object;
-        protected Transform2DController transform2d => parent.Get<Transform2DController>();
+        protected TransformController transform2d => parent.Get<TransformController>();
         // ReSharper restore InconsistentNaming
 
         /// <summary>

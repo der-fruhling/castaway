@@ -1,10 +1,10 @@
 using static Castaway.Math.Matrix4;
 using static Castaway.Render.ShaderManager;
 
-namespace Castaway.Level.Controllers.Rendering2D
+namespace Castaway.Level.Controllers.Rendering
 {
     [ControllerInfo(Name = "Transform [2D]")]
-    public class Transform2DController : Controller
+    public class TransformController : Controller
     {
         public override void PreOnDraw()
         {
