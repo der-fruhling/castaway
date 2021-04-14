@@ -28,6 +28,8 @@ namespace Castaway.Render
             var view = "";
             var projection = "";
 
+            var properties = new Dictionary<string, string>();
+
             var lines = confSrc.Split('\n');
             foreach (var line in lines)
             {
@@ -60,12 +62,18 @@ namespace Castaway.Render
                                     $"Cannot set transform matrix {cmdParts[1]} to {cmdParts[3]}");
                         }
                         break;
+                    case "use" when cmdParts.Length == 4 && cmdParts[2] == "as":
+                        properties[cmdParts[3]] = cmdParts[1];
+                        break;
+                    case "set" when cmdParts.Length == 4 && cmdParts[2] == "=":
+                        properties[cmdParts[1]] = cmdParts[3];
+                        break;
                     default:
                         throw new InvalidOperationException($"Couldn't process config: Invalid line `{line}`");
                 }
             }
 
-            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc, model, view, projection);
+            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc, model, view, projection, properties);
         }
     }
 }

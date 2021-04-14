@@ -18,6 +18,7 @@ namespace Castaway.Render
         private readonly string _model;
         private readonly string _view;
         private readonly string _projection;
+        private readonly Dictionary<string, string> _properties;
 
         internal LoadedShader(
             Dictionary<string, VertexAttribInfo.AttribValue> vertAttrs, 
@@ -26,7 +27,8 @@ namespace Castaway.Render
             string fragSrc,
             string model,
             string view,
-            string projection)
+            string projection,
+            Dictionary<string, string> properties)
         {
             _vertAttrs = vertAttrs;
             _fragOutputs = fragOutputs;
@@ -35,6 +37,7 @@ namespace Castaway.Render
             _model = model;
             _view = view;
             _projection = projection;
+            _properties = properties;
         }
 
         /// <summary>
@@ -64,6 +67,10 @@ namespace Castaway.Render
             program.SetTModel(Matrix4.Identity);
             program.SetTView(Matrix4.Identity);
             program.SetTProjection(Matrix4.Identity);
+            foreach (var (k, v) in _properties)
+            {
+                program.Properties[k] = v;
+            }
 
             return program;
         }

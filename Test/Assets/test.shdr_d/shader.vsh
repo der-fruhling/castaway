@@ -2,8 +2,11 @@
 
 in vec3 inPosition;
 in vec4 inColor;
+in vec3 inNormal;
 
 out vec4 color;
+out vec3 normal;
+out vec3 fragPos;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -13,4 +16,6 @@ void main()
 {
     gl_Position = proj * view * model * vec4(inPosition, 1);
     color = inColor;
+    normal = mat3(transpose(inverse(model))) * inNormal;
+    fragPos = vec3(model * vec4(inPosition, 1));
 }

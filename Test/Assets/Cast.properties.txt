@@ -1,3 +1,4 @@
 DefaultWindowWidth=800
 DefaultWindowHeight=600
 WindowTitle=Meow meow
+EnableDepth=true

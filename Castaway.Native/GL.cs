@@ -66,6 +66,8 @@ namespace Castaway.Native
 
         public const uint COMPILE_STATUS = 0x8B81;
         
+        public const uint DEPTH_TEST = 0x0B71;
+        
         #endregion
         
         #region Delegates
@@ -352,6 +354,18 @@ namespace Castaway.Native
             return a;
         }
 
+        public static void Enable(uint c)
+        {
+            Fn<uint1>("glEnable")(c);
+            CheckError();
+        }
+
+        public static void Disable(uint c)
+        {
+            Fn<uint1>("glDisable")(c);
+            CheckError();
+        }
+
         // GetError should NOT check for errors after it executes, because
         // that would be a recursive loop.
         public static uint GetError() => Fn<create0>("glGetError")();
@@ -363,7 +377,7 @@ namespace Castaway.Native
             var e = GetError();
             if (e != 0)
             {
-                /*throw new ApplicationException*/ Console.WriteLine($"OpenGL Error {e} ({Marshal.PtrToStringAnsi(gluErrorString(e))})");
+                throw new ApplicationException($"OpenGL Error {e} ({Marshal.PtrToStringAnsi(gluErrorString(e))})");
             }
         }
         

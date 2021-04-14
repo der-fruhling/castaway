@@ -73,6 +73,8 @@ namespace Castaway.Render
         internal readonly VertexAttribInfo[] Attributes;
         public int TModel = -1, TView = -1, TProjection = -1;
 
+        public readonly Dictionary<string, string> Properties = new Dictionary<string, string>();
+
         internal ShaderHandle(uint index, uint glProgram, uint glFrag, uint glVert, VertexAttribInfo[] attributes)
         {
             Index = index;
@@ -376,6 +378,7 @@ namespace Castaway.Render
             for (var i = 0; i < handle.Attributes.Length; i++)
             {
                 var attr = GL.GetAttributeLocation(handle.GLProgram, handle.Attributes[i].Name);
+                if (attr == -1) continue;
                 GL.SetAttribPointer(attr, sizes[i], GL.FLOAT, 0, 
                     (uint) (all * sizeof(float)),
                     (ulong) (i == 0 ? 0 : sizes[..i].Aggregate((a, b) => a + b) * sizeof(float)));

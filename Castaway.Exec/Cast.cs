@@ -30,6 +30,7 @@ namespace Castaway.Exec
             DefaultWindowHeight,
             WindowTitle,
             Fullscreen,
+            EnableDepth
         }
 
         /// <summary>
@@ -68,7 +69,8 @@ namespace Castaway.Exec
             {
                 [DefaultWindowWidth] = new Settings(PropertyReaders.Int32),
                 [DefaultWindowHeight] = new Settings(PropertyReaders.Int32),
-                [WindowTitle] = new Settings(PropertyReaders.String)
+                [WindowTitle] = new Settings(PropertyReaders.String),
+                [EnableDepth] = new Settings(PropertyReaders.Bool)
             };
             Properties = new Properties<CastProperty>(settings);
             PropertiesAsset = AssetManager.Index("/Cast.properties.txt");
@@ -110,10 +112,18 @@ namespace Castaway.Exec
             {
                 Events.PreInit += SetupProperties;
                 Events.PreInit += SetupWindow;
-                Events.CloseNormally += GLFW.glfwTerminate;
-                Events.PreDraw += () =>
+                Events.PreInit += () =>
                 {
-                    GL.Clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+                    if (Properties!.Get<bool>(EnableDepth))
+                        GL.Enable(GL.DEPTH_TEST);
+                    Events.CloseNormally += GLFW.glfwTerminate;
+                    Events.PreDraw += () =>
+                    {
+                        GL.Clear(
+                            Properties!.Get<bool>(EnableDepth)
+                                ? GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT
+                                : GL.COLOR_BUFFER_BIT);
+                    };
                 };
                 Events.Loop();
             });

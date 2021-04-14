@@ -58,6 +58,13 @@ namespace Castaway.Levels.Controllers.Rendering
             
             ShaderManager.ActiveHandle.SetTView(
                 Matrix4.Translate(parent.Position) * Matrix4.Rotate(parent.Rotation));
+            
+            if (ShaderManager.ActiveHandle.Properties.ContainsKey("ViewPosition"))
+            {
+                var vname = ShaderManager.ActiveHandle.Properties["ViewPosition"];
+                var p = parent.Position;
+                ShaderManager.SetUniform(ShaderManager.ActiveHandle, vname, p.X, p.Y, p.Z);
+            }
         }
     }
 }

@@ -142,6 +142,8 @@ namespace Castaway.Assets
         /// match.</exception>
         public T Get<T>(TEnum e)
         {
+            if (!_values.ContainsKey(e))
+                return default;
             var o = _values[e];
             CheckValid(e);
             if (o.GetType() != typeof(T))

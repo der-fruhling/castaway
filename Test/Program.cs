@@ -65,6 +65,7 @@ internal class ProgramEntrypoint
         
         // Activates the shader.
         _shaderHandle.Use();
+        ShaderManager.SetUniform(_shaderHandle, "lightPos", 0f, 0, 0);
 
         _level = Get<Level>(Index("/test.lvl"));
         if (_level == null) throw new ApplicationException("Failed to load level");
