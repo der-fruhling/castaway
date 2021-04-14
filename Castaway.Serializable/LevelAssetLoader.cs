@@ -14,9 +14,10 @@ namespace Castaway.Serializable
 {
     public class LevelAssetLoader : IAssetLoader
     {
-        private static readonly IEnumerable<Type> _types = 
+        private static readonly IEnumerable<Type> ControllerTypes = 
             AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
-                .Concat(CastawayCore.StartupAssembly.GetTypes());
+                .Concat(CastawayCore.StartupAssembly.GetTypes())
+                .Where(t => t.BaseType == typeof(Controller));
         
         public IEnumerable<string> FileExtensions { get; } = new[] {"lvl"};
         
@@ -157,7 +158,7 @@ namespace Castaway.Serializable
         {
             try
             {
-                return (Controller) Activator.CreateInstance(_types.First(t =>
+                return (Controller) Activator.CreateInstance(ControllerTypes.First(t =>
                     t.FullName == name ||
                     t.FullName == $"Castaway.Levels.Controllers.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Rendering.{name}Controller" ||
