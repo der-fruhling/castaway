@@ -10,7 +10,7 @@ namespace Castaway.Levels.Controllers.Rendering
         {
             base.PreOnDraw();
             
-            var m = Translate(parent.Position) * Scale(parent.Scale) * Rotate(parent.Rotation);
+            var m = Translate(parent.Position) * Scale(parent.Scale) * RotateDeg(parent.Rotation);
             ActiveHandle.SetTModel(m);
         }
 

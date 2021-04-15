@@ -55,8 +55,7 @@ namespace Castaway.Levels.Controllers.Rendering
                 L = -((FarClip + NearClip) / (FarClip - NearClip)),
             });
             
-            ShaderManager.ActiveHandle.SetTView(
-                Matrix4.Translate(parent.Position) * Matrix4.Rotate(parent.Rotation));
+            ShaderManager.ActiveHandle.SetTView(Matrix4.RotateDeg(parent.Rotation) * Matrix4.Translate(parent.Position));
 
             if (ShaderManager.ActiveHandle.Properties.ContainsKey("ViewPosition"))
             {
