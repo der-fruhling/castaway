@@ -123,6 +123,9 @@ namespace Castaway.Math
             => new Vector3(a.X * b, a.Y * b, a.Z * b);
         public static Vector3 operator /(Vector3 a, float b)
             => new Vector3(a.X / b, a.Y / b, a.Z / b);
+
+        public static Vector3 operator -(Vector3 a)
+            => new Vector3(-a.X, -a.Y, -a.Z);
     }
 
     public class Vector4 : Vector
