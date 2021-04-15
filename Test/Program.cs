@@ -3,6 +3,7 @@ using Castaway.Core;
 using Castaway.Exec;
 using Castaway.Input;
 using Castaway.Levels;
+using Castaway.Math;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 
@@ -10,16 +11,26 @@ using static Castaway.Assets.AssetManager;
 [Entrypoint]
 internal class ProgramEntrypoint
 {
-    private class Movement2DController : Controller
+    private class MovementController : Controller
     {
         public override void OnUpdate()
         {
             base.OnUpdate();
             const float speed = .05f;
-            if (InputSystem.Keyboard.IsPressed(Keys.W)) parent.Position.Y += speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.S)) parent.Position.Y -= speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.D)) parent.Position.X += speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.A)) parent.Position.X -= speed;
+            const float lookSpeed = 1f;
+
+            var movement = Vector3.Zero;
+            if (InputSystem.Keyboard.IsPressed(Keys.W)) movement.Z += speed;
+            if (InputSystem.Keyboard.IsPressed(Keys.S)) movement.Z -= speed;
+            if (InputSystem.Keyboard.IsPressed(Keys.D)) movement.X += speed;
+            if (InputSystem.Keyboard.IsPressed(Keys.A)) movement.X -= speed;
+
+            if (InputSystem.Keyboard.IsPressed(Keys.Up))    parent.Rotation.X += lookSpeed;
+            if (InputSystem.Keyboard.IsPressed(Keys.Down))  parent.Rotation.X -= lookSpeed;
+            if (InputSystem.Keyboard.IsPressed(Keys.Left))  parent.Rotation.Y += lookSpeed;
+            if (InputSystem.Keyboard.IsPressed(Keys.Right)) parent.Rotation.Y -= lookSpeed;
+
+            parent.Position += Matrix4.RotateDeg(-parent.Rotation) * -movement;
         }
     }
 

@@ -18,16 +18,16 @@ Object
 		Id ${Camera}
 		Size 2
 	End
+	Controller ProgramEntrypoint+MovementController Empty
 End
 
 # Sphere
 Object
-	Position 0 0 4
+	Position -1 0 4
 	#Rotation 0 0 0
 	#Scale 1 1 1
 	
 	Mesh /test.stl
 	Controller Transform Empty
 	Controller MeshRenderer Empty
-	Controller ProgramEntrypoint+Movement2DController Empty
 End
