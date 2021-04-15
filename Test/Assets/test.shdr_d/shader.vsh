@@ -12,10 +12,18 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
+bool first = false;
+mat4 lastModel = mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+mat4 tiModel = mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 void main()
 {
+    if(model != lastModel) {
+        tiModel = transpose(inverse(model));
+        lastModel = model;
+    }
     gl_Position = proj * view * model * vec4(inPosition, 1);
     color = inColor;
-    normal = mat3(transpose(inverse(model))) * inNormal;
+    normal = mat3(tiModel) * inNormal;
     fragPos = vec3(model * vec4(inPosition, 1));
 }

@@ -199,5 +199,13 @@ namespace Castaway.Math
                               $"{I},{J},{K},{L}\n" +
                               $"{M},{N},{O},{P}");
         }
+
+        public Matrix4 Transpose() => new Matrix4(new[]
+        {
+            A,E,I,M,
+            B,F,J,N,
+            C,G,K,O,
+            D,H,L,P
+        });
     }
 }
