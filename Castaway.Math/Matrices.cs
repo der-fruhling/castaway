@@ -185,12 +185,12 @@ namespace Castaway.Math
         public static Matrix4 RotateZ(float x) => 
             new Matrix4(Identity.Array) {A = Cos(x), B = -Sin(x), E = Sin(x), F = Cos(x)};
 
-        public static Matrix4 Rotate(Vector3 v) => RotateX(v.X) * RotateY(v.Y) * RotateZ(v.Z);
+        public static Matrix4 Rotate(Vector3 v) => RotateZ(v.Z) * RotateY(v.Y) * RotateX(v.X);
 
         public static Matrix4 RotateXDeg(float x) => RotateX(x * (PI / 180f));
         public static Matrix4 RotateYDeg(float x) => RotateY(x * (PI / 180f));
         public static Matrix4 RotateZDeg(float x) => RotateZ(x * (PI / 180f));
-        public static Matrix4 RotateDeg(Vector3 v) => RotateXDeg(v.X) * RotateYDeg(v.Y) * RotateZDeg(v.Z);
+        public static Matrix4 RotateDeg(Vector3 v) => RotateZDeg(v.Z) * RotateYDeg(v.Y) * RotateXDeg(v.X);
 
         public void Print()
         {
