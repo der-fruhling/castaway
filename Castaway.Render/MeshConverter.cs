@@ -25,7 +25,7 @@ namespace Castaway.Render
                 vertices.Add(new VertexBuffer.Vertex(
                     p ?? Vector3.Zero, 
                     n ?? Vector3.Zero, 
-                    t ?? Vector3.Zero,
+                    t ?? Vector2.Zero,
                     color ?? new Vector4(1, 1, 1, 1)));
             }
 

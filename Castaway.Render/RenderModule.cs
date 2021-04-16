@@ -13,6 +13,7 @@ namespace Castaway.Render
         {
             base.Start();
             AssetManager.CreateAssetLoader(new GLSLShaderAssetLoader());
+            AssetManager.CreateAssetLoader(new Texture.Loader());
         }
     }
 }

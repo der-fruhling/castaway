@@ -7,8 +7,11 @@ using System.Text.RegularExpressions;
 using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Levels;
+using Castaway.Levels.Controllers.Rendering;
 using Castaway.Levels.Controllers.Storage;
 using Castaway.Math;
+using Castaway.Render;
+using static Castaway.Assets.AssetManager;
 
 namespace Castaway.Serializable
 {
@@ -106,6 +109,16 @@ namespace Castaway.Serializable
                     case "Mesh" when parts.Length == 2:
                         obj.Add(new MeshLoaderController {Asset = parts[1]});
                         break;
+                    case "Texture" when parts.Length == 3 && parts[2] == "Empty":
+                        obj.Add(new TextureController {Texture = Get<Texture>(Index(parts[1]))});
+                        break;
+                    case "Texture" when parts.Length == 2:
+                    {
+                        Controller c = new TextureController {Texture = Get<Texture>(Index(parts[1]))};
+                        ReadController(ref c, lines);
+                        obj.Add(c);
+                        break;
+                    }
                     case "End" when parts.Length == 1:
                         return;
                     default:
@@ -149,6 +162,7 @@ namespace Castaway.Serializable
                 if (t == typeof(double)) value  = double.Parse(parts[1]);
                 if (t == typeof(string) && parts[1].StartsWith('"') && parts[1].EndsWith('"'))
                     value = Regex.Unescape(parts[1][1..^1]);
+                if (t == typeof(bool)) value    = bool.Parse(parts[1]);
 
                 switch (setting.MemberType)
                 {

@@ -3,6 +3,7 @@
 in vec4 color;
 in vec3 normal;
 in vec3 fragPos;
+in vec2 texCoords;
 
 out vec4 outColor;
 
@@ -18,6 +19,8 @@ struct Material
 };
 
 uniform Material material;
+uniform sampler2D tex;
+uniform bool shouldTexture;
 
 void main()
 {
@@ -36,5 +39,6 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0), material.specularExp);
     vec3 specular = specularStrength * spec * material.specular;
     
-    outColor = vec4(ambient + diffuse + specular, 1) * color;
+    outColor = vec4(ambient + diffuse + specular, 1) *
+        ((shouldTexture ? texture(tex, texCoords) : vec4(1, 1, 1, 1)) * color);
 }

@@ -17,7 +17,7 @@ namespace Castaway.Mesh
         public Material Material = new Material();
         
         private readonly List<Vector3> vertices = new List<Vector3>();
-        private readonly List<Vector3> textures = new List<Vector3>();
+        private readonly List<Vector2> textures = new List<Vector2>();
         private readonly List<Vector3> normals = new List<Vector3>();
         
         public void Load(byte[] input, string path)
@@ -53,10 +53,8 @@ namespace Castaway.Mesh
                             throw new ApplicationException($"Invalid OBJ file: {parts}");
                         if (!float.TryParse(parts[2], out var y))
                             throw new ApplicationException($"Invalid OBJ file: {parts}");
-                        if (parts.Length <= 3 || !float.TryParse(parts[3], out var z))
-                            z = 0;
                         
-                        textures.Add(new Vector3(x, y, z));
+                        textures.Add(new Vector2(x, y));
                         break;
                     }
                     case "vn":
@@ -174,7 +172,7 @@ namespace Castaway.Mesh
                 _vertices.Add(new CompleteVertex
                 {
                     Pos = vertices[int.Parse(p[0]) - 1],
-                    Tex = Vector3.Zero,
+                    Tex = Vector2.Zero,
                     Norm = Vector3.Zero,
                 });
             }
@@ -194,7 +192,7 @@ namespace Castaway.Mesh
                 _vertices.Add(new CompleteVertex
                 {
                     Pos = vertices[int.Parse(p[0]) - 1],
-                    Tex = Vector3.Zero,
+                    Tex = Vector2.Zero,
                     Norm = normals[int.Parse(p[1]) - 1],
                 });
             }

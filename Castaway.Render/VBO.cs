@@ -41,7 +41,7 @@ namespace Castaway.Render
                     VertexAttribInfo.AttribValue.Position => 3,
                     VertexAttribInfo.AttribValue.Color => 4,
                     VertexAttribInfo.AttribValue.Normal => 3,
-                    VertexAttribInfo.AttribValue.Texture => 3,
+                    VertexAttribInfo.AttribValue.Texture => 2,
                     _ => throw new ArgumentOutOfRangeException()
                 });
             var vbo = new float[size * _vertices.Count];
@@ -71,7 +71,6 @@ namespace Castaway.Render
                         case VertexAttribInfo.AttribValue.Texture:
                             vbo[j++] = v.Texture.X;
                             vbo[j++] = v.Texture.Y;
-                            vbo[j++] = v.Texture.Z;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

@@ -3,10 +3,12 @@
 in vec3 inPosition;
 in vec4 inColor;
 in vec3 inNormal;
+in vec2 inTexCoords;
 
 out vec4 color;
 out vec3 normal;
 out vec3 fragPos;
+out vec2 texCoords;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -24,5 +26,6 @@ void main()
     gl_Position = proj * view * model * vec4(inPosition, 1);
     color = inColor;
     normal = mat3(tiModel) * inNormal;
+    texCoords = inTexCoords;
     fragPos = vec3(model * vec4(inPosition, 1));
 }

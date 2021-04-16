@@ -67,6 +67,22 @@ namespace Castaway.Native
         public const uint COMPILE_STATUS = 0x8B81;
         
         public const uint DEPTH_TEST = 0x0B71;
+
+        public const uint TEXTURE_2D = 0x0DE1;
+        public const uint REPEAT = 0x2901;
+        public const uint MIRRORED_REPEAT = 0x8370;
+        public const uint CLAMP_TO_EDGE = 0x812F;
+        public const uint CLAMP_TO_BORDER = 0x812D;
+        public const uint TEXTURE_WRAP_S = 0x2802;
+        public const uint TEXTURE_WRAP_T = 0x2803;
+        public const uint NEAREST = 0x2600;
+        public const uint LINEAR = 0x2601;
+        public const uint TEXTURE_MIN_FILTER = 0x2801;
+        public const uint TEXTURE_MAG_FILTER = 0x2800;
+        public const uint RGB = 0x1907;
+        public const uint RGBA = 0x1908;
+        public const uint TEXTURE0 = 0x84C0;
+        public const uint TEXTURE31 = 0x84DF;
         
         #endregion
         
@@ -113,10 +129,16 @@ namespace Castaway.Native
         private delegate void uniform4i(int l, int a, int b, int c, int d);
         private delegate void uniformMf(int l, uint c, bool t, float* v);
         private delegate int getUniformLocation(uint p, [MarshalAs(LPStr)] string name);
+
+        private delegate void texParameterf(uint t, uint n, float p);
+        private delegate void texParameteri(uint t, uint n, int p);
+        private delegate void texImage2D(uint t, int l, uint i, uint w, uint h, int b, uint f, uint t1, void* d);
         
         #endregion
         
         #region Functions
+        
+        #region Old OpenGL Drawing
         
         public static void Begin(uint a)
         {
@@ -171,6 +193,7 @@ namespace Castaway.Native
             Fn<float3>("glTexCoord3f")(x, y, z);
             CheckError();
         }
+        #endregion
 
         public static void Clear(uint a)
         {
@@ -178,6 +201,8 @@ namespace Castaway.Native
             CheckError();
         }
 
+        #region Buffers
+        
         public static void GenBuffers(uint c, uint* p)
         {
             Fn<gen>("glGenBuffers")(c, p);
@@ -195,6 +220,8 @@ namespace Castaway.Native
             Fn<bufferData>("glBufferData")(p, s, d, m);
             CheckError();
         }
+        
+        #endregion
 
         public static void DrawArrays(uint m, int f, uint c)
         {
@@ -202,6 +229,9 @@ namespace Castaway.Native
             CheckError();
         }
 
+        #region Shaders
+        
+        #region Create / Delete
         public static uint CreateShader(uint m)
         {
             var a = Fn<create1>("glCreateShader")(m);
@@ -214,6 +244,7 @@ namespace Castaway.Native
             Fn<uint1>("glDeleteShader")(s);
             CheckError();
         }
+        #endregion
 
         public static void ShaderSource(uint s, uint c, IntPtr* src, uint* len)
         {
@@ -238,7 +269,12 @@ namespace Castaway.Native
             Fn<getInfoLog>("glGetShaderInfoLog")(s, l, ol, log);
             CheckError();
         }
+        
+        #endregion
 
+        #region Programs
+        
+        #region Create / Delete
         public static uint CreateProgram()
         {
             var a = Fn<create0>("glCreateProgram")();
@@ -251,7 +287,9 @@ namespace Castaway.Native
             Fn<uint1>("glDeleteProgram")(p);
             CheckError();
         }
+        #endregion
 
+        #region Attach / Detach
         public static void AttachToProgram(uint p, uint s)
         {
             Fn<uint2>("glAttachShader")(p, s);
@@ -263,7 +301,9 @@ namespace Castaway.Native
             Fn<uint2>("glDetachShader")(p, s);
             CheckError();
         }
+        #endregion
 
+        #region Link / Use
         public static void LinkProgram(uint p)
         {
             Fn<uint1>("glLinkProgram")(p);
@@ -275,19 +315,21 @@ namespace Castaway.Native
             Fn<uint1>("glUseProgram")(p);
             CheckError();
         }
+        #endregion
         
         public static void GetProgramInfo(uint p, uint l, uint* ol, IntPtr log)
         {
             Fn<getInfoLog>("glGetProgramInfoLog")(p, l, ol, log);
             CheckError();
         }
-
+        
         public static void BindFragLocation(uint p, uint o, string name)
         {
             Fn<bindFragDataLocation>("glBindFragDataLocation")(p, o, name);
             CheckError();
         }
 
+        #region Attributes
         public static int GetAttributeLocation(uint p, string name)
         {
             var a = Fn<getAttribLocation>("glGetAttribLocation")(p, name);
@@ -306,6 +348,7 @@ namespace Castaway.Native
             Fn<int1>("glEnableVertexAttribArray")(a);
             CheckError();
         }
+        #endregion
 
         public static bool IsProgram(uint o)
         {
@@ -314,6 +357,7 @@ namespace Castaway.Native
             return a;
         }
 
+        #region Uniforms
         public static void SetUniform(int l, params float[] data)
         {
             if (data.Length > 4) throw new ApplicationException("Too many parameters. (max: 4)");
@@ -353,21 +397,63 @@ namespace Castaway.Native
             CheckError();
             return a;
         }
+        #endregion
+        
+        #endregion
+
+        #region Enable / Disable
 
         public static void Enable(uint c)
+                {
+                    Fn<uint1>("glEnable")(c);
+                    CheckError();
+                }
+        
+                public static void Disable(uint c)
+                {
+                    Fn<uint1>("glDisable")(c);
+                    CheckError();
+                }
+
+        #endregion
+
+        #region Textures
+        
+        public static void GenTextures(uint count, uint* output)
         {
-            Fn<uint1>("glEnable")(c);
+            Fn<gen>("glGenTextures")(count, output);
+            CheckError();
+        }
+        
+        public static void BindTexture(uint mode, uint texture)
+        {
+            Fn<uint2>("glBindTexture")(mode, texture);
             CheckError();
         }
 
-        public static void Disable(uint c)
+        public static void TextureParam(uint target, uint name, float param)
         {
-            Fn<uint1>("glDisable")(c);
+            Fn<texParameterf>("glTexParameterf")(target, name, param);
             CheckError();
         }
 
-        // GetError should NOT check for errors after it executes, because
-        // that would be a recursive loop.
+        public static void TextureParam(uint target, uint name, int param)
+        {
+            Fn<texParameteri>("glTexParameteri")(target, name, param);
+            CheckError();
+        }
+
+        public static void LoadTexture2D(uint target, int level, uint internalFormat, uint width, uint height, int border,
+            uint format, uint type, void* data)
+        {
+            Fn<texImage2D>("glTexImage2D")(
+                target, level, internalFormat, width, height, border,
+                format, type, data);
+            CheckError();
+        }
+
+        #endregion
+
         public static uint GetError() => Fn<create0>("glGetError")();
         
         #region Helpers

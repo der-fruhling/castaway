@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Castaway.Math;
 using Castaway.Mesh;
 using Castaway.Native;
+using static Castaway.Render.VertexAttribInfo;
 using static Castaway.Render.VertexAttribInfo.AttribValue;
 
 namespace Castaway.Render
@@ -14,7 +15,7 @@ namespace Castaway.Render
     /// Structure containing information about attributes passed down to vertex
     /// shaders.
     /// </summary>
-    /// <seealso cref="AttribValue"/>
+    /// <seealso cref="VertexAttribInfo.AttribValue"/>
     /// <seealso cref="ShaderHandle"/>
     public struct VertexAttribInfo
     {
@@ -94,10 +95,6 @@ namespace Castaway.Render
         /// <seealso cref="ShaderManager.Destroy"/>
         public void Destroy() => ShaderManager.Destroy(this);
         
-        /// <seealso cref="ShaderManager.BindFragmentLocation"/>
-        public void BindFragmentLocation(uint location, string name) =>
-            ShaderManager.BindFragmentLocation(this, location, name);
-        
         /// <seealso cref="ShaderManager.FinishLinkingProgram"/>
         public void Finish() => ShaderManager.FinishLinkingProgram(GLProgram);
 
@@ -153,20 +150,25 @@ namespace Castaway.Render
         public void SetMaterial(Material material)
         {
             if (Properties.ContainsKey("Materials.Ambient"))
-                ShaderManager.SetUniform(this, Properties["Materials.Ambient"], material.Ambient);
+                this.SetUniform(Properties["Materials.Ambient"], material.Ambient);
             if (Properties.ContainsKey("Materials.Diffuse"))
-                ShaderManager.SetUniform(this, Properties["Materials.Diffuse"], material.Diffuse);
+                this.SetUniform(Properties["Materials.Diffuse"], material.Diffuse);
             if (Properties.ContainsKey("Materials.Specular"))
-                ShaderManager.SetUniform(this, Properties["Materials.Specular"], material.Specular);
+                this.SetUniform(Properties["Materials.Specular"], material.Specular);
             if (Properties.ContainsKey("Materials.SpecularExp"))
-                ShaderManager.SetUniform(this, Properties["Materials.SpecularExp"], material.SpecularExponent);
+                this.SetUniform(Properties["Materials.SpecularExp"], material.SpecularExponent);
             if (Properties.ContainsKey("Materials.Dissolve"))
-                ShaderManager.SetUniform(this, Properties["Materials.Dissolve"], material.Dissolve);
+                this.SetUniform(Properties["Materials.Dissolve"], material.Dissolve);
             if (Properties.ContainsKey("Materials.IOR"))
-                ShaderManager.SetUniform(this, Properties["Materials.IOR"], material.IndexOfRefraction);
+                this.SetUniform(Properties["Materials.IOR"], material.IndexOfRefraction);
             if (Properties.ContainsKey("Materials.LightMode"))
-                ShaderManager.SetUniform(this, Properties["Materials.LightMode"], (int)material.Mode);
+                this.SetUniform(Properties["Materials.LightMode"], (int)material.Mode);
         }
+
+        public void SetProperty(string name, params float[] floats) => this.SetUniform(Properties[name], floats);
+        public void SetProperty(string name, params int[] ints) => this.SetUniform(Properties[name], ints);
+        public void SetProperty(string name, Vector vector) => this.SetUniform(Properties[name], vector);
+        public void SetProperty(string name, Matrix4 matrix4) => this.SetUniform(Properties[name], matrix4);
     }
     
     /// <summary>
@@ -389,7 +391,7 @@ namespace Castaway.Render
                     Position => 3,
                     Color => 4,
                     Normal => 3,
-                    Texture => 3,
+                    AttribValue.Texture => 2,
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -411,13 +413,13 @@ namespace Castaway.Render
         /// <param name="handle">Handle of the shader with the uniform.</param>
         /// <param name="name">Name of the uniform variable.</param>
         /// <param name="floats">1..4 floats.</param>
-        public static void SetUniform(ShaderHandle handle, string name, params float[] floats)
+        public static void SetUniform(this ShaderHandle handle, string name, params float[] floats)
         {
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
             GL.SetUniform(loc, floats);
         }
 
-        public static void SetUniform(ShaderHandle handle, string name, Vector vector)
+        public static void SetUniform(this ShaderHandle handle, string name, Vector vector)
             => SetUniform(handle, name, vector.Array);
         
         /// <summary>
@@ -426,7 +428,7 @@ namespace Castaway.Render
         /// <param name="handle">Handle of the shader with the uniform.</param>
         /// <param name="name">Name of the uniform variable.</param>
         /// <param name="ints">1..4 ints.</param>
-        public static void SetUniform(ShaderHandle handle, string name, params int[] ints)
+        public static void SetUniform(this ShaderHandle handle, string name, params int[] ints)
         {
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
             GL.SetUniform(loc, ints);
@@ -438,7 +440,7 @@ namespace Castaway.Render
         /// <param name="handle">Handle of the shader with the uniform.</param>
         /// <param name="name">Name of the uniform variable.</param>
         /// <param name="matrix">Matrix value.</param>
-        public static void SetUniform(ShaderHandle handle, string name, Matrix4 matrix)
+        public static void SetUniform(this ShaderHandle handle, string name, Matrix4 matrix)
         {
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
             GL.SetUniform(loc, matrix);
@@ -450,7 +452,7 @@ namespace Castaway.Render
         /// <param name="handle">Handle to bind for.</param>
         /// <param name="location">Location to bind to.</param>
         /// <param name="name">Name of the output.</param>
-        public static void BindFragmentLocation(ShaderHandle handle, uint location, string name)
+        public static void BindFragmentLocation(this ShaderHandle handle, uint location, string name)
             => GL.BindFragLocation(handle.GLProgram, location, name);
     }
 }

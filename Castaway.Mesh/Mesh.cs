@@ -11,7 +11,7 @@ namespace Castaway.Mesh
     {
         public Vector3 Pos = Vector3.Zero;
         public Vector3 Norm = Vector3.Zero;
-        public Vector3 Tex = Vector3.Zero;
+        public Vector2 Tex = Vector2.Zero;
 
         public override string ToString()
         {
@@ -32,7 +32,7 @@ namespace Castaway.Mesh
             _vertices = vertices;
         }
 
-        public void Next(out Vector3? pos, out Vector3? tex, out Vector3? norm)
+        public void Next(out Vector3? pos, out Vector2? tex, out Vector3? norm)
         {
             var v = _vertices[_i];
             pos = v.Pos;

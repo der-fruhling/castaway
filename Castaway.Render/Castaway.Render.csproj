@@ -13,4 +13,8 @@
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    </ItemGroup>
+
 </Project>
