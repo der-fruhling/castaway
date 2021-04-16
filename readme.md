@@ -12,7 +12,7 @@ JetBrains Rider).
 ### `Entrypoint`s
 
 `Entrypoint` classes are where Castaway start looking for any
-initialization code. It exists to differentiate normal classes from
+initialization code. They exist to differentiate normal classes from
 startup classes.
 
 Here's an example:
@@ -46,7 +46,8 @@ it.
 
 Events are an important part of Castaway. There are many events:
 ```c#
-class Castaway.Core.Events
+/* in Castaway.Core */
+class Events
 {
     event Init;
     event PreInit;
@@ -63,9 +64,7 @@ class Castaway.Core.Events
 ```
 
 Any of these events can be subscribed to (or unsubscribed from) at
-any time.
-
-Here's an example:
+any time. Here's an example:
 
 ```c#
 using System;
@@ -126,7 +125,10 @@ public class ReadmeTest
 Assets are also important. They store the data that your game will use.
 
 First, create a new folder called `Assets`. In that folder, create a file
-called `Asset.txt` and put `Hello, World!` in it.
+called `Asset.txt`. In that file, put:
+```text
+Hello, World!
+```
 
 Then, run this:
 ```c#
