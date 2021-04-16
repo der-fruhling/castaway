@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Castaway.Core;
 using Castaway.Math;
+using Castaway.Native;
 using Castaway.Render;
 using Castaway.Window;
 
@@ -15,6 +16,7 @@ namespace Castaway.Levels.Controllers.Rendering
         public float FarClip = 100f;
         public float NearClip = .01f;
         public float Size = 4f;
+        public Vector3 BackgroundColor = Vector3.Zero;
         
         public OrthographicCameraController() {}
 
@@ -38,6 +40,7 @@ namespace Castaway.Levels.Controllers.Rendering
         private void EventPreDraw()
         {
             if (level.CurrentCamera != Id) return;
+            GL.ClearColor(new Vector4(BackgroundColor, 1));
             GLFWWindow.Current.GetWindowSize(out var w, out var h);
 
             var r = (float) w / h * Size;

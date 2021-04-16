@@ -18,6 +18,7 @@ Object
 		Id ${Camera}
 		Size 1
 		FOV 90
+		BackgroundColor 0.019607843 0.90196078 1
 	End
 	Controller ProgramEntrypoint+MovementController Empty
 End

@@ -201,6 +201,14 @@ namespace Castaway.Native
             CheckError();
         }
 
+        public static void ClearColor(float r, float g, float b, float a)
+        {
+            Fn<float4>("glClearColor")(r, g, b, a);
+            CheckError();
+        }
+
+        public static void ClearColor(Vector4 v) => ClearColor(v.R, v.G, v.B, v.A);
+
         #region Buffers
         
         public static void GenBuffers(uint c, uint* p)
