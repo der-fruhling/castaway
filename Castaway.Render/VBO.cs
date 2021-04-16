@@ -97,6 +97,7 @@ namespace Castaway.Render
         {
             if(!_locked) Setup();
             GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
+            ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
             GL.DrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
         }
     }
