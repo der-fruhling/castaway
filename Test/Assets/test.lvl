@@ -26,7 +26,10 @@ End
 Object
 	Position -2 0 4
 	
-	Mesh /test.stl
+	Mesh /Sphere.obj
+	Texture /test.png
+		FilterNearest true
+	End
 	Controller Transform Empty
 	Controller MeshRenderer Empty
 End
