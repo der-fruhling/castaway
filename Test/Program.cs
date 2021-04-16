@@ -4,7 +4,6 @@ using Castaway.Exec;
 using Castaway.Input;
 using Castaway.Levels;
 using Castaway.Math;
-using Castaway.Mesh;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 
