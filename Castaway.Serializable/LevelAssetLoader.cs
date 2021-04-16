@@ -141,7 +141,6 @@ namespace Castaway.Serializable
                 var setting = type.GetMember(parts[0]).Single();
                 if (setting.MemberType != MemberTypes.Property && setting.MemberType != MemberTypes.Field)
                     throw new ApplicationException($"Cannot set setting {parts[0]}");
-                object value = null;
 
                 var t = setting.MemberType switch
                 {
@@ -149,20 +148,8 @@ namespace Castaway.Serializable
                     MemberTypes.Property => ((PropertyInfo)setting).PropertyType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
-                if (t == typeof(byte)) value    = byte.Parse(parts[1]);
-                if (t == typeof(short)) value   = short.Parse(parts[1]);
-                if (t == typeof(int)) value     = int.Parse(parts[1]);
-                if (t == typeof(long)) value    = long.Parse(parts[1]);
-                if (t == typeof(sbyte)) value   = sbyte.Parse(parts[1]);
-                if (t == typeof(ushort)) value  = ushort.Parse(parts[1]);
-                if (t == typeof(uint)) value    = uint.Parse(parts[1]);
-                if (t == typeof(ulong)) value   = ulong.Parse(parts[1]);
-                if (t == typeof(float)) value   = float.Parse(parts[1]);
-                if (t == typeof(double)) value  = double.Parse(parts[1]);
-                if (t == typeof(string) && parts[1].StartsWith('"') && parts[1].EndsWith('"'))
-                    value = Regex.Unescape(parts[1][1..^1]);
-                if (t == typeof(bool)) value    = bool.Parse(parts[1]);
+
+                var value = DeserializeObject(t, parts);
 
                 switch (setting.MemberType)
                 {
@@ -178,6 +165,29 @@ namespace Castaway.Serializable
             }
         }
 
+        private static object DeserializeObject(Type t, IReadOnlyList<string> parts)
+        {
+            object value;
+            if (t == typeof(byte)) value         = byte.Parse(parts[1]);
+            else if (t == typeof(short)) value   = short.Parse(parts[1]);
+            else if (t == typeof(int)) value     = int.Parse(parts[1]);
+            else if (t == typeof(long)) value    = long.Parse(parts[1]);
+            else if (t == typeof(sbyte)) value   = sbyte.Parse(parts[1]);
+            else if (t == typeof(ushort)) value  = ushort.Parse(parts[1]);
+            else if (t == typeof(uint)) value    = uint.Parse(parts[1]);
+            else if (t == typeof(ulong)) value   = ulong.Parse(parts[1]);
+            else if (t == typeof(float)) value   = float.Parse(parts[1]);
+            else if (t == typeof(double)) value  = double.Parse(parts[1]);
+            else if (t == typeof(string) && parts[1].StartsWith('"') && parts[1].EndsWith('"')) value = Regex.Unescape(parts[1][1..^1]);
+            else if (t == typeof(bool)) value    = bool.Parse(parts[1]);
+            else if (t == typeof(Vector2)) value = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
+            else if (t == typeof(Vector3)) value = new Vector3(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
+            else if (t == typeof(Vector4)) value = new Vector4(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]));
+            else if (t.IsEnum) value             = Enum.Parse(t, parts[1]);
+            else throw new ApplicationException($"Non-serializable type {t}");
+            return value;
+        }
+        
         private static Controller CreateController(string name)
         {
             try
