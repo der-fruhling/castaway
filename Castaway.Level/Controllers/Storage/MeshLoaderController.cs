@@ -11,7 +11,7 @@ namespace Castaway.Levels.Controllers.Storage
     {
         private IMesh _loaded;
         
-        public string Asset = null!;
+        public string Asset;
 
         public override IMesh Mesh
         {
@@ -25,6 +25,7 @@ namespace Castaway.Levels.Controllers.Storage
             if (Asset == null) throw new ApplicationException("Asset cannot be null.");
             
             if (Asset.EndsWith(".stl")) _loaded = AssetManager.Get<STLMesh>(AssetManager.Index(Asset));
+            else if (Asset.EndsWith(".obj")) _loaded = AssetManager.Get<OBJMesh>(AssetManager.Index(Asset));
             else throw new ApplicationException("Invalid mesh format.");
         }
     }

@@ -12,10 +12,12 @@ namespace Castaway.Levels.Controllers.Renderers
     {
         public VertexBuffer.Vertex[]? Vertices;
         private VBO _vbo = null!;
+        private IMesh _mesh;
 
         public MeshRendererController(IMesh m, Vector4? color = null)
         {
             Vertices = MeshConverter.Vertices(m, color);
+            _mesh = m;
         }
         
         public MeshRendererController() {}
@@ -35,6 +37,23 @@ namespace Castaway.Levels.Controllers.Renderers
         public override void OnDraw()
         {
             base.OnDraw();
+            if (_mesh is OBJMesh mesh)
+            {
+                ShaderManager.ActiveHandle.SetMaterial(mesh.Material);
+            }
+            else
+            {
+                ShaderManager.ActiveHandle.SetMaterial(new Material
+                {
+                    Ambient = new Vector3(1, 1, 1),
+                    Diffuse = new Vector3(1, 1, 1),
+                    Specular = new Vector3(1, 1, 1),
+                    SpecularExponent = 32,
+                    Dissolve = 1,
+                    IndexOfRefraction = 1.45f,
+                    Mode = Material.IllumMode.Highlight
+                });
+            }
             _vbo.Draw();
         }
     }

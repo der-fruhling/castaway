@@ -12,6 +12,7 @@ namespace Castaway.Mesh
         {
             base.Start();
             AssetManager.CreateAssetLoader(new STLMesh.Loader());
+            AssetManager.CreateAssetLoader(new OBJMesh.Loader());
         }
     }
 }

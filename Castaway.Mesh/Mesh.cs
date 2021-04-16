@@ -54,7 +54,8 @@ namespace Castaway.Mesh
         /// Loads this mesh from a byte array.
         /// </summary>
         /// <param name="input">Array to load from.</param>
-        public void Load(byte[] input);
+        /// <param name="path"></param>
+        public void Load(byte[] input, string path);
         
         /// <summary>
         /// Gets every <see cref="CompleteVertex"/> in this mesh.

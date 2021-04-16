@@ -14,7 +14,7 @@ namespace Castaway.Mesh
     {
         private readonly List<CompleteVertex> _vertices = new List<CompleteVertex>();
         
-        public void Load(byte[] input)
+        public void Load(byte[] input, string path)
         {
             var r = new BinaryReader(new MemoryStream(input));
             var header = r.ReadBytes(80);
@@ -49,7 +49,7 @@ namespace Castaway.Mesh
             public object LoadFile(string path)
             {
                 var m = new STLMesh();
-                m.Load(File.ReadAllBytes(path));
+                m.Load(File.ReadAllBytes(path), path);
                 return m;
             }
         }

@@ -4,6 +4,7 @@ using Castaway.Exec;
 using Castaway.Input;
 using Castaway.Levels;
 using Castaway.Math;
+using Castaway.Mesh;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 
@@ -80,7 +81,7 @@ internal class ProgramEntrypoint
 
         _level = Get<Level>(Index("/test.lvl"));
         if (_level == null) throw new ApplicationException("Failed to load level");
-        
+
         Events.CloseNormally += _level.Deactivate;
         _level.Activate();
     }

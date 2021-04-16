@@ -16,18 +16,26 @@ Object
 	
 	Controller PerspectiveCamera
 		Id ${Camera}
-		Size 2
+		Size 1
+		FOV 90
 	End
 	Controller ProgramEntrypoint+MovementController Empty
 End
 
 # Sphere
 Object
-	Position -1 0 4
-	#Rotation 0 0 0
-	#Scale 1 1 1
+	Position -2 0 4
 	
 	Mesh /test.stl
+	Controller Transform Empty
+	Controller MeshRenderer Empty
+End
+
+# Cube
+Object
+	Position 2 0 4
+	
+	Mesh /Cube.obj
 	Controller Transform Empty
 	Controller MeshRenderer Empty
 End

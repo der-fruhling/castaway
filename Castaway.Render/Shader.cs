@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Castaway.Math;
+using Castaway.Mesh;
 using Castaway.Native;
 using static Castaway.Render.VertexAttribInfo.AttribValue;
 
@@ -147,6 +148,24 @@ namespace Castaway.Render
         {
             if(TProjection == -1) return;
             GL.SetUniform(TProjection, m);
+        }
+
+        public void SetMaterial(Material material)
+        {
+            if (Properties.ContainsKey("Materials.Ambient"))
+                ShaderManager.SetUniform(this, Properties["Materials.Ambient"], material.Ambient);
+            if (Properties.ContainsKey("Materials.Diffuse"))
+                ShaderManager.SetUniform(this, Properties["Materials.Diffuse"], material.Diffuse);
+            if (Properties.ContainsKey("Materials.Specular"))
+                ShaderManager.SetUniform(this, Properties["Materials.Specular"], material.Specular);
+            if (Properties.ContainsKey("Materials.SpecularExp"))
+                ShaderManager.SetUniform(this, Properties["Materials.SpecularExp"], material.SpecularExponent);
+            if (Properties.ContainsKey("Materials.Dissolve"))
+                ShaderManager.SetUniform(this, Properties["Materials.Dissolve"], material.Dissolve);
+            if (Properties.ContainsKey("Materials.IOR"))
+                ShaderManager.SetUniform(this, Properties["Materials.IOR"], material.IndexOfRefraction);
+            if (Properties.ContainsKey("Materials.LightMode"))
+                ShaderManager.SetUniform(this, Properties["Materials.LightMode"], (int)material.Mode);
         }
     }
     
@@ -397,6 +416,9 @@ namespace Castaway.Render
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
             GL.SetUniform(loc, floats);
         }
+
+        public static void SetUniform(ShaderHandle handle, string name, Vector vector)
+            => SetUniform(handle, name, vector.Array);
         
         /// <summary>
         /// Sets a uniform value.

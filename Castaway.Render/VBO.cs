@@ -15,6 +15,7 @@ namespace Castaway.Render
     {
         private List<Vertex> _vertices = new List<Vertex>();
         private bool _locked = false;
+        private uint _buf;
 
         public override Vertex[] Vertices
         {
@@ -78,9 +79,8 @@ namespace Castaway.Render
                 }
             }
             
-            uint buf;
-            GL.GenBuffers(1, &buf);
-            GL.BindBuffer(GL.ARRAY_BUFFER, buf);
+            fixed(uint* b = &_buf) GL.GenBuffers(1, b);
+            GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
             fixed (float* p = vbo)
                 GL.BufferData(GL.ARRAY_BUFFER, (uint) (vbo.Length * sizeof(float)), p, GL.STATIC_DRAW);
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
@@ -96,6 +96,7 @@ namespace Castaway.Render
         public void Draw()
         {
             if(!_locked) Setup();
+            GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
             GL.DrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
         }
     }
