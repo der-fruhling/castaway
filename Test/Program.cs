@@ -11,8 +11,11 @@ using static Castaway.Math.Matrix4;
 [ControllerInfo(Name = "Camera Controller")]
 internal class CameraController : Controller
 {
+    private Vector3 _currentForward = null!;
+    
     public override void OnUpdate()
     {
+        _currentForward ??= parent.ForwardVector;
         base.OnUpdate();
         // Lighting.Add(new Lighting.DirectionalLightConfig(
         //     new Vector3(1, 1, 1),
@@ -32,7 +35,7 @@ internal class CameraController : Controller
             new Vector3(1, 1, 1),
             new Vector3(1, 1, 1),
             parent.Position,
-            parent.ForwardVector,
+            _currentForward = Vector3.Lerp(_currentForward, parent.ForwardVector, .15f),
             MathF.Cos(CMath.Radians(27.5f)),
             MathF.Cos(CMath.Radians(32.5f))));
     }
