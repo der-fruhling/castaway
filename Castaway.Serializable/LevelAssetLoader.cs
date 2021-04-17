@@ -61,6 +61,15 @@ namespace Castaway.Serializable
                         @ref.Object = o;
                         break;
                     }
+
+                    case "Object" when parts.Length == 2:
+                    {
+                        var @ref = level.Create(DeserializeObject(typeof(string), parts) as string);
+                        var o = @ref.Object;
+                        ReadObject(ref o, lines);
+                        @ref.Object = o;
+                        break;
+                    }
                     
                     default:
                         throw new ApplicationException($"Invalid line in level file: `{line}`");

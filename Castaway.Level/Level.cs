@@ -1,4 +1,7 @@
+#nullable enable
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castaway.Core;
 
 namespace Castaway.Levels
@@ -48,7 +51,19 @@ namespace Castaway.Levels
         /// <param name="index">Index to get the object for.</param>
         /// <returns>The object at <paramref name="index"/>.</returns>
         public LevelObject Get(int index) => Objects[index];
-        
+
+        public LevelObject? Get(string name)
+        {
+            try
+            {
+                return Objects.First(o => o.Name == name);
+            }
+            catch (InvalidOperationException e)
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Sets the object at index to a new value.
         /// </summary>
@@ -68,13 +83,14 @@ namespace Castaway.Levels
         /// it.
         /// </summary>
         /// <returns>Reference to the new object.</returns>
-        public ObjectRef<LevelObject> Create()
+        public ObjectRef<LevelObject> Create(string? name = null)
         {
             var r = new ObjectRef<LevelObject>(Objects.Count, this);
             Objects.Add(new LevelObject
             {
                 Ref = r,
-                Level = this
+                Level = this,
+                Name = name
             });
             return r;
         }
@@ -85,10 +101,11 @@ namespace Castaway.Levels
         /// created object.
         /// </summary>
         /// <inheritdoc cref="Create()"/>
+        /// <param name="name">Name of the object. Optional.</param>
         /// <param name="controllers">Controllers to add.</param>
-        public ObjectRef<LevelObject> Create(params Controller[] controllers)
+        public ObjectRef<LevelObject> Create(string? name = null, params Controller[] controllers)
         {
-            var o = Create();
+            var o = Create(name);
             var obj = o.Object;
             foreach (var c in controllers) obj.Add(c);
             o.Object = obj;
@@ -102,6 +119,6 @@ namespace Castaway.Levels
         /// <inheritdoc cref="Create(Controller[])"/>
         /// <typeparam name="T">Type of the new object.</typeparam>
         public ObjectRef<T> Create<T>(params Controller[] controllers) where T : LevelObject 
-            => Create(controllers).To<T>();
+            => Create(controllers: controllers).To<T>();
     }
 }

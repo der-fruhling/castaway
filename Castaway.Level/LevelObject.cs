@@ -27,6 +27,8 @@ namespace Castaway.Levels
         /// </summary>
         public Vector3 Scale = new Vector3(1, 1, 1);
 
+        public string? Name = null;
+
         public ObjectRef<LevelObject> Ref { get; internal set; }
         public Level Level { get; internal set; } = null!;
 
