@@ -33,9 +33,8 @@ namespace Castaway.Render
             var lines = confSrc.Split('\n');
             foreach (var line in lines)
             {
-                var s = line.Split("//")[0].Trim();
-                if(s.Length == 0 || s[0] != '#') continue;
-                var command = s[1..];
+                var command = line.Split("//")[0].Trim();
+                if(command.Length == 0) continue;
                 var cmdParts = command.Split(' ');
                 switch (cmdParts[0])
                 {
