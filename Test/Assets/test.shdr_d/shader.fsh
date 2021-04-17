@@ -44,7 +44,7 @@ void main()
 {
     // Do some math to find some directions for later math.
     vec3 norm = normalize(normal);
-    vec3 viewDir = normalize(-viewPos - fragPos);
+    vec3 viewDir = normalize(viewPos - fragPos);
     
     // Do not render unseen pixels.
     if(dot(viewDir, norm) < 0) discard;
