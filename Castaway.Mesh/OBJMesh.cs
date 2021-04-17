@@ -103,7 +103,7 @@ namespace Castaway.Mesh
             Console.WriteLine($"Load took {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private void ReadMaterials(out Dictionary<string, Material> materials, string path)
+        private static void ReadMaterials(out Dictionary<string, Material> materials, string path)
         {
             var lines = File.ReadAllLines(path)
                 .Select(s => s.Split('#')[0].Trim())
