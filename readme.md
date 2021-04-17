@@ -111,12 +111,8 @@ using Castaway.Exec;
 [RequiresModules(CModule.Assets)]
 public class ReadmeTest
 {
-    [Entrypoint]
-    public void Entrypoint()
-    {
-        // Assets module is now loaded.
-        Console.WriteLine("Assets are loaded.");
-    }
+    // Assets module will be loaded.
+    // Entrypoint methods cannot use features from modules.
 }
 ```
 
