@@ -31,16 +31,19 @@ namespace Castaway.Levels.Controllers.Storage
             else throw new ApplicationException("Invalid mesh format.");
 
             if (!ZUp) return;
-            for (var i = 0; i < _loaded!.Vertices.Length; i++)
+            var vertices = _loaded!.Vertices;
+            for (var i = 0; i < vertices.Length; i++)
             {
-                var v = _loaded.Vertices[i];
-                _loaded.Vertices[i] = new CompleteVertex
+                var v = vertices[i];
+                vertices[i] = new CompleteVertex
                 {
                     Norm = new Vector3(v.Norm.X, v.Norm.Z, v.Norm.Y),
                     Pos = new Vector3(v.Pos.X, v.Pos.Z, v.Pos.Y),
                     Tex = v.Tex
                 };
             }
+
+            _loaded.Vertices = vertices;
         }
     }
 }

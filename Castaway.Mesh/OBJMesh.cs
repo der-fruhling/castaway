@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -19,15 +20,16 @@ namespace Castaway.Mesh
         private readonly List<Vector3> vertices = new List<Vector3>();
         private readonly List<Vector2> textures = new List<Vector2>();
         private readonly List<Vector3> normals = new List<Vector3>();
+        private readonly Stopwatch stopwatch = new Stopwatch();
         
         public void Load(byte[] input, string path)
         {
+            stopwatch.Restart();
             var lines = Encoding.UTF8.GetString(input)
                 .Split('\n')
                 .Select(s => s.Split('#')[0].Trim())
                 .Where(s => s.Length > 0)
                 .Select(s => s.Split(' '));
-
             
             Dictionary<string, Material> materials = null!;
 
@@ -97,6 +99,8 @@ namespace Castaway.Mesh
                     case "s": break;
                 }
             }
+            stopwatch.Stop();
+            Console.WriteLine($"Load took {stopwatch.ElapsedMilliseconds}ms");
         }
 
         private void ReadMaterials(out Dictionary<string, Material> materials, string path)
@@ -199,7 +203,26 @@ namespace Castaway.Mesh
             else throw new ApplicationException($"Invalid vertex reference: {v}");
         }
 
-        public CompleteVertex[] Vertices => _vertices.ToArray();
+        public CompleteVertex[] Vertices
+        {
+            get
+            {
+                stopwatch.Restart();
+                var v = _vertices.ToArray();
+                stopwatch.Stop();
+                Console.WriteLine($"Array conversion took {stopwatch.ElapsedMilliseconds}ms");
+                return v;
+            }
+
+            set
+            {
+                stopwatch.Restart();
+                _vertices = value.ToList();
+                stopwatch.Stop();
+                Console.WriteLine($"List conversion took {stopwatch.ElapsedMilliseconds}ms");
+            }
+        }
+
         public MeshConverter Converter => new MeshConverter(Vertices);
 
         public class Loader : IAssetLoader

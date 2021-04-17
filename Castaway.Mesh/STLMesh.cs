@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using Castaway.Assets;
 using Castaway.Math;
 
@@ -12,12 +13,12 @@ namespace Castaway.Mesh
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class STLMesh : IMesh
     {
-        private readonly List<CompleteVertex> _vertices = new List<CompleteVertex>();
+        private List<CompleteVertex> _vertices = new List<CompleteVertex>();
         
         public void Load(byte[] input, string path)
         {
             var r = new BinaryReader(new MemoryStream(input));
-            var header = r.ReadBytes(80);
+            r.ReadBytes(80);
             var count = r.ReadUInt32();
             for (var i = 0; i < count; i++)
             {
@@ -35,7 +36,12 @@ namespace Castaway.Mesh
             }
         }
 
-        public CompleteVertex[] Vertices => _vertices.ToArray();
+        public CompleteVertex[] Vertices
+        {
+            get => _vertices.ToArray();
+            set => _vertices = value.ToList();
+        }
+
         public MeshConverter Converter => new MeshConverter(Vertices);
 
         /// <summary>

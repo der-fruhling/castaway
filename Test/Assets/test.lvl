@@ -51,7 +51,7 @@ End
 Object
 	Position -2 0 4
 	
-	Mesh /Sphere.obj Z_Up
+	Mesh /SphereHD.obj Z_Up
 	
 	Texture /test.png
 		FilterNearest true

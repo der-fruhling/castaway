@@ -60,7 +60,7 @@ namespace Castaway.Mesh
         /// <summary>
         /// Gets every <see cref="CompleteVertex"/> in this mesh.
         /// </summary>
-        public CompleteVertex[] Vertices { get; }
+        public CompleteVertex[] Vertices { get; set; }
         
         /// <summary>
         /// Creates a new <see cref="MeshConverter"/> to convert
