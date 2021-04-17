@@ -64,8 +64,7 @@ namespace Castaway.Levels.Controllers.Rendering
             if (ShaderManager.ActiveHandle.Properties.ContainsKey("ViewPosition"))
             {
                 var vname = ShaderManager.ActiveHandle.Properties["ViewPosition"];
-                var p = parent.Position;
-                ShaderManager.SetUniform(ShaderManager.ActiveHandle, vname, p.X, p.Y, p.Z);
+                ShaderManager.ActiveHandle.SetUniform(vname, parent.Position);
             }
         }
     }
