@@ -8,6 +8,20 @@ using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 using static Castaway.Math.Matrix4;
 
+[ControllerInfo(Name = "Camera Controller")]
+internal class CameraController : Controller
+{
+    public string AttachedObject = "";
+    
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        var o = level.Get(AttachedObject);
+        if (o == null) throw new InvalidOperationException($"Bad object reference: {AttachedObject}");
+        parent.Position = Vector3.Lerp(parent.Position, o.Position - new Vector3(0, 0, 5), .05f);
+    }
+}
+
 [RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable, CModule.Input)]
 [Entrypoint]
 internal class ProgramEntrypoint
@@ -64,30 +78,16 @@ internal class ProgramEntrypoint
     }
 
     // ReSharper disable UnusedMember.Global
-    private static float _speed = .075f;
-    private const float LookSpeed = 3f;
+    private static float _speed = .025f;
 
-    public static void SpacebarHandler(LevelObject m, Keys k) => m.Position.Y -= _speed;
-    public static void LeftShiftHandler(LevelObject m, Keys k) => m.Position.Y += _speed;
-    public static void WHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
-    public static void SHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
-    public static void DHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
-    public static void AHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
-    
-    public static void UpHandler(LevelObject m, Keys k)
-    {
-        if(m.Rotation.X < 90f) m.Rotation.X += LookSpeed;
-    }
+    public static void SpacebarHandler(LevelObject m, Keys k) => m.Position.Y += _speed;
+    public static void LeftShiftHandler(LevelObject m, Keys k) => m.Position.Y -= _speed;
+    public static void WHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
+    public static void SHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
+    public static void DHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
+    public static void AHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
 
-    public static void DownHandler(LevelObject m, Keys k)
-    {
-        if(m.Rotation.X > -90f) m.Rotation.X -= LookSpeed;
-    }
-
-    public static void RightHandler(LevelObject m, Keys k) => m.Rotation.Y -= LookSpeed;
-    public static void LeftHandler(LevelObject m, Keys k) => m.Rotation.Y += LookSpeed;
-    
-    public static void SpeedUp(LevelObject m, Keys k) => _speed = .15f;
-    public static void SlowDown(LevelObject m, Keys k) => _speed = .075f;
+    public static void SpeedUp(LevelObject m, Keys k) => _speed = .05f;
+    public static void SlowDown(LevelObject m, Keys k) => _speed = .025f;
     // ReSharper restore UnusedMember.Global
 }

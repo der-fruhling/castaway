@@ -1,14 +1,12 @@
 # .lvl file example
-# Contains 2 objects
 
 Set Camera 0
-Set Speed 0.075
 
 InitialCamera ${Camera}
 
 # Camera
-Object
-	Position 0 0 -0.75
+Object "Camera"
+	Position 0 0 -5
 	
 	# Default Rotation is [0,0,0], so this line isn't needed.
 	Rotation 0 0 0
@@ -22,6 +20,24 @@ Object
 		BackgroundColor 0.019607843 0.90196078 1
 	End
 	
+	Controller CameraController
+		AttachedObject "Sphere"
+	End
+End
+
+# Sphere
+Object "Sphere"
+	Position 0 0 0
+	
+	Mesh /SphereHD.obj
+	
+	Texture /test.png
+		FilterNearest true
+	End
+	
+	Controller Transform Empty
+	Controller MeshRenderer Empty
+	
 	Controller PlayerAction
 		KeyPressed
 			Spacebar "ProgramEntrypoint::SpacebarHandler"
@@ -30,11 +46,6 @@ Object
 			S "ProgramEntrypoint::SHandler"
 			D "ProgramEntrypoint::DHandler"
 			A "ProgramEntrypoint::AHandler"
-			
-			Up "ProgramEntrypoint::UpHandler"
-			Down "ProgramEntrypoint::DownHandler"
-			Right "ProgramEntrypoint::RightHandler"
-			Left "ProgramEntrypoint::LeftHandler"
 		End
 		
 		KeyPressedNow
@@ -45,30 +56,4 @@ Object
 			LeftControl "ProgramEntrypoint::SlowDown"
 		End
 	End
-End
-
-# Sphere
-Object
-	Position -2 0 4
-	
-	Mesh /SphereHD.obj Z_Up
-	
-	Texture /test.png
-		FilterNearest true
-	End
-	
-	Controller Transform Empty
-	Controller MeshRenderer Empty
-End
-
-# Cube
-Object
-	Position 2 0 4
-	
-	Mesh /Cube.obj Z_Up
-	Texture /test.png
-		FilterNearest true
-	End
-	Controller Transform Empty
-	Controller MeshRenderer Empty
 End
