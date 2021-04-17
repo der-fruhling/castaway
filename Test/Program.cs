@@ -69,10 +69,10 @@ internal class ProgramEntrypoint
 
     public static void SpacebarHandler(LevelObject m, Keys k) => m.Position.Y -= _speed;
     public static void LeftShiftHandler(LevelObject m, Keys k) => m.Position.Y += _speed;
-    public static void WHandler(LevelObject m, Keys k) => m.Position -= RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(0, 0, _speed);
-    public static void SHandler(LevelObject m, Keys k) => m.Position += RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(0, 0, _speed);
-    public static void DHandler(LevelObject m, Keys k) => m.Position -= RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(_speed, 0, 0);
-    public static void AHandler(LevelObject m, Keys k) => m.Position += RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(_speed, 0, 0);
+    public static void WHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
+    public static void SHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(0, 0, _speed);
+    public static void DHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
+    public static void AHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
     
     public static void UpHandler(LevelObject m, Keys k) => m.Rotation.X += LookSpeed;
     public static void DownHandler(LevelObject m, Keys k) => m.Rotation.X -= LookSpeed;
