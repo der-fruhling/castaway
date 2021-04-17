@@ -45,6 +45,10 @@ namespace Castaway.Math
         {
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}";
         }
+
+        public static Vector2 Lerp(Vector2 a, Vector2 b, float i) => new Vector2(
+            CMath.Lerp(a.X, b.X, i),
+            CMath.Lerp(a.Y, b.Y, i));
     }
 
     public class Vector3 : Vector
@@ -126,6 +130,11 @@ namespace Castaway.Math
 
         public static Vector3 operator -(Vector3 a)
             => new Vector3(-a.X, -a.Y, -a.Z);
+        
+        public static Vector3 Lerp(Vector3 a, Vector3 b, float i) => new Vector3(
+            CMath.Lerp(a.X, b.X, i),
+            CMath.Lerp(a.Y, b.Y, i),
+            CMath.Lerp(a.Z, b.Z, i));
     }
 
     public class Vector4 : Vector
@@ -177,5 +186,11 @@ namespace Castaway.Math
         {
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}, {nameof(W)}: {W}";
         }
+        
+        public static Vector4 Lerp(Vector4 a, Vector4 b, float i) => new Vector4(
+            CMath.Lerp(a.X, b.X, i),
+            CMath.Lerp(a.Y, b.Y, i),
+            CMath.Lerp(a.Z, b.Z, i),
+            CMath.Lerp(a.W, b.W, i));
     }
 }
