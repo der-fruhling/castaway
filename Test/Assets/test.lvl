@@ -21,6 +21,7 @@ Object
 		FOV 90
 		BackgroundColor 0.019607843 0.90196078 1
 	End
+	
 	Controller PlayerAction
 		KeyPressed
 			Spacebar "ProgramEntrypoint::SpacebarHandler"
@@ -50,10 +51,12 @@ End
 Object
 	Position -2 0 4
 	
-	Mesh /Sphere.obj Z-Up
+	Mesh /Sphere.obj Z_Up
+	
 	Texture /test.png
 		FilterNearest true
 	End
+	
 	Controller Transform Empty
 	Controller MeshRenderer Empty
 End
@@ -62,7 +65,7 @@ End
 Object
 	Position 2 0 4
 	
-	Mesh /Cube.obj Z-Up
+	Mesh /Cube.obj Z_Up
 	Texture /test.png
 		FilterNearest true
 	End

@@ -109,7 +109,7 @@ namespace Castaway.Serializable
                     case "Mesh" when parts.Length == 2:
                         obj.Add(new MeshLoaderController {Asset = parts[1]});
                         break;
-                    case "Mesh" when parts.Length == 3 && parts[2] == "Z-Up":
+                    case "Mesh" when parts.Length == 3 && parts[2] == "Z_Up":
                         obj.Add(new MeshLoaderController {Asset = parts[1], ZUp = true});
                         break;
                     case "Texture" when parts.Length == 3 && parts[2] == "Empty":
