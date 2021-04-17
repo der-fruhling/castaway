@@ -24,12 +24,15 @@ uniform bool shouldTexture;
 
 void main()
 {
+    vec3 norm = normalize(normal);
+    vec3 cullViewDir = normalize(-viewPos - fragPos);
+    if(dot(cullViewDir, norm) < 0) discard;
+    
     float ambientStrength = 0.1;
     float specularStrength = 0.5;
     
     vec3 ambient = ambientStrength * material.ambient;
     
-    vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightPos - fragPos);
     float diff = max(dot(norm, lightDir), 0);
     vec3 diffuse = diff * material.diffuse;
