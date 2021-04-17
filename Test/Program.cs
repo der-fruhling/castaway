@@ -74,8 +74,16 @@ internal class ProgramEntrypoint
     public static void DHandler(LevelObject m, Keys k) => m.Position -= RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
     public static void AHandler(LevelObject m, Keys k) => m.Position += RotateYDeg(-m.Rotation.Y) * RotateXDeg(-m.Rotation.X) * new Vector3(_speed, 0, 0);
     
-    public static void UpHandler(LevelObject m, Keys k) => m.Rotation.X += LookSpeed;
-    public static void DownHandler(LevelObject m, Keys k) => m.Rotation.X -= LookSpeed;
+    public static void UpHandler(LevelObject m, Keys k)
+    {
+        if(m.Rotation.X < 90f) m.Rotation.X += LookSpeed;
+    }
+
+    public static void DownHandler(LevelObject m, Keys k)
+    {
+        if(m.Rotation.X > -90f) m.Rotation.X -= LookSpeed;
+    }
+
     public static void RightHandler(LevelObject m, Keys k) => m.Rotation.Y -= LookSpeed;
     public static void LeftHandler(LevelObject m, Keys k) => m.Rotation.Y += LookSpeed;
     
