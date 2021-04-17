@@ -2,6 +2,7 @@
 # Contains 2 objects
 
 Set Camera 0
+Set Speed 0.075
 
 InitialCamera ${Camera}
 
@@ -20,7 +21,29 @@ Object
 		FOV 90
 		BackgroundColor 0.019607843 0.90196078 1
 	End
-	Controller ProgramEntrypoint+MovementController Empty
+	Controller PlayerAction
+		KeyPressed
+			Spacebar "ProgramEntrypoint::SpacebarHandler"
+			LeftShift "ProgramEntrypoint::LeftShiftHandler"
+			W "ProgramEntrypoint::WHandler"
+			S "ProgramEntrypoint::SHandler"
+			D "ProgramEntrypoint::DHandler"
+			A "ProgramEntrypoint::AHandler"
+			
+			Up "ProgramEntrypoint::UpHandler"
+			Down "ProgramEntrypoint::DownHandler"
+			Right "ProgramEntrypoint::RightHandler"
+			Left "ProgramEntrypoint::LeftHandler"
+		End
+		
+		KeyPressedNow
+			LeftControl "ProgramEntrypoint::SpeedUp"
+		End
+		
+		KeyUnpressed
+			LeftControl "ProgramEntrypoint::SlowDown"
+		End
+	End
 End
 
 # Sphere

@@ -6,36 +6,13 @@ using Castaway.Levels;
 using Castaway.Math;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
+using static Castaway.Levels.Controllers.Controls.PlayerActionController;
+using static Castaway.Math.Matrix4;
 
 [RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable)]
 [Entrypoint]
 internal class ProgramEntrypoint
 {
-    private class MovementController : Controller
-    {
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            var speed = InputSystem.Keyboard.IsPressed(Keys.LeftControl) ? 0.15f : .075f;
-            const float lookSpeed = 3f;
-
-            var movement = Vector3.Zero;
-            if (InputSystem.Keyboard.IsPressed(Keys.W)) movement.Z += speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.S)) movement.Z -= speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.D)) movement.X += speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.A)) movement.X -= speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.Spacebar)) movement.Y += speed;
-            if (InputSystem.Keyboard.IsPressed(Keys.LeftShift)) movement.Y -= speed;
-
-            if (InputSystem.Keyboard.IsPressed(Keys.Up) && parent.Rotation.X < 87.5f)    parent.Rotation.X += lookSpeed;
-            if (InputSystem.Keyboard.IsPressed(Keys.Down) && parent.Rotation.X > -87.5f)  parent.Rotation.X -= lookSpeed;
-            if (InputSystem.Keyboard.IsPressed(Keys.Left))  parent.Rotation.Y += lookSpeed;
-            if (InputSystem.Keyboard.IsPressed(Keys.Right)) parent.Rotation.Y -= lookSpeed;
-
-            parent.Position -= Matrix4.RotateYDeg(-parent.Rotation.Y) * movement;
-        }
-    }
-
     private ShaderHandle _shaderHandle;
     private int _shaderHandleAsset;
     private Level _level;
@@ -78,7 +55,7 @@ internal class ProgramEntrypoint
         
         // Activates the shader.
         _shaderHandle.Use();
-        ShaderManager.SetUniform(_shaderHandle, "lightPos", 0f, 0, 0);
+        _shaderHandle.SetUniform("lightPos", 0f, 0, 0);
 
         _level = Get<Level>(Index("/test.lvl"));
         if (_level == null) throw new ApplicationException("Failed to load level");
@@ -86,4 +63,24 @@ internal class ProgramEntrypoint
         Events.CloseNormally += _level.Deactivate;
         _level.Activate();
     }
+
+    // ReSharper disable UnusedMember.Global
+    private static float _speed = .075f;
+    private const float LookSpeed = 3f;
+
+    public static void SpacebarHandler(LevelObject m, Keys k) => m.Position.Y -= _speed;
+    public static void LeftShiftHandler(LevelObject m, Keys k) => m.Position.Y += _speed;
+    public static void WHandler(LevelObject m, Keys k) => m.Position -= RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(0, 0, _speed);
+    public static void SHandler(LevelObject m, Keys k) => m.Position += RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(0, 0, _speed);
+    public static void DHandler(LevelObject m, Keys k) => m.Position -= RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(_speed, 0, 0);
+    public static void AHandler(LevelObject m, Keys k) => m.Position += RotateXDeg(-m.Rotation.X) * RotateYDeg(-m.Rotation.Y) * new Vector3(_speed, 0, 0);
+    
+    public static void UpHandler(LevelObject m, Keys k) => m.Rotation.X += LookSpeed;
+    public static void DownHandler(LevelObject m, Keys k) => m.Rotation.X -= LookSpeed;
+    public static void RightHandler(LevelObject m, Keys k) => m.Rotation.Y -= LookSpeed;
+    public static void LeftHandler(LevelObject m, Keys k) => m.Rotation.Y += LookSpeed;
+    
+    public static void SpeedUp(LevelObject m, Keys k) => _speed = .15f;
+    public static void SlowDown(LevelObject m, Keys k) => _speed = .075f;
+    // ReSharper restore UnusedMember.Global
 }

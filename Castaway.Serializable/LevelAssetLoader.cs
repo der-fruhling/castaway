@@ -12,6 +12,7 @@ using Castaway.Levels.Controllers.Storage;
 using Castaway.Math;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
+using static Castaway.Levels.Controllers.Controls.PlayerActionController;
 
 namespace Castaway.Serializable
 {
@@ -137,22 +138,59 @@ namespace Castaway.Serializable
             {
                 var line = lines.Current;
                 if(line!.StartsWith('#') || line.Length == 0) continue;
-                foreach (var (k, v) in Variables) line = line.Replace($"${{{k}}}", v);
+                foreach (var (key, val) in Variables)
+                    line = line.Replace($"${{{key}}}", val);
                 var parts = line.Split(' ');
                 if (parts[0] == "End") return;
                 
                 var setting = type.GetMember(parts[0]).Single();
                 if (setting.MemberType != MemberTypes.Property && setting.MemberType != MemberTypes.Field)
                     throw new ApplicationException($"Cannot set setting {parts[0]}");
-
+                
                 var t = setting.MemberType switch
                 {
                     MemberTypes.Field => ((FieldInfo)setting).FieldType,
                     MemberTypes.Property => ((PropertyInfo)setting).PropertyType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
+                var v = setting.MemberType switch
+                {
+                    MemberTypes.Field => ((FieldInfo)setting).GetValue(controller),
+                    MemberTypes.Property => ((PropertyInfo)setting).GetValue(controller),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                var value = DeserializeObject(t, parts);
+                object value;
+                if (t.IsArray)
+                {
+                    var list = new List<object>();
+                    while (lines.MoveNext())
+                    {
+                        line = lines.Current;
+                        if (line == "End") break;
+                        parts = line!.Split(' ');
+                        list.Add(DeserializeObject(t, parts, 0));
+                    }
+                    value = list.ToArray();
+                }
+                else if ($"{t.Namespace}.{t.Name}" == "System.Collections.Generic.Dictionary`2")
+                {
+                    var types = t.GenericTypeArguments;
+                    while (lines.MoveNext())
+                    {
+                        line = lines.Current;
+                        if(line!.StartsWith('#') || line.Length == 0) continue;
+                        foreach (var (key, val) in Variables)
+                            line = line.Replace($"${{{key}}}", val);
+                        if (line == "End") break;
+                        parts = line!.Split(' ');
+                        var a = DeserializeObject(types[0], parts, 0, false);
+                        var b = DeserializeObject(types[1], parts);
+                        t.GetProperty("Item")!.SetValue(v, b, new []{a});
+                    }
+                    value = v;
+                }
+                else value = DeserializeObject(t, parts);
 
                 switch (setting.MemberType)
                 {
@@ -168,25 +206,26 @@ namespace Castaway.Serializable
             }
         }
 
-        private static object DeserializeObject(Type t, IReadOnlyList<string> parts)
+        private static object DeserializeObject(Type t, IReadOnlyList<string> parts, int o = 1, bool multiValue = true)
         {
             object value;
-            if (t == typeof(byte)) value         = byte.Parse(parts[1]);
-            else if (t == typeof(short)) value   = short.Parse(parts[1]);
-            else if (t == typeof(int)) value     = int.Parse(parts[1]);
-            else if (t == typeof(long)) value    = long.Parse(parts[1]);
-            else if (t == typeof(sbyte)) value   = sbyte.Parse(parts[1]);
-            else if (t == typeof(ushort)) value  = ushort.Parse(parts[1]);
-            else if (t == typeof(uint)) value    = uint.Parse(parts[1]);
-            else if (t == typeof(ulong)) value   = ulong.Parse(parts[1]);
-            else if (t == typeof(float)) value   = float.Parse(parts[1]);
-            else if (t == typeof(double)) value  = double.Parse(parts[1]);
-            else if (t == typeof(string) && parts[1].StartsWith('"') && parts[1].EndsWith('"')) value = Regex.Unescape(parts[1][1..^1]);
-            else if (t == typeof(bool)) value    = bool.Parse(parts[1]);
-            else if (t == typeof(Vector2)) value = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
-            else if (t == typeof(Vector3)) value = new Vector3(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
-            else if (t == typeof(Vector4)) value = new Vector4(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]), float.Parse(parts[4]));
-            else if (t.IsEnum) value             = Enum.Parse(t, parts[1]);
+            if (t == typeof(byte)) value         = byte.Parse(parts[o]);
+            else if (t == typeof(short)) value   = short.Parse(parts[o]);
+            else if (t == typeof(int)) value     = int.Parse(parts[o]);
+            else if (t == typeof(long)) value    = long.Parse(parts[o]);
+            else if (t == typeof(sbyte)) value   = sbyte.Parse(parts[o]);
+            else if (t == typeof(ushort)) value  = ushort.Parse(parts[o]);
+            else if (t == typeof(uint)) value    = uint.Parse(parts[o]);
+            else if (t == typeof(ulong)) value   = ulong.Parse(parts[o]);
+            else if (t == typeof(float)) value   = float.Parse(parts[o]);
+            else if (t == typeof(double)) value  = double.Parse(parts[o]);
+            else if ((t == typeof(string) || parts[o].StartsWith('"') && parts[^1].EndsWith('"')) && multiValue) value
+                                                 = Regex.Unescape(parts[o][1..^1]);
+            else if (t == typeof(bool)) value    = bool.Parse(parts[o]);
+            else if (t == typeof(Vector2) && multiValue) value = new Vector2(float.Parse(parts[o]), float.Parse(parts[o+1]));
+            else if (t == typeof(Vector3) && multiValue) value = new Vector3(float.Parse(parts[o]), float.Parse(parts[o+1]), float.Parse(parts[o+2]));
+            else if (t == typeof(Vector4) && multiValue) value = new Vector4(float.Parse(parts[o]), float.Parse(parts[o+1]), float.Parse(parts[o+2]), float.Parse(parts[o+3]));
+            else if (t.IsEnum) value             = Enum.Parse(t, parts[o]);
             else throw new ApplicationException($"Non-serializable type {t}");
             return value;
         }
@@ -199,6 +238,7 @@ namespace Castaway.Serializable
                     t.FullName == name ||
                     t.FullName == $"Castaway.Levels.Controllers.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Rendering.{name}Controller" ||
+                    t.FullName == $"Castaway.Levels.Controllers.Controls.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Renderers.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Storage.{name}Controller"));
             }
