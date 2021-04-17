@@ -128,6 +128,8 @@ namespace Castaway.Native
         private delegate void uniform3i(int l, int a, int b, int c);
         private delegate void uniform4i(int l, int a, int b, int c, int d);
         private delegate void uniformMf(int l, uint c, bool t, float* v);
+        private delegate void uniformfv(int l, uint c, float* a);
+        private delegate void uniformiv(int l, uint c, int* a);
         private delegate int getUniformLocation(uint p, [MarshalAs(LPStr)] string name);
 
         private delegate void texParameterf(uint t, uint n, float p);
@@ -366,28 +368,32 @@ namespace Castaway.Native
         }
 
         #region Uniforms
-        public static void SetUniform(int l, params float[] data)
+        public static void SetUniform(int l, int len, params float[] data)
         {
-            if (data.Length > 4) throw new ApplicationException("Too many parameters. (max: 4)");
-            switch (data.Length)
+            fixed (float* p = data)
             {
-                case 1: Fn<uniform1f>("glUniform1f")(l, data[0]); break;
-                case 2: Fn<uniform2f>("glUniform2f")(l, data[0], data[1]); break;
-                case 3: Fn<uniform3f>("glUniform3f")(l, data[0], data[1], data[2]); break;
-                case 4: Fn<uniform4f>("glUniform4f")(l, data[0], data[1], data[2], data[3]); break;
+                switch (len)
+                {
+                    case 1: Fn<uniformfv>("glUniform1fv")(l, (uint) (data.Length / 1), p); break;
+                    case 2: Fn<uniformfv>("glUniform2fv")(l, (uint) (data.Length / 2), p); break;
+                    case 3: Fn<uniformfv>("glUniform3fv")(l, (uint) (data.Length / 3), p); break;
+                    case 4: Fn<uniformfv>("glUniform4fv")(l, (uint) (data.Length / 4), p); break;
+                }
             }
             CheckError();
         }
         
-        public static void SetUniform(int l, params int[] data)
+        public static void SetUniform(int l, int len, params int[] data)
         {
-            if (data.Length > 4) throw new ApplicationException("Too many parameters. (max: 4)");
-            switch (data.Length)
+            fixed (int* p = data)
             {
-                case 1: Fn<uniform1i>("glUniform1i")(l, data[0]); break;
-                case 2: Fn<uniform2i>("glUniform2i")(l, data[0], data[1]); break;
-                case 3: Fn<uniform3i>("glUniform3i")(l, data[0], data[1], data[2]); break;
-                case 4: Fn<uniform4i>("glUniform4i")(l, data[0], data[1], data[2], data[3]); break;
+                switch (len)
+                {
+                    case 1: Fn<uniformiv>("glUniform1iv")(l, (uint) (data.Length / 1), p); break;
+                    case 2: Fn<uniformiv>("glUniform2iv")(l, (uint) (data.Length / 2), p); break;
+                    case 3: Fn<uniformiv>("glUniform3iv")(l, (uint) (data.Length / 3), p); break;
+                    case 4: Fn<uniformiv>("glUniform4iv")(l, (uint) (data.Length / 4), p); break;
+                }
             }
             CheckError();
         }

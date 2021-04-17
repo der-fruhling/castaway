@@ -29,7 +29,8 @@ out vec4 outColor;
 uniform Material material;
 
 // Some light settings.
-uniform vec3 lightPos;
+uniform int lightCount = 0;
+uniform vec3 lightPositions[128];
 
 // Camera position.
 uniform vec3 viewPos;
@@ -40,33 +41,55 @@ uniform sampler2D tex;
 // Used by `Texture` to disable textures when needed.
 uniform bool shouldTexture;
 
-void main()
+const float specularStrength = 0.5;
+const float ambientStrength = 0.1;
+
+// Calculate Diffuse lighting.
+vec3 calculateDiffuse(vec3 lightPos, vec3 norm, vec3 lightDir)
 {
-    // Do some math to find some directions for later math.
-    vec3 norm = normalize(normal);
-    vec3 viewDir = normalize(viewPos - fragPos);
-    
-    // Do not render unseen pixels.
-    if(dot(viewDir, norm) < 0) discard;
-    
-    // Some constant values.
-    const float ambientStrength = 0.1;
-    const float specularStrength = 0.5;
-    const vec4 defaultColor = vec4(1, 1, 1, 1);
-    
-    // Calculate Ambient lighting
-    vec3 ambient = ambientStrength * material.ambient;
-    
-    // Calculate Diffuse lighting.
-    vec3 lightDir = normalize(lightPos - fragPos);
     float diff = max(dot(norm, lightDir), 0);
     vec3 diffuse = diff * material.diffuse;
     
-    // Calculate Specular lighting.
+    return diffuse;
+}
+
+// Calculate Specular lighting.
+vec3 calculateSpecular(vec3 lightPos, vec3 norm, vec3 lightDir)
+{
+    vec3 viewDir = normalize(viewPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0), material.specularExp);
     vec3 specular = specularStrength * spec * material.specular;
     
+    return specular;
+}
+
+// Combine Diffuse and Specular lighting.
+vec3 calculateLighting(vec3 lightPos)
+{
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(lightPos - fragPos);
+
+    return calculateDiffuse(lightPos, norm, lightDir) + calculateSpecular(lightPos, norm, lightDir);
+}
+
+void main()
+{
+    // Do not render unseen pixels.
+    if(dot(normalize(viewPos - fragPos), normalize(normal)) < 0) discard;
+    
+    // Calculate all diffuse and specular lightings.
+    vec3 lighting = vec3(0, 0, 0);
+    for(int i = 0; i < min(lightCount, 128); i++) {
+        lighting += calculateLighting(lightPositions[i]);
+    }
+
+    // Calculate ambient lighting.
+    vec3 ambient = ambientStrength * material.ambient;
+    
+    // Constant.
+    const vec4 defaultColor = vec4(1, 1, 1, 1);
+    
     // Combine all the lightings!
-    outColor = vec4(ambient + diffuse + specular, 1) * ((shouldTexture ? texture(tex, texCoords) : defaultColor) * color);
+    outColor = vec4(ambient + lighting, 1) * ((shouldTexture ? texture(tex, texCoords) : defaultColor) * color);
 }

@@ -165,8 +165,10 @@ namespace Castaway.Render
                 this.SetUniform(Properties["Materials.LightMode"], (int)material.Mode);
         }
 
-        public void SetProperty(string name, params float[] floats) => this.SetUniform(Properties[name], floats);
-        public void SetProperty(string name, params int[] ints) => this.SetUniform(Properties[name], ints);
+        public void SetProperty(string name, int len, params float[] floats) => this.SetUniform(Properties[name], len, floats);
+        public void SetProperty(string name, int len, params int[] ints) => this.SetUniform(Properties[name], len, ints);
+        public void SetProperty(string name, float f) => this.SetUniform(Properties[name], 1, f);
+        public void SetProperty(string name, int i) => this.SetUniform(Properties[name], 1, i);
         public void SetProperty(string name, Vector vector) => this.SetUniform(Properties[name], vector);
         public void SetProperty(string name, Matrix4 matrix4) => this.SetUniform(Properties[name], matrix4);
     }
@@ -412,15 +414,22 @@ namespace Castaway.Render
         /// </summary>
         /// <param name="handle">Handle of the shader with the uniform.</param>
         /// <param name="name">Name of the uniform variable.</param>
-        /// <param name="floats">1..4 floats.</param>
-        public static void SetUniform(this ShaderHandle handle, string name, params float[] floats)
+        /// <param name="len">Length of each vectors.</param>
+        /// <param name="floats">Float array.</param>
+        public static void SetUniform(this ShaderHandle handle, string name, int len, params float[] floats)
         {
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
-            GL.SetUniform(loc, floats);
+            GL.SetUniform(loc, len, floats);
         }
 
+        public static void SetUniform(this ShaderHandle handle, string name, float f)
+            => SetUniform(handle, name, 1, f);
+
         public static void SetUniform(this ShaderHandle handle, string name, Vector vector)
-            => SetUniform(handle, name, vector.Array);
+            => SetUniform(handle, name, vector.Array.Length, vector.Array);
+
+        public static void SetUniform(this ShaderHandle handle, string name, params Vector[] vectors)
+            => SetUniform(handle, name, vectors[0].Array.Length, vectors.SelectMany(v => v.Array).ToArray());
         
         /// <summary>
         /// Sets a uniform value.
@@ -428,11 +437,14 @@ namespace Castaway.Render
         /// <param name="handle">Handle of the shader with the uniform.</param>
         /// <param name="name">Name of the uniform variable.</param>
         /// <param name="ints">1..4 ints.</param>
-        public static void SetUniform(this ShaderHandle handle, string name, params int[] ints)
+        public static void SetUniform(this ShaderHandle handle, string name, int len, params int[] ints)
         {
             var loc = GL.GetUniformLocation(handle.GLProgram, name);
-            GL.SetUniform(loc, ints);
+            GL.SetUniform(loc, len, ints);
         }
+        
+        public static void SetUniform(this ShaderHandle handle, string name, int i)
+            => SetUniform(handle, name, 1, i);
 
         /// <summary>
         /// Sets a uniform value.
