@@ -9,7 +9,7 @@ using static Castaway.Assets.AssetManager;
 using static Castaway.Levels.Controllers.Controls.PlayerActionController;
 using static Castaway.Math.Matrix4;
 
-[RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable)]
+[RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable, CModule.Input)]
 [Entrypoint]
 internal class ProgramEntrypoint
 {
