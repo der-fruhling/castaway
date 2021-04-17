@@ -27,7 +27,7 @@ End
 Object
 	Position -2 0 4
 	
-	Mesh /Sphere.obj
+	Mesh /Sphere.obj Z-Up
 	Texture /test.png
 		FilterNearest true
 	End
@@ -39,7 +39,7 @@ End
 Object
 	Position 2 0 4
 	
-	Mesh /Cube.obj
+	Mesh /Cube.obj Z-Up
 	Texture /test.png
 		FilterNearest true
 	End
