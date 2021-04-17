@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Castaway.Core;
 using Castaway.Input;
-using Castaway.Math;
 
 namespace Castaway.Levels.Controllers.Controls
 {

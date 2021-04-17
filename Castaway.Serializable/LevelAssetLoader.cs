@@ -12,7 +12,6 @@ using Castaway.Levels.Controllers.Storage;
 using Castaway.Math;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
-using static Castaway.Levels.Controllers.Controls.PlayerActionController;
 
 namespace Castaway.Serializable
 {

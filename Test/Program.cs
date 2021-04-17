@@ -6,7 +6,6 @@ using Castaway.Levels;
 using Castaway.Math;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
-using static Castaway.Levels.Controllers.Controls.PlayerActionController;
 using static Castaway.Math.Matrix4;
 
 [RequiresModules(CModule.Assets, CModule.Render, CModule.Mesh, CModule.Serializable, CModule.Input)]
