@@ -28,3 +28,30 @@ use material.specularExp as Materials.SpecularExp
 
 // Texture settings.
 use shouldTexture as Textures[IsActive]
+
+// Directional light settings
+use dirCount as Lights[D].Count
+use dirLights[$].direction as Lights[D].Direction
+use dirLights[$].ambient as Lights[D].Ambient
+use dirLights[$].diffuse as Lights[D].Diffuse
+use dirLights[$].specular as Lights[D].Specular
+
+// Point light settings
+use pointCount as Lights[P].Count
+use pointLights[$].position as Lights[P].Position
+use pointLights[$].constant as Lights[P].Constant
+use pointLights[$].linear as Lights[P].Linear
+use pointLights[$].quadratic as Lights[P].Quadratic
+use pointLights[$].ambient as Lights[P].Ambient
+use pointLights[$].diffuse as Lights[P].Diffuse
+use pointLights[$].specular as Lights[P].Specular
+
+// Spotlight settings
+use spotCount as Lights[S].Count
+use spotlights[$].position as Lights[S].Position
+use spotlights[$].direction as Lights[S].Direction
+use spotlights[$].cutOff as Lights[S].CutOff
+use spotlights[$].outerCutOff as Lights[S].OuterCutOff
+use spotlights[$].ambient as Lights[S].Ambient
+use spotlights[$].diffuse as Lights[S].Diffuse
+use spotlights[$].specular as Lights[S].Specular

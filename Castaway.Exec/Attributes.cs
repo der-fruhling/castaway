@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Castaway.Assets;
 using Castaway.Core;
 using Castaway.Input;
+using Castaway.Levels;
 using Castaway.Mesh;
 using Castaway.Render;
 using Castaway.Serializable;
@@ -18,7 +19,8 @@ namespace Castaway.Exec
         Assets,
         Mesh,
         Serializable,
-        Input
+        Input,
+        Level
     }
 
     /// <summary>
@@ -67,6 +69,9 @@ namespace Castaway.Exec
                     break;
                 case CModule.Input:
                     Modules.Use<InputSystemModule>();
+                    break;
+                case CModule.Level:
+                    Modules.Use<LevelModule>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(lm), lm, null);

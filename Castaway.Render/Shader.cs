@@ -171,6 +171,19 @@ namespace Castaway.Render
         public void SetProperty(string name, int i) => this.SetUniform(Properties[name], 1, i);
         public void SetProperty(string name, Vector vector) => this.SetUniform(Properties[name], vector);
         public void SetProperty(string name, Matrix4 matrix4) => this.SetUniform(Properties[name], matrix4);
+        
+        public void SetProperty(int index, string name, int len, params float[] floats) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), len, floats);
+        public void SetProperty(int index, string name, int len, params int[] ints) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), len, ints);
+        public void SetProperty(int index, string name, float f) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, f);
+        public void SetProperty(int index, string name, int i) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, i);
+        public void SetProperty(int index, string name, Vector vector) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), vector);
+        public void SetProperty(int index, string name, Matrix4 matrix4) 
+            => this.SetUniform(Properties[name].Replace("$", index.ToString()), matrix4);
     }
     
     /// <summary>

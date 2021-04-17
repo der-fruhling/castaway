@@ -6,7 +6,7 @@ InitialCamera ${Camera}
 
 # Camera
 Object "Camera"
-	Position 0 0 -5
+	Position 0 0 0
 	
 	# Default Rotation is [0,0,0], so this line isn't needed.
 	Rotation 0 0 0
@@ -20,32 +20,20 @@ Object "Camera"
 		BackgroundColor 0.019607843 0.90196078 1
 	End
 	
-	Controller CameraController
-		AttachedObject "Sphere"
-	End
-End
-
-# Sphere
-Object "Sphere"
-	Position 0 0 0
-	
-	Mesh /SphereHD.obj
-	
-	Texture /test.png
-		FilterNearest true
-	End
-	
-	Controller Transform Empty
-	Controller MeshRenderer Empty
+	Controller CameraController Empty
 	
 	Controller PlayerAction
 		KeyPressed
-			Spacebar "ProgramEntrypoint::SpacebarHandler"
-			LeftShift "ProgramEntrypoint::LeftShiftHandler"
+			Up "ProgramEntrypoint::UpHandler"
+			Down "ProgramEntrypoint::DownHandler"
+			Left "ProgramEntrypoint::LeftHandler"
+			Right "ProgramEntrypoint::RightHandler"
 			W "ProgramEntrypoint::WHandler"
 			S "ProgramEntrypoint::SHandler"
 			D "ProgramEntrypoint::DHandler"
 			A "ProgramEntrypoint::AHandler"
+			Spacebar "ProgramEntrypoint::SpacebarHandler"
+			LeftShift "ProgramEntrypoint::LeftShiftHandler"
 		End
 		
 		KeyPressedNow
@@ -56,4 +44,18 @@ Object "Sphere"
 			LeftControl "ProgramEntrypoint::SlowDown"
 		End
 	End
+End
+
+# Sphere
+Object "Sphere"
+	Position 0 0 3
+	
+	Mesh /SphereHD.obj
+	
+	Texture /test.png
+		FilterNearest true
+	End
+	
+	Controller Transform Empty
+	Controller MeshRenderer Empty
 End
