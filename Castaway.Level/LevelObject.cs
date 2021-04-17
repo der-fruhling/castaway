@@ -27,6 +27,13 @@ namespace Castaway.Levels
         /// </summary>
         public Vector3 Scale = new Vector3(1, 1, 1);
 
+        public Vector3 ForwardVector => Matrix4.RotateDeg(Rotation) * new Vector3(0, 0, 1);
+        public Vector3 UpVector => Matrix4.RotateDeg(Rotation) * new Vector3(0, 1, 0);
+        public Vector3 RightVector => Matrix4.RotateDeg(Rotation) * new Vector3(1, 0, 0);
+        public Vector3 BackwardVector => -ForwardVector;
+        public Vector3 DownVector => -UpVector;
+        public Vector3 LeftVector => -RightVector;
+
         public string? Name = null;
 
         public ObjectRef<LevelObject> Ref { get; internal set; }
