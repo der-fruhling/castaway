@@ -248,6 +248,7 @@ namespace Castaway.Serializable
                     t.FullName == $"Castaway.Levels.Controllers.Rendering.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Controls.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Renderers.{name}Controller" ||
+                    t.FullName == $"Castaway.Levels.Controllers.Lights.{name}Controller" ||
                     t.FullName == $"Castaway.Levels.Controllers.Storage.{name}Controller"));
             }
             catch (InvalidOperationException e)

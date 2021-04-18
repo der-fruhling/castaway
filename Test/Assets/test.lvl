@@ -44,6 +44,8 @@ Object "Camera"
 			LeftControl "ProgramEntrypoint::SlowDown"
 		End
 	End
+	
+	Controller Spotlight Empty
 End
 
 # Sphere
