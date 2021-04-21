@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Castaway.Assets;
+using static Castaway.Render.VertexAttribInfo;
 
 namespace Castaway.Render
 {
@@ -21,15 +22,21 @@ namespace Castaway.Render
             var fragSrc = (string)ldr.LoadFile($"{dir}/shader.fsh");
             var confSrc = (string)ldr.LoadFile($"{dir}/shader.csh");
 
-            var vertAttrs = new Dictionary<string, VertexAttribInfo.AttribValue>();
+            var vertAttrs = new Dictionary<string, AttribValue>();
             var fragOutputs = new Dictionary<string, uint>();
-
             var model = "";
             var view = "";
             var projection = "";
-
             var properties = new Dictionary<string, string>();
+            
+            Configure(confSrc, vertAttrs, fragOutputs, ref model, ref view, ref projection, properties);
+            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc, model, view, projection, properties);
+        }
 
+        public static void Configure(string confSrc, Dictionary<string, AttribValue> vertAttrs, 
+            Dictionary<string, uint> fragOutputs, ref string model, ref string view, ref string projection,
+            Dictionary<string, string> properties)
+        {
             var lines = confSrc.Split('\n');
             foreach (var line in lines)
             {
@@ -39,7 +46,7 @@ namespace Castaway.Render
                 switch (cmdParts[0])
                 {
                     case "input" when cmdParts.Length == 4 && cmdParts[2] == "=":
-                        vertAttrs[cmdParts[1]] = Enum.Parse<VertexAttribInfo.AttribValue>(cmdParts[3]);
+                        vertAttrs[cmdParts[1]] = Enum.Parse<AttribValue>(cmdParts[3]);
                         break;
                     case "output" when cmdParts.Length == 4 && cmdParts[2] == "=":
                         fragOutputs[cmdParts[1]] = uint.Parse(cmdParts[3]);
@@ -71,8 +78,6 @@ namespace Castaway.Render
                         throw new InvalidOperationException($"Couldn't process config: Invalid line `{line}`");
                 }
             }
-
-            return new LoadedShader(vertAttrs, fragOutputs, vertSrc, fragSrc, model, view, projection, properties);
         }
     }
 }

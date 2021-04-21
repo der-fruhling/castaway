@@ -22,6 +22,7 @@
       <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
+      <ProjectReference Include="..\Castaway.PSLC\Castaway.PSLC.csproj" />
       <ProjectReference Include="..\Castaway.Render\Castaway.Render.csproj" />
       <ProjectReference Include="..\Castaway.Serializable\Castaway.Serializable.csproj" />
       <ProjectReference Include="..\Castaway.Window\Castaway.Window.csproj" />

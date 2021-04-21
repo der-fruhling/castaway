@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Mesh", "Castaway.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Serializable", "Castaway.Serializable\Castaway.Serializable.csproj", "{3F8D66F2-FA8D-4F19-9FCB-D2A03512B0B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.PirateSL", "Castaway.PirateSL\Castaway.PirateSL.csproj", "{90661FBC-06BC-49E8-AFFE-AE5BECC60AD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.PSLC", "Castaway.PSLC\Castaway.PSLC.csproj", "{2EDC14F4-3DAB-4BBF-A94D-359CF335063C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +82,13 @@ Global
 		{3F8D66F2-FA8D-4F19-9FCB-D2A03512B0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F8D66F2-FA8D-4F19-9FCB-D2A03512B0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F8D66F2-FA8D-4F19-9FCB-D2A03512B0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90661FBC-06BC-49E8-AFFE-AE5BECC60AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90661FBC-06BC-49E8-AFFE-AE5BECC60AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90661FBC-06BC-49E8-AFFE-AE5BECC60AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90661FBC-06BC-49E8-AFFE-AE5BECC60AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EDC14F4-3DAB-4BBF-A94D-359CF335063C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EDC14F4-3DAB-4BBF-A94D-359CF335063C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EDC14F4-3DAB-4BBF-A94D-359CF335063C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EDC14F4-3DAB-4BBF-A94D-359CF335063C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
