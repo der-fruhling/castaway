@@ -11,6 +11,7 @@ namespace Castaway.Levels.Controllers.Rendering
             base.PreOnDraw();
             
             var m = Translate(parent.Position) * Scale(parent.Scale) * RotateDeg(parent.Rotation);
+            if(ActiveHandle == null) return;
             ActiveHandle.SetTModel(m);
         }
 
@@ -18,6 +19,7 @@ namespace Castaway.Levels.Controllers.Rendering
         {
             base.PostOnDraw();
             
+            if(ActiveHandle == null) return;
             ActiveHandle.SetTModel(Identity);
         }
     }

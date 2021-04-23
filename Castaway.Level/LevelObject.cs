@@ -105,7 +105,6 @@ namespace Castaway.Levels
         internal void OnDraw()
         {
             if (!_running) return;
-            var s = ShaderManager.ActiveHandle;
             _controllers.ForEach(c => c.PreOnDraw());
             _controllers.ForEach(c => c.OnDraw());
             _controllers.ForEach(c => c.PostOnDraw());

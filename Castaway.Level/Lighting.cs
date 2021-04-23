@@ -73,6 +73,7 @@ namespace Castaway.Levels
 
         internal static void Finish()
         {
+            if(ShaderManager.ActiveHandle == null) return;
             var a = ShaderManager.ActiveHandle;
             a.SetProperty("Lights[D].Count", DirectionalLights.Count);
             a.SetProperty("Lights[P].Count", PointLights.Count);

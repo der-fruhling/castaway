@@ -36,6 +36,7 @@ namespace Castaway.Levels.Controllers.Renderers
 
         public override void OnDraw()
         {
+            if(ShaderManager.ActiveHandle == null) return;
             base.OnDraw();
             if (_mesh is OBJMesh mesh)
             {

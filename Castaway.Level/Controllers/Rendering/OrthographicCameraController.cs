@@ -39,6 +39,7 @@ namespace Castaway.Levels.Controllers.Rendering
 
         private void EventPreDraw()
         {
+            if(ShaderManager.ActiveHandle == null) return;
             if (level.CurrentCamera != Id) return;
             GL.ClearColor(new Vector4(BackgroundColor, 1));
             GLFWWindow.Current.GetWindowSize(out var w, out var h);
