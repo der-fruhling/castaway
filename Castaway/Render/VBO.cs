@@ -36,6 +36,8 @@ namespace Castaway.Render
 
         public void Setup()
         {
+            if (ShaderManager.ActiveHandle.Equals(null!))
+                throw new ApplicationException("Shader is not set up. VBOs require shaders.");
             var size = ShaderManager.ActiveHandle.Attributes.Aggregate(0, (c, a) => c + a.Value switch
                 {
                     VertexAttribInfo.AttribValue.Position => 3,
@@ -94,7 +96,9 @@ namespace Castaway.Render
         /// </exception>
         public void Draw()
         {
-            if(!_locked) Setup();
+            if (ShaderManager.ActiveHandle.Equals(null!))
+                throw new ApplicationException("Shader is not set up. VBOs require shaders.");
+            if(!_setup) Setup();
             GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
             GL.DrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
