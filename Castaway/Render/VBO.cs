@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Castaway.Native;
 
 namespace Castaway.Render
@@ -42,7 +43,8 @@ namespace Castaway.Render
                     VertexAttribInfo.AttribValue.Texture => 2,
                     _ => throw new ArgumentOutOfRangeException()
                 });
-            var vbo = new float[size * _vertices.Count];
+            var vboSize = size * _vertices.Count;
+            var vbo = (float*)Marshal.AllocHGlobal(vboSize * sizeof(float)).ToPointer();
             var j = 0;
             foreach (var v in _vertices)
             {
@@ -79,8 +81,8 @@ namespace Castaway.Render
             if(_buf == uint.MaxValue)
                 fixed (uint* b = &_buf) GL.GenBuffers(1, b);
             GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
-            fixed (float* p = vbo)
-                GL.BufferData(GL.ARRAY_BUFFER, (uint) (vbo.Length * sizeof(float)), p, GL.STATIC_DRAW);
+            GL.BufferData(GL.ARRAY_BUFFER, (uint) (vboSize * sizeof(float)), vbo, GL.STATIC_DRAW);
+            Marshal.FreeHGlobal(new IntPtr(vbo));
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
             _setup = true;
         }

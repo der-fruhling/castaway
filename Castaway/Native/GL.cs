@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -22,14 +23,20 @@ namespace Castaway.Native
         [DllImport("libGLU.so")]
         private static extern IntPtr gluErrorString(uint err);
 
+        private static readonly Dictionary<string, object> Functions = new Dictionary<string, object>();
+
         private static T Fn<T>(string name)
         {
-            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
-            return Marshal.GetDelegateForFunctionPointer<T>(Environment.OSVersion.Platform switch
+            if (!Functions.ContainsKey(name))
             {
-                PlatformID.Unix => glXGetProcAddress(name),
-                _ => throw new ApplicationException("Castaway does not yet support your platform.")
-            });
+                // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+                Functions[name] = Marshal.GetDelegateForFunctionPointer<T>(Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => glXGetProcAddress(name),
+                    _ => throw new ApplicationException("Castaway does not yet support your platform.")
+                });
+            }
+            return (T) Functions[name];
         }
         
         #endregion
@@ -478,12 +485,14 @@ namespace Castaway.Native
         
         #region Helpers
 
+        private static uint _error;
+
         public static void CheckError()
         {
-            var e = GetError();
-            if (e != 0)
+            _error = GetError();
+            if (_error != 0)
             {
-                throw new ApplicationException($"OpenGL Error {e} ({Marshal.PtrToStringAnsi(gluErrorString(e))})");
+                throw new ApplicationException($"OpenGL Error {_error} ({Marshal.PtrToStringAnsi(gluErrorString(_error))})");
             }
         }
         
