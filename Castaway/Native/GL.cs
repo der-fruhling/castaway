@@ -230,6 +230,12 @@ namespace Castaway.Native
             Fn<bufferData>("glBufferData")(p, s, d, m);
             CheckError();
         }
+
+        public static void DeleteBuffers(uint c, uint* p)
+        {
+            Fn<gen>("glDeleteBuffers")(c, p);
+            CheckError();
+        }
         
         #endregion
 

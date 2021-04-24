@@ -14,8 +14,8 @@ namespace Castaway.Render
     public unsafe class VBO : VertexBuffer
     {
         private List<Vertex> _vertices = new List<Vertex>();
-        private bool _locked = false;
-        private uint _buf;
+        private bool _setup = false;
+        private uint _buf = uint.MaxValue;
 
         public override Vertex[] Vertices
         {
@@ -24,15 +24,11 @@ namespace Castaway.Render
         }
 
         /// <inheritdoc cref="VertexBuffer.Add(Castaway.Render.VertexBuffer.Vertex)"/>
-        /// <exception cref="ApplicationException">Thrown if this VBO is
-        /// locked by <see cref="Lock"/>.</exception>
         public override void Add(Vertex vertex)
         {
-            if (_locked) throw new ApplicationException("Cannot modify locked VBO.");
             _vertices.Add(vertex);
+            _setup = false;
         }
-
-        public void Lock() => _locked = true;
 
         public void Setup()
         {
@@ -80,12 +76,19 @@ namespace Castaway.Render
                 }
             }
             
-            fixed(uint* b = &_buf) GL.GenBuffers(1, b);
+            if(_buf == uint.MaxValue)
+                fixed (uint* b = &_buf) GL.GenBuffers(1, b);
             GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
             fixed (float* p = vbo)
                 GL.BufferData(GL.ARRAY_BUFFER, (uint) (vbo.Length * sizeof(float)), p, GL.STATIC_DRAW);
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
-            Lock();
+            _setup = true;
+        }
+
+        public void Reset()
+        {
+            _vertices.Clear();
+            _setup = false;
         }
 
         /// <summary>
