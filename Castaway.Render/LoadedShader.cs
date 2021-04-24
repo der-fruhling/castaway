@@ -20,7 +20,7 @@ namespace Castaway.Render
         private readonly string _projection;
         private readonly Dictionary<string, string> _properties;
 
-        internal LoadedShader(
+        public LoadedShader(
             Dictionary<string, VertexAttribInfo.AttribValue> vertAttrs, 
             Dictionary<string, uint> fragOutputs, 
             string vertSrc, 

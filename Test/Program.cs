@@ -4,6 +4,7 @@ using Castaway.Exec;
 using Castaway.Input;
 using Castaway.Levels;
 using Castaway.Math;
+using Castaway.PSLC;
 using Castaway.Render;
 using static Castaway.Assets.AssetManager;
 using static Castaway.Math.Matrix4;
@@ -30,6 +31,12 @@ internal class ProgramEntrypoint
     private ShaderHandle _shaderHandle;
     private int _shaderHandleAsset;
     private Level _level;
+
+    [Entrypoint]
+    public void Entry()
+    {
+        Modules.Use<PirateSLModule>();
+    }
 
     /*
      * The [EventHandler(...)] attribute allows defining a method in an
@@ -80,6 +87,9 @@ internal class ProgramEntrypoint
 
         Events.CloseNormally += _level.Deactivate;
         _level.Activate();
+
+        var otherHandle = Get<LoadedShader>(Index("/test.psl"))!.ToHandle();
+        otherHandle.Use();
     }
 
     // ReSharper disable UnusedMember.Global

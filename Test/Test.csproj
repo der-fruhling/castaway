@@ -11,6 +11,7 @@
       <ProjectReference Include="..\Castaway.Exec\Castaway.Exec.csproj" />
       <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
+      <ProjectReference Include="..\Castaway.PSLC\Castaway.PSLC.csproj" />
     </ItemGroup>
 
 </Project>

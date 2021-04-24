@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -164,26 +165,78 @@ namespace Castaway.Render
             if (Properties.ContainsKey("Materials.LightMode"))
                 this.SetUniform(Properties["Materials.LightMode"], (int)material.Mode);
         }
-
-        public void SetProperty(string name, int len, params float[] floats) => this.SetUniform(Properties[name], len, floats);
-        public void SetProperty(string name, int len, params int[] ints) => this.SetUniform(Properties[name], len, ints);
-        public void SetProperty(string name, float f) => this.SetUniform(Properties[name], 1, f);
-        public void SetProperty(string name, int i) => this.SetUniform(Properties[name], 1, i);
-        public void SetProperty(string name, Vector vector) => this.SetUniform(Properties[name], vector);
-        public void SetProperty(string name, Matrix4 matrix4) => this.SetUniform(Properties[name], matrix4);
         
-        public void SetProperty(int index, string name, int len, params float[] floats) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), len, floats);
-        public void SetProperty(int index, string name, int len, params int[] ints) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), len, ints);
-        public void SetProperty(int index, string name, float f) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, f);
-        public void SetProperty(int index, string name, int i) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, i);
-        public void SetProperty(int index, string name, Vector vector) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), vector);
-        public void SetProperty(int index, string name, Matrix4 matrix4) 
-            => this.SetUniform(Properties[name].Replace("$", index.ToString()), matrix4);
+        public void SetProperty(string name, int len, params float[] floats)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], len, floats);
+        }
+
+        public void SetProperty(string name, int len, params int[] ints)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], len, ints);
+        }
+
+        public void SetProperty(string name, float f)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], 1, f);
+        }
+
+        public void SetProperty(string name, int i)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], 1, i);
+        }
+
+        public void SetProperty(string name, Vector vector)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], vector);
+        }
+
+        public void SetProperty(string name, Matrix4 matrix4)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name], matrix4);
+        }
+
+        public void SetProperty(int index, string name, int len, params float[] floats)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), len, floats);
+        }
+
+        public void SetProperty(int index, string name, int len, params int[] ints)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), len, ints);
+        }
+
+        public void SetProperty(int index, string name, float f)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, f);
+        }
+
+        public void SetProperty(int index, string name, int i)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), 1, i);
+        }
+
+        public void SetProperty(int index, string name, Vector vector)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), vector);
+        }
+
+        public void SetProperty(int index, string name, Matrix4 matrix4)
+        {
+            if(Properties.ContainsKey(name))
+                this.SetUniform(Properties[name].Replace("$", index.ToString()), matrix4);
+        }
     }
     
     /// <summary>
