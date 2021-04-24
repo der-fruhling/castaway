@@ -18,9 +18,9 @@ namespace Castaway.Render
         {
             var ldr = new TextAssetLoader();
             var dir = AssetManager.AssetFolderPath + (string)ldr.LoadFile(path);
-            var vertSrc = (string)ldr.LoadFile($"{dir}/shader.vsh");
-            var fragSrc = (string)ldr.LoadFile($"{dir}/shader.fsh");
-            var confSrc = (string)ldr.LoadFile($"{dir}/shader.csh");
+            var vertSrc = (string)ldr.LoadFile($"{dir}/vert.glsl");
+            var fragSrc = (string)ldr.LoadFile($"{dir}/frag.glsl");
+            var confSrc = (string)ldr.LoadFile($"{dir}/conf.csnf");
 
             var vertAttrs = new Dictionary<string, AttribValue>();
             var fragOutputs = new Dictionary<string, uint>();
