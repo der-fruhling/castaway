@@ -20,13 +20,9 @@ namespace Castaway.Assets
         /// </summary>
         /// <param name="name">Name of the asset to search for.</param>
         /// <returns>Index of the asset.</returns>
-        /// <exception cref="ApplicationException">Thrown when no such asset
-        /// exists.</exception>
         public static int Index(string name)
         {
-            var i = _names.IndexOf(name);
-            if(i >= 0) return i;
-            throw new ApplicationException($"Asset does not exist: {name}");
+            return _names.IndexOf(name);
         }
 
         /// <summary>
