@@ -3,7 +3,7 @@ using Castaway.Math;
 
 namespace Castaway.Render
 {
-    public class TextureAtlas : Texture
+    public class TextureAtlas
     {
         public readonly struct Bounds
         {
@@ -23,17 +23,19 @@ namespace Castaway.Render
         }
 
         private readonly int _tileWidth, _tileHeight;
+        public readonly Texture Texture;
         
-        public TextureAtlas(string path, int tileWidth, int tileHeight) : base(path)
+        public TextureAtlas(Texture texture, int tileWidth, int tileHeight)
         {
             _tileWidth = tileWidth;
             _tileHeight = tileHeight;
+            Texture = texture;
         }
         
         public Bounds GetBounds(int x, int y)
         {
-            var w = (float)Image.Width;
-            var h = (float)Image.Height;
+            var w = (float)Texture.Image.Width;
+            var h = (float)Texture.Image.Height;
             var tx = x * _tileWidth / w;
             var ty = y * _tileHeight / h;
             

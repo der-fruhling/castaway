@@ -29,7 +29,7 @@ namespace Castaway.Render
     
     public unsafe class Texture
     {
-        protected readonly Bitmap Image;
+        public readonly Bitmap Image;
         private uint _tex;
 
         public bool IsSetUp { get; private set; }
