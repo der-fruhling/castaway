@@ -58,8 +58,12 @@ namespace Castaway.Levels.Controllers.Rendering
                 K = -2f / (FarClip - NearClip),
                 L = -((FarClip + NearClip) / (FarClip - NearClip)),
             });
+
+            var posScale = new Vector3((float)h / w, 1, 1);
             
-            ShaderManager.ActiveHandle.SetTView(Matrix4.RotateDeg(-parent.Rotation) * Matrix4.Translate(-parent.Position));
+            ShaderManager.ActiveHandle.SetTView(
+                Matrix4.RotateDeg(-parent.Rotation) * 
+                Matrix4.Translate(-(parent.Position * posScale)));
 
             if (ShaderManager.ActiveHandle.Properties.ContainsKey("ViewPosition"))
             {
