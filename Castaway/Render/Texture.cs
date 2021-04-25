@@ -29,7 +29,7 @@ namespace Castaway.Render
     
     public unsafe class Texture
     {
-        private readonly Bitmap _image;
+        protected readonly Bitmap Image;
         private uint _tex;
 
         public bool IsSetUp { get; private set; }
@@ -37,26 +37,26 @@ namespace Castaway.Render
         public Texture(string path)
         {
             using var s = File.OpenRead(path);
-            _image = new Bitmap(s);
+            Image = new Bitmap(s);
         }
 
         public Texture(int width, int height, Color color)
         {
-            _image = new Bitmap(width, height);
+            Image = new Bitmap(width, height);
             for (var i = 0; i < width; i++)
                 for (var j = 0; j < height; j++)
-                    _image.SetPixel(i, j, color);
+                    Image.SetPixel(i, j, color);
         }
 
         public void Setup(bool filterNearest = false, bool rgba = true)
         {
-            var pixels = new float[_image.Width * _image.Height * (rgba ? 4 : 3)];
-            for (var i = 0; i < _image.Width; i++)
+            var pixels = new float[Image.Width * Image.Height * (rgba ? 4 : 3)];
+            for (var i = 0; i < Image.Width; i++)
             {
-                for (var j = 0; j < _image.Height; j++)
+                for (var j = 0; j < Image.Height; j++)
                 {
-                    var l = (_image.Width * j + i) * (rgba ? 4 : 3);
-                    var c = _image.GetPixel(i, j);
+                    var l = (Image.Width * j + i) * (rgba ? 4 : 3);
+                    var c = Image.GetPixel(i, j);
                     pixels[l + 0] = c.R / 256f;
                     pixels[l + 1] = c.G / 256f;
                     pixels[l + 2] = c.B / 256f;
@@ -70,8 +70,8 @@ namespace Castaway.Render
             GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
             GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
             fixed(float* p = pixels)
-                GL.LoadTexture2D(GL.TEXTURE_2D, 0, GL.RGBA, (uint) _image.Width,
-                    (uint) _image.Height, 0, rgba ? GL.RGBA : GL.RGB, GL.FLOAT, p);
+                GL.LoadTexture2D(GL.TEXTURE_2D, 0, GL.RGBA, (uint) Image.Width,
+                    (uint) Image.Height, 0, rgba ? GL.RGBA : GL.RGB, GL.FLOAT, p);
             IsSetUp = true;
         }
 

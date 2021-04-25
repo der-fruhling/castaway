@@ -49,6 +49,17 @@ namespace Castaway.Math
         public static Vector2 Lerp(Vector2 a, Vector2 b, float i) => new Vector2(
             CMath.Lerp(a.X, b.X, i),
             CMath.Lerp(a.Y, b.Y, i));
+        
+        public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.X + b.X, a.Y + b.Y);
+        public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.X - b.X, a.Y - b.Y);
+        public static Vector2 operator *(Vector2 a, Vector2 b) => new Vector2(a.X * b.X, a.Y * b.Y);
+        public static Vector2 operator /(Vector2 a, Vector2 b) => new Vector2(a.X / b.X, a.Y / b.Y);
+        public static Vector2 operator +(Vector2 a, float b) => new Vector2(a.X + b, a.Y + b);
+        public static Vector2 operator -(Vector2 a, float b) => new Vector2(a.X - b, a.Y - b);
+        public static Vector2 operator *(Vector2 a, float b) => new Vector2(a.X * b, a.Y * b);
+        public static Vector2 operator /(Vector2 a, float b) => new Vector2(a.X / b, a.Y / b);
+
+        public static Vector2 operator -(Vector2 a) => new Vector2(-a.X, -a.Y);
     }
 
     public class Vector3 : Vector
