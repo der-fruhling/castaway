@@ -57,11 +57,11 @@ namespace Castaway.Render
             program.Finish();
 
             if (_model.Length > 0)
-                program.TModel = GL.GetUniformLocation(program.GLProgram, _model);
+                program.TModel = GL.glGetUniformLocation(program.GLProgram, _model);
             if (_view.Length > 0)
-                program.TView = GL.GetUniformLocation(program.GLProgram, _view);
+                program.TView = GL.glGetUniformLocation(program.GLProgram, _view);
             if (_projection.Length > 0)
-                program.TProjection = GL.GetUniformLocation(program.GLProgram, _projection);
+                program.TProjection = GL.glGetUniformLocation(program.GLProgram, _projection);
             
             program.Use();
             program.SetTModel(Matrix4.Identity);

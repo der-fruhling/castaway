@@ -115,11 +115,11 @@ namespace Cast
                 Events.PreInit += () =>
                 {
                     if (Properties!.Get<bool>(EnableDepth))
-                        GL.Enable(GL.DEPTH_TEST);
+                        GL.glEnable(GL.DEPTH_TEST);
                     Events.CloseNormally += GLFW.glfwTerminate;
                     Events.PreDraw += () =>
                     {
-                        GL.Clear(
+                        GL.glClear(
                             Properties!.Get<bool>(EnableDepth)
                                 ? GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT
                                 : GL.COLOR_BUFFER_BIT);

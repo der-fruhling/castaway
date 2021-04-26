@@ -133,19 +133,19 @@ namespace Castaway.Render
         public void SetTModel(Matrix4 m)
         {
             if(TModel == -1) return;
-            GL.SetUniform(TModel, m);
+            GL.glSetUniform(TModel, m);
         }
 
         public void SetTView(Matrix4 m)
         {
             if(TView == -1) return;
-            GL.SetUniform(TView, m);
+            GL.glSetUniform(TView, m);
         }
 
         public void SetTProjection(Matrix4 m)
         {
             if(TProjection == -1) return;
-            GL.SetUniform(TProjection, m);
+            GL.glSetUniform(TProjection, m);
         }
 
         public void SetMaterial(Material material)
@@ -265,13 +265,13 @@ namespace Castaway.Render
         /// </returns>
         /// <seealso cref="FinishLinkingProgram"/>
         /// <seealso cref="CreateShader(uint,string)"/>
-        /// <seealso cref="GL.CreateProgram"/>
+        /// <seealso cref="GL.glCreateProgram"/>
         internal static uint CreateProgram(params uint[] shaders)
         {
-            var p = GL.CreateProgram();
+            var p = GL.glCreateProgram();
             foreach (var shader in shaders)
             {
-                GL.AttachToProgram(p, shader);
+                GL.glAttachShader(p, shader);
             }
             return p;
         }
@@ -286,12 +286,12 @@ namespace Castaway.Render
         /// <seealso cref="BindFragmentLocation"/>
         /// <seealso cref="CreateProgram"/>
         /// <seealso cref="ShaderHandle.Finish"/>
-        /// <seealso cref="GL.LinkProgram"/>
+        /// <seealso cref="GL.glLinkProgram"/>
         internal static void FinishLinkingProgram(uint program)
         {
-            GL.LinkProgram(program);
+            GL.glLinkProgram(program);
             var ptr = Marshal.AllocHGlobal(8192);
-            GL.GetProgramInfo(program, 8192, null, ptr);
+            GL.glGetProgramInfoLog(program, 8192, null, ptr);
             Console.Write(Marshal.PtrToStringAnsi(ptr));
         }
 
@@ -301,10 +301,10 @@ namespace Castaway.Render
         /// </summary>
         /// <param name="program">Program to use.</param>
         /// <seealso cref="Use(ShaderHandle)"/>
-        /// <seealso cref="GL.UseProgram"/>
+        /// <seealso cref="GL.glUseProgram"/>
         internal static void Use(uint program)
         {
-            GL.UseProgram(program);
+            GL.glUseProgram(program);
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace Castaway.Render
         /// <param name="handle">Handle to enable.</param>
         /// <seealso cref="Use(uint)"/>
         /// <seealso cref="ActiveHandle"/>
-        /// <seealso cref="GL.UseProgram"/>
+        /// <seealso cref="GL.glUseProgram"/>
         /// <seealso cref="ShaderHandle.Use"/>
         public static void Use(ShaderHandle handle)
         {
@@ -335,16 +335,16 @@ namespace Castaway.Render
         /// during compilation.</exception>
         internal static uint CreateShader(uint type, string source)
         {
-            var shader = GL.CreateShader(type);
+            var shader = GL.glCreateShader(type);
 
             var len = (uint) source.Length;
             var ptr = Marshal.StringToHGlobalAnsi(source);
-            GL.ShaderSource(shader, 1, &ptr, &len);
+            GL.glShaderSource(shader, 1, &ptr, &len);
             
-            GL.CompileShader(shader);
+            GL.glCompileShader(shader);
             
             var log = Marshal.AllocHGlobal(8192);
-            GL.GetShaderInfo(shader, 8192, null, log);
+            GL.glGetShaderInfoLog(shader, 8192, null, log);
             var logStr = Marshal.PtrToStringAnsi(log);
             var t = type switch
             {
@@ -359,7 +359,7 @@ namespace Castaway.Render
             }
             
             int val;
-            GL.GetShaderValue(shader, GL.COMPILE_STATUS, &val);
+            GL.glGetShaderiv(shader, GL.COMPILE_STATUS, &val);
             if (val != 1)
             {
                 throw new ApplicationException($"{t} shader failed to compile.");
@@ -406,7 +406,7 @@ namespace Castaway.Render
         /// <param name="shaders">Shaders to delete.</param>
         internal static void DeleteShaders(params uint[] shaders)
         {
-            foreach(var s in shaders) GL.DeleteShader(s);
+            foreach(var s in shaders) GL.glDeleteShader(s);
         }
 
         /// <summary>
@@ -415,7 +415,7 @@ namespace Castaway.Render
         /// <param name="programs">Programs to delete.</param>
         internal static void DeletePrograms(params uint[] programs)
         {
-            foreach(var p in programs) GL.DeleteProgram(p);
+            foreach(var p in programs) GL.glDeleteProgram(p);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Castaway.Render
         /// <param name="shaders">Shaders to detach.</param>
         internal static void DetachShaders(uint program, params uint[] shaders)
         {
-            foreach (var s in shaders) GL.DetachFromProgram(program, s);
+            foreach (var s in shaders) GL.glDetachShader(program, s);
         }
 
         /// <summary>
@@ -466,12 +466,12 @@ namespace Castaway.Render
             var all = sizes.Aggregate((a, b) => a + b);
             for (var i = 0; i < handle.Attributes.Length; i++)
             {
-                var attr = GL.GetAttributeLocation(handle.GLProgram, handle.Attributes[i].Name);
+                var attr = GL.glGetAttribLocation(handle.GLProgram, handle.Attributes[i].Name);
                 if (attr == -1) continue;
-                GL.SetAttribPointer(attr, sizes[i], GL.FLOAT, 0, 
+                GL.glVertexAttribPointer(attr, sizes[i], GL.FLOAT, 0, 
                     (uint) (all * sizeof(float)),
                     (ulong) (i == 0 ? 0 : sizes[..i].Aggregate((a, b) => a + b) * sizeof(float)));
-                GL.EnableAttribute(attr);
+                GL.glEnableVertexAttribArray(attr);
             }
         }
 
@@ -484,8 +484,8 @@ namespace Castaway.Render
         /// <param name="floats">Float array.</param>
         public static void SetUniform(this ShaderHandle handle, string name, int len, params float[] floats)
         {
-            var loc = GL.GetUniformLocation(handle.GLProgram, name);
-            GL.SetUniform(loc, len, floats);
+            var loc = GL.glGetUniformLocation(handle.GLProgram, name);
+            GL.glSetUniform(loc, len, floats);
         }
 
         public static void SetUniform(this ShaderHandle handle, string name, float f)
@@ -505,8 +505,8 @@ namespace Castaway.Render
         /// <param name="ints">1..4 ints.</param>
         public static void SetUniform(this ShaderHandle handle, string name, int len, params int[] ints)
         {
-            var loc = GL.GetUniformLocation(handle.GLProgram, name);
-            GL.SetUniform(loc, len, ints);
+            var loc = GL.glGetUniformLocation(handle.GLProgram, name);
+            GL.glSetUniform(loc, len, ints);
         }
         
         public static void SetUniform(this ShaderHandle handle, string name, int i)
@@ -520,8 +520,8 @@ namespace Castaway.Render
         /// <param name="matrix">Matrix value.</param>
         public static void SetUniform(this ShaderHandle handle, string name, Matrix4 matrix)
         {
-            var loc = GL.GetUniformLocation(handle.GLProgram, name);
-            GL.SetUniform(loc, matrix);
+            var loc = GL.glGetUniformLocation(handle.GLProgram, name);
+            GL.glSetUniform(loc, matrix);
         }
 
         /// <summary>
@@ -531,6 +531,6 @@ namespace Castaway.Render
         /// <param name="location">Location to bind to.</param>
         /// <param name="name">Name of the output.</param>
         public static void BindFragmentLocation(this ShaderHandle handle, uint location, string name)
-            => GL.BindFragLocation(handle.GLProgram, location, name);
+            => GL.glBindFragDataLocation(handle.GLProgram, location, name);
     }
 }

@@ -22,14 +22,14 @@ namespace Castaway.Render
 
         public void Draw()
         {
-            GL.Begin(GL.TRIANGLES);
+            GL.glBegin(GL.TRIANGLES);
             foreach (var vertex in _vertices)
             {
-                GL.Color(vertex.Color);
-                GL.TexCoord(vertex.Texture);
-                GL.Vertex(vertex.Position);
+                GL.glColor(vertex.Color);
+                GL.glTexCoord(vertex.Texture);
+                GL.glVertex(vertex.Position);
             }
-            GL.End();
+            GL.glEnd();
         }
 
         public override void Add(Vertex vertex) => _vertices.Add(vertex);

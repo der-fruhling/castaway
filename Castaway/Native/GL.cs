@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Castaway.Math;
@@ -149,96 +150,96 @@ namespace Castaway.Native
         
         #region Old OpenGL Drawing
         
-        public static void Begin(uint a)
+        public static void glBegin(uint a)
         {
             Fn<uint1>("glBegin")(a);
             CheckError();
         }
 
-        public static void End()
+        public static void glEnd()
         {
             Fn<none>("glEnd")();
             CheckError();
         }
 
-        public static void Vertex(float x, float y)
+        public static void glVertex2f(float x, float y)
         {
             Fn<float2>("glVertex2f")(x, y);
             CheckError();
         }
 
-        public static void Vertex(float x, float y, float z)
+        public static void glVertex3f(float x, float y, float z)
         {
             Fn<float3>("glVertex3f")(x, y, z);
             CheckError();
         }
 
-        public static void Vertex(float x, float y, float z, float w)
+        public static void glVertex4f(float x, float y, float z, float w)
         {
             Fn<float4>("glVertex4f")(x, y, z, w);
             CheckError();
         }
 
-        public static void Color(float r, float g, float b)
+        public static void glColor3f(float r, float g, float b)
         {
             Fn<float3>("glColor3f")(r, g, b);
             CheckError();
         }
 
-        public static void Color(float r, float g, float b, float a)
+        public static void glColor4f(float r, float g, float b, float a)
         {
             Fn<float4>("glColor4f")(r, g, b, a);
             CheckError();
         }
 
-        public static void TexCoord(float x, float y)
+        public static void glTexCoord2f(float x, float y)
         {
             Fn<float2>("glTexCoord2f")(x, y);
             CheckError();
         }
 
-        public static void TexCoord(float x, float y, float z)
+        public static void glTexCoord3f(float x, float y, float z)
         {
             Fn<float3>("glTexCoord3f")(x, y, z);
             CheckError();
         }
         #endregion
 
-        public static void Clear(uint a)
+        public static void glClear(uint a)
         {
             Fn<uint1>("glClear")(a);
             CheckError();
         }
 
-        public static void ClearColor(float r, float g, float b, float a)
+        public static void glClearColor(float r, float g, float b, float a)
         {
             Fn<float4>("glClearColor")(r, g, b, a);
             CheckError();
         }
 
-        public static void ClearColor(Vector4 v) => ClearColor(v.R, v.G, v.B, v.A);
+        public static void glClearColor(Vector4 v) => glClearColor(v.R, v.G, v.B, v.A);
 
         #region Buffers
         
-        public static void GenBuffers(uint c, uint* p)
+        public static void glGenBuffers(uint c, uint* p)
         {
             Fn<gen>("glGenBuffers")(c, p);
             CheckError();
         }
 
-        public static void BindBuffer(uint p, uint b)
+        public static void glBindBuffer(uint p, uint b)
         {
             Fn<uint2>("glBindBuffer")(p, b);
             CheckError();
         }
 
-        public static void BufferData(uint p, uint s, void* d, uint m)
+        public static void glBufferData(uint p, uint s, void* d, uint m)
         {
             Fn<bufferData>("glBufferData")(p, s, d, m);
             CheckError();
         }
 
-        public static void DeleteBuffers(uint c, uint* p)
+        public static void glDeleteBuffers(uint c, uint* p)
         {
             Fn<gen>("glDeleteBuffers")(c, p);
             CheckError();
@@ -246,7 +247,7 @@ namespace Castaway.Native
         
         #endregion
 
-        public static void DrawArrays(uint m, int f, uint c)
+        public static void glDrawArrays(uint m, int f, uint c)
         {
             Fn<drawArrays>("glDrawArrays")(m, f, c);
             CheckError();
@@ -255,39 +256,39 @@ namespace Castaway.Native
         #region Shaders
         
         #region Create / Delete
-        public static uint CreateShader(uint m)
+        public static uint glCreateShader(uint m)
         {
             var a = Fn<create1>("glCreateShader")(m);
             CheckError();
             return a;
         }
 
-        public static void DeleteShader(uint s)
+        public static void glDeleteShader(uint s)
         {
             Fn<uint1>("glDeleteShader")(s);
             CheckError();
         }
         #endregion
 
-        public static void ShaderSource(uint s, uint c, IntPtr* src, uint* len)
+        public static void glShaderSource(uint s, uint c, IntPtr* src, uint* len)
         {
             Fn<shaderSource>("glShaderSource")(s, c, src, len);
             CheckError();
         }
 
-        public static void CompileShader(uint s)
+        public static void glCompileShader(uint s)
         {
             Fn<uint1>("glCompileShader")(s);
             CheckError();
         }
 
-        public static void GetShaderValue(uint s, uint t, int* p)
+        public static void glGetShaderiv(uint s, uint t, int* p)
         {
             Fn<getShaderiv>("glGetShaderiv")(s, t, p);
             CheckError();
         }
 
-        public static void GetShaderInfo(uint s, uint l, uint* ol, IntPtr log)
+        public static void glGetShaderInfoLog(uint s, uint l, uint* ol, IntPtr log)
         {
             Fn<getInfoLog>("glGetShaderInfoLog")(s, l, ol, log);
             CheckError();
@@ -298,14 +299,14 @@ namespace Castaway.Native
         #region Programs
         
         #region Create / Delete
-        public static uint CreateProgram()
+        public static uint glCreateProgram()
         {
             var a = Fn<create0>("glCreateProgram")();
             CheckError();
             return a;
         }
 
-        public static void DeleteProgram(uint p)
+        public static void glDeleteProgram(uint p)
         {
             Fn<uint1>("glDeleteProgram")(p);
             CheckError();
@@ -313,13 +314,13 @@ namespace Castaway.Native
         #endregion
 
         #region Attach / Detach
-        public static void AttachToProgram(uint p, uint s)
+        public static void glAttachShader(uint p, uint s)
         {
             Fn<uint2>("glAttachShader")(p, s);
             CheckError();
         }
 
-        public static void DetachFromProgram(uint p, uint s)
+        public static void glDetachShader(uint p, uint s)
         {
             Fn<uint2>("glDetachShader")(p, s);
             CheckError();
@@ -327,53 +328,53 @@ namespace Castaway.Native
         #endregion
 
         #region Link / Use
-        public static void LinkProgram(uint p)
+        public static void glLinkProgram(uint p)
         {
             Fn<uint1>("glLinkProgram")(p);
             CheckError();
         }
 
-        public static void UseProgram(uint p)
+        public static void glUseProgram(uint p)
         {
             Fn<uint1>("glUseProgram")(p);
             CheckError();
         }
         #endregion
         
-        public static void GetProgramInfo(uint p, uint l, uint* ol, IntPtr log)
+        public static void glGetProgramInfoLog(uint p, uint l, uint* ol, IntPtr log)
         {
             Fn<getInfoLog>("glGetProgramInfoLog")(p, l, ol, log);
             CheckError();
         }
         
-        public static void BindFragLocation(uint p, uint o, string name)
+        public static void glBindFragDataLocation(uint p, uint o, string name)
         {
             Fn<bindFragDataLocation>("glBindFragDataLocation")(p, o, name);
             CheckError();
         }
 
         #region Attributes
-        public static int GetAttributeLocation(uint p, string name)
+        public static int glGetAttribLocation(uint p, string name)
         {
             var a = Fn<getAttribLocation>("glGetAttribLocation")(p, name);
             CheckError();
             return a;
         }
 
-        public static void SetAttribPointer(int i, int s, uint t, uint n, uint stride, ulong ptr)
+        public static void glVertexAttribPointer(int i, int s, uint t, uint n, uint stride, ulong ptr)
         {
             Fn<vertexAttribPointer>("glVertexAttribPointer")(i, s, t, n, stride, ptr);
             CheckError();
         }
 
-        public static void EnableAttribute(int a)
+        public static void glEnableVertexAttribArray(int a)
         {
             Fn<int1>("glEnableVertexAttribArray")(a);
             CheckError();
         }
         #endregion
 
-        public static bool IsProgram(uint o)
+        public static bool glIsProgram(uint o)
         {
             var a = Fn<isChecker>("glIsProgram")(o);
             CheckError();
@@ -381,7 +382,7 @@ namespace Castaway.Native
         }
 
         #region Uniforms
-        public static void SetUniform(int l, int len, params float[] data)
+        public static void glSetUniform(int l, int len, params float[] data)
         {
             fixed (float* p = data)
             {
@@ -396,7 +397,7 @@ namespace Castaway.Native
             CheckError();
         }
         
-        public static void SetUniform(int l, int len, params int[] data)
+        public static void glSetUniform(int l, int len, params int[] data)
         {
             fixed (int* p = data)
             {
@@ -411,14 +412,14 @@ namespace Castaway.Native
             CheckError();
         }
 
-        public static void SetUniform(int l, Matrix4 m)
+        public static void glSetUniform(int l, Matrix4 m)
         {
             var a = m.Array;
             fixed (float* p = a) Fn<uniformMf>("glUniformMatrix4fv")(l, 1, true, p);
             CheckError();
         }
 
-        public static int GetUniformLocation(uint p, string name)
+        public static int glGetUniformLocation(uint p, string name)
         {
             var a = Fn<getUniformLocation>("glGetUniformLocation")(p, name);
             CheckError();
@@ -430,47 +431,47 @@ namespace Castaway.Native
 
         #region Enable / Disable
 
-        public static void Enable(uint c)
-                {
-                    Fn<uint1>("glEnable")(c);
-                    CheckError();
-                }
-        
-                public static void Disable(uint c)
-                {
-                    Fn<uint1>("glDisable")(c);
-                    CheckError();
-                }
+        public static void glEnable(uint c)
+        {
+            Fn<uint1>("glEnable")(c);
+            CheckError();
+        }
+
+        public static void glDisable(uint c)
+        {
+            Fn<uint1>("glDisable")(c);
+            CheckError();
+        }
 
         #endregion
 
         #region Textures
         
-        public static void GenTextures(uint count, uint* output)
+        public static void glGenTextures(uint count, uint* output)
         {
             Fn<gen>("glGenTextures")(count, output);
             CheckError();
         }
         
-        public static void BindTexture(uint mode, uint texture)
+        public static void glBindTexture(uint mode, uint texture)
         {
             Fn<uint2>("glBindTexture")(mode, texture);
             CheckError();
         }
 
-        public static void TextureParam(uint target, uint name, float param)
+        public static void glTexParameterf(uint target, uint name, float param)
         {
             Fn<texParameterf>("glTexParameterf")(target, name, param);
             CheckError();
         }
 
-        public static void TextureParam(uint target, uint name, int param)
+        public static void glTexParameteri(uint target, uint name, int param)
         {
             Fn<texParameteri>("glTexParameteri")(target, name, param);
             CheckError();
         }
 
-        public static void LoadTexture2D(uint target, int level, uint internalFormat, uint width, uint height, int border,
+        public static void glTexImage2D(uint target, int level, uint internalFormat, uint width, uint height, int border,
             uint format, uint type, void* data)
         {
             Fn<texImage2D>("glTexImage2D")(
@@ -481,7 +482,7 @@ namespace Castaway.Native
 
         #endregion
 
-        public static uint GetError() => Fn<create0>("glGetError")();
+        public static uint glGetError() => Fn<create0>("glGetError")();
         
         #region Helpers
 
@@ -489,21 +490,21 @@ namespace Castaway.Native
 
         public static void CheckError()
         {
-            _error = GetError();
+            _error = glGetError();
             if (_error != 0)
             {
                 throw new ApplicationException($"OpenGL Error {_error} ({Marshal.PtrToStringAnsi(gluErrorString(_error))})");
             }
         }
         
-        public static void Vertex(Vector2 v) => Vertex(v.X, v.Y);
-        public static void Vertex(Vector3 v) => Vertex(v.X, v.Y, v.Z);
-        public static void Vertex(Vector4 v) => Vertex(v.X, v.Y, v.Z, v.W);
-        public static void Color(Vector3 v) => Color(v.R, v.G, v.B);
-        public static void Color(Vector4 v) => Color(v.R, v.G, v.B, v.A);
-        public static void TexCoord(Vector2 v) => TexCoord(v.X, v.Y);
-        public static void TexCoord(Vector3 v) => TexCoord(v.X, v.Y, v.Z);
-        public static void Clear(params uint[] a) => Clear(a.Aggregate((o, i) => o | i));
+        public static void glVertex(Vector2 v) => glVertex2f(v.X, v.Y);
+        public static void glVertex(Vector3 v) => glVertex3f(v.X, v.Y, v.Z);
+        public static void glVertex(Vector4 v) => glVertex4f(v.X, v.Y, v.Z, v.W);
+        public static void glColor(Vector3 v) => glColor3f(v.R, v.G, v.B);
+        public static void glColor(Vector4 v) => glColor4f(v.R, v.G, v.B, v.A);
+        public static void glTexCoord(Vector2 v) => glTexCoord2f(v.X, v.Y);
+        public static void glTexCoord(Vector3 v) => glTexCoord3f(v.X, v.Y, v.Z);
+        public static void glClear(params uint[] a) => glClear(a.Aggregate((o, i) => o | i));
 
         #endregion
 

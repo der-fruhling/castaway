@@ -16,14 +16,14 @@ namespace Castaway.Render
         {
             BindLocation = bindLocation;
             Texture = texture;
-            GL.BindTexture(BindLocation, Texture);
+            GL.glBindTexture(BindLocation, Texture);
             ShaderManager.ActiveHandle.SetProperty("Textures[IsActive]", 1);
         }
 
         public void Dispose()
         {
             ShaderManager.ActiveHandle.SetProperty("Textures[IsActive]", 0);
-            GL.BindTexture(BindLocation, 0);
+            GL.glBindTexture(BindLocation, 0);
         }
     }
     
@@ -63,14 +63,14 @@ namespace Castaway.Render
                     if(rgba) pixels[l + 3] = c.A;
                 }
             }
-            fixed(uint* p = &_tex) GL.GenTextures(1, p);
-            GL.BindTexture(GL.TEXTURE_2D, _tex);
-            GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.REPEAT);
-            GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.REPEAT);
-            GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
-            GL.TextureParam(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
+            fixed(uint* p = &_tex) GL.glGenTextures(1, p);
+            GL.glBindTexture(GL.TEXTURE_2D, _tex);
+            GL.glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.REPEAT);
+            GL.glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.REPEAT);
+            GL.glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
+            GL.glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, filterNearest ? GL.NEAREST : GL.LINEAR);
             fixed(float* p = pixels)
-                GL.LoadTexture2D(GL.TEXTURE_2D, 0, GL.RGBA, (uint) Image.Width,
+                GL.glTexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, (uint) Image.Width,
                     (uint) Image.Height, 0, rgba ? GL.RGBA : GL.RGB, GL.FLOAT, p);
             IsSetUp = true;
         }
@@ -80,7 +80,7 @@ namespace Castaway.Render
         public void Bind(uint to)
         {
             if (to >= 32) throw new ApplicationException("OpenGL only has 32 other texture slots.");
-            GL.BindTexture(GL.TEXTURE0 + to, _tex);
+            GL.glBindTexture(GL.TEXTURE0 + to, _tex);
         }
 
         public class Loader : IAssetLoader

@@ -43,7 +43,7 @@ namespace Castaway.Levels.Controllers.Rendering
         {
             if(ShaderManager.ActiveHandle == null) return;
             if (level.CurrentCamera != Id) return;
-            GL.ClearColor(new Vector4(BackgroundColor, 1));
+            GL.glClearColor(new Vector4(BackgroundColor, 1));
             GLFWWindow.Current.GetWindowSize(out var w, out var h);
 
             var a = (float) w / h * Size;

@@ -79,9 +79,9 @@ namespace Castaway.Render
             }
             
             if(_buf == uint.MaxValue)
-                fixed (uint* b = &_buf) GL.GenBuffers(1, b);
-            GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
-            GL.BufferData(GL.ARRAY_BUFFER, (uint) (vboSize * sizeof(float)), vbo, GL.STATIC_DRAW);
+                fixed (uint* b = &_buf) GL.glGenBuffers(1, b);
+            GL.glBindBuffer(GL.ARRAY_BUFFER, _buf);
+            GL.glBufferData(GL.ARRAY_BUFFER, (uint) (vboSize * sizeof(float)), vbo, GL.STATIC_DRAW);
             Marshal.FreeHGlobal(new IntPtr(vbo));
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
             _setup = true;
@@ -104,9 +104,9 @@ namespace Castaway.Render
             if (ShaderManager.ActiveHandle.Equals(null!))
                 throw new ApplicationException("Shader is not set up. VBOs require shaders.");
             if(!_setup) Setup();
-            GL.BindBuffer(GL.ARRAY_BUFFER, _buf);
+            GL.glBindBuffer(GL.ARRAY_BUFFER, _buf);
             ShaderManager.SetupAttributes(ShaderManager.ActiveHandle);
-            GL.DrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
+            GL.glDrawArrays(GL.TRIANGLES, 0, (uint) _vertices.Count);
         }
     }
 }
