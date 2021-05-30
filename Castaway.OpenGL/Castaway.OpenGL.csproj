@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Remove="_native/Unix" />
+        <ProjectReference Include="..\Castaway\Castaway.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <PackageReference Include="glfw-net" Version="3.3.1" />
+        <Content Remove="_glspec/2.1.gl" />
     </ItemGroup>
 </Project>

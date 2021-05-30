@@ -1,56 +1,48 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Castaway;
-using Castaway.Assets;
-using Castaway.Math;
-using Castaway.Render;
+using Castaway.OpenGL;
+using Castaway.Rendering;
 
 namespace Test
 {
     internal static class Program
     {
-        private static Shader _shader;
-        private static AssetManager _assets = new DirectoryAssetManager("Assets");
-        
-        private static async Task Main(string[] args)
+        private static void Main()
         {
-            var vertLoad = _assets.LoadAsync("default.v.glsl");
-            var fragLoad = _assets.LoadAsync("default.f.glsl");
-            
-            Cast.Init();
-            Console.WriteLine($"Castaway Version {Cast.GetVersion()}");
+            Graphics.SetImpl<GLGraphics>();
+            var g = Graphics.GetImpl();
+            var w = g.CreateWindow("Test", 800, 600);
 
-            Window w;
-            using (var c = new Window.Config(800, 600, "cat").AnyGLVersion())
-                w = new Window(c);
+            var v = g.CreateShader(ShaderStage.Vertex, "#version 400 core\nin vec2 inPos;\nvoid main() { gl_Position = vec4(inPos, 0, 1); }");
+            var f = g.CreateShader(ShaderStage.Fragment, "#version 400 core\nout vec4 outCol;\nvoid main() { outCol = vec4(1, 1, 1, 1); }");
+            var p = g.CreateProgram(v, f);
+            g.CreateInput(p, VertexInputType.PositionXY, "inPos");
+            g.CreateOutput(p, 0, "outCol");
+            g.FinishProgram(p);
 
-            var vert = _assets.Get<StringAsset>(await vertLoad);
-            var frag = _assets.Get<StringAsset>(await fragLoad);
-            
-            _shader = new Shader(vert, frag)
+            g.SetClearColor(0, 0, 0);
+
+            while (!w.ShouldClose)
             {
-                [ShaderAttr.Position2] = "pos", 
-                [ShaderAttr.Color3] = "inCol", 
-                [0] = "outCol"
-            };
+                g.StartFrame(w);
+                g.Clear();
+                g.Use(p);
+                
+                var b = g.CreateBuffer(BufferTarget.VertexArray);
+                var va = new VertexArray()
+                    .Position(0, 0).Next()
+                    .Position(0, 1).Next()
+                    .Position(1, 0).Next();
+                b.Upload(va);
+                var db = g.CreateDrawBuffer(b, 3);
+                
+                g.Draw(db);
+                
+                g.Destroy(b);
+                g.FinishFrame(w);
+            }
             
-            _shader.Link();
-            _shader.Use();
-
-            _shader["transform"] = new Matrix(4) {[0, 0] = 600f / 800f};
-            
-            const float a = -.5f, b = .5f;
-            var o = new DrawObject()
-                .Vertex(a, a, r: 1, g: 0, b: 0)
-                .Vertex(a, b, r: 0, g: 1, b: 0)
-                .Vertex(b, a, r: 0, g: 0, b: 1)
-                .Vertex(b, b, r: 1, g: 1, b: 1)
-                .Quad();
-
-            using (w) w.Render = draw =>
-            {
-                draw.Draw(o);
-            };
+            w.Close();
+            g.Dispose();
         }
     }
 }
