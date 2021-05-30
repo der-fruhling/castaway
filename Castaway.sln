@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.OpenGL", "Castaway
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.OpenGL.FunctionListGenerator", "Castaway.OpenGL.FunctionListGenerator\Castaway.OpenGL.FunctionListGenerator.csproj", "{2E28263F-8F82-4E70-AA9C-883AF6FA30F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Tests", "Castaway.Tests\Castaway.Tests.csproj", "{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2E28263F-8F82-4E70-AA9C-883AF6FA30F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E28263F-8F82-4E70-AA9C-883AF6FA30F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E28263F-8F82-4E70-AA9C-883AF6FA30F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
