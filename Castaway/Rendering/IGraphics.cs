@@ -23,12 +23,17 @@ namespace Castaway.Rendering
         
         void CreateInput(IProgram program, VertexInputType inputType, string name);
         void CreateOutput(IProgram program, uint color, string name);
-        void CreateUniform(IProgram program, string name);
+        void CreateUniform(IProgram program, string name, UniformType type);
         void RemoveInput(IProgram program, string name);
         void RemoveOutput(IProgram program, string name);
         void RemoveUniform(IProgram program, string name);
         void FinishProgram(IProgram program);
 
+        void SetUniform(string name, object @object);
+        void SetUniform(string name, object[] objects);
+        void SetUniform(UniformType name, object @object);
+        void SetUniform(UniformType name, object[] objects);
+        
         void Clear();
         void SetClearColor(float r, float g, float b);
     }

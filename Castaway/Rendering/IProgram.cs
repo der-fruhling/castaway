@@ -8,7 +8,7 @@ namespace Castaway.Rendering
         IShader[] Shaders { get; }
         ReadOnlyDictionary<string, VertexInputType> VertexInputs { get; }
         ReadOnlyDictionary<string, uint> FragmentOutputs { get; }
-        ReadOnlyDictionary<string, int> Uniforms { get; }
+        ReadOnlyDictionary<string, UniformType> Uniforms { get; }
         
         bool IsLinked { get; }
         bool HasVertexShader { get; }

@@ -10,6 +10,9 @@ namespace Castaway.OpenGL
         public OpenGLType Type => OpenGLType.Buffer;
         public bool IsValid => Validate();
         public GL.BufferTarget Target;
+
+        private bool Revalidate = true;
+        private bool LastValidate;
         
         public GLBuffer(GL.BufferTarget target, uint number)
         {
@@ -19,7 +22,14 @@ namespace Castaway.OpenGL
 
         public bool Validate()
         {
-            return GL.IsBuffer(Number);
+            if (!Revalidate) return LastValidate;
+            Revalidate = false;
+            return LastValidate = GL.IsBuffer(Number);
+        }
+
+        public void MarkDirty()
+        {
+            Revalidate = true;
         }
 
         public void Upload(Span<byte> data)

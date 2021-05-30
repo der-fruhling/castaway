@@ -13,5 +13,6 @@ namespace Castaway.OpenGL
         OpenGLType Type { get; }
 
         bool Validate();
+        void MarkDirty();
     }
 }

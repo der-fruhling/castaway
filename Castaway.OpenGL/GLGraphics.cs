@@ -1,6 +1,8 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Castaway.Math;
 using Castaway.Rendering;
 using GLFW;
 using static Castaway.Rendering.DrawBufferConstants;
@@ -179,6 +181,7 @@ namespace Castaway.OpenGL
             
             GL.UseProgram(o.Number);
             _currentProgram = o;
+            o.MarkDirty();
         }
 
         public void CreateInput(IProgram program, VertexInputType inputType, string name)
@@ -187,6 +190,7 @@ namespace Castaway.OpenGL
             if (!program.IsValid) throw new InvalidOperationException("Cannot create an input on an invalid program.");
 
             o.VertexInputsI[name] = inputType;
+            o.MarkDirty();
         }
 
         public void CreateOutput(IProgram program, uint color, string name)
@@ -195,14 +199,16 @@ namespace Castaway.OpenGL
             if (!program.IsValid) throw new InvalidOperationException("Cannot create an output on an invalid program.");
 
             o.FragmentOutputsI[name] = color;
+            o.MarkDirty();
         }
 
-        public void CreateUniform(IProgram program, string name)
+        public void CreateUniform(IProgram program, string name, UniformType type)
         {
             if (program is not GLProgram o) throw new InvalidOperationException("Object is not an OpenGL program instance.");
             if (!program.IsValid) throw new InvalidOperationException("Cannot create a uniform on an invalid program.");
 
-            o.UniformsI[name] = -1;
+            o.UniformsI[name] = type;
+            o.MarkDirty();
         }
 
         public void RemoveInput(IProgram program, string name)
@@ -211,6 +217,7 @@ namespace Castaway.OpenGL
             if (!program.IsValid) throw new InvalidOperationException("Cannot delete an input on an invalid program.");
 
             o.VertexInputsI.Remove(name);
+            o.MarkDirty();
         }
 
         public void RemoveOutput(IProgram program, string name)
@@ -219,6 +226,7 @@ namespace Castaway.OpenGL
             if (!program.IsValid) throw new InvalidOperationException("Cannot delete an output on an invalid program.");
 
             o.FragmentOutputsI.Remove(name);
+            o.MarkDirty();
         }
 
         public void RemoveUniform(IProgram program, string name)
@@ -227,6 +235,7 @@ namespace Castaway.OpenGL
             if (!program.IsValid) throw new InvalidOperationException("Cannot delete a uniform on an invalid program.");
 
             o.UniformsI.Remove(name);
+            o.MarkDirty();
         }
 
         public void FinishProgram(IProgram program)
@@ -246,6 +255,94 @@ namespace Castaway.OpenGL
 
             o.IsLinked = true;
             Use(o);
+            o.MarkDirty();
+        }
+
+        public void SetUniform(string name, object @object)
+        {
+            SetUniform(name, new[] {@object});
+        }
+
+        public void SetUniform(string name, object[] objects)
+        {
+            if (_currentProgram is not GLProgram o) throw new InvalidOperationException("Current program is not an OpenGL program instance.");
+            if (!_currentProgram.IsValid) throw new InvalidOperationException("Cannot modify invalid program.");
+
+            var loc = o.UniformLocations.ContainsKey(name)
+                ? o.UniformLocations[name]
+                : o.UniformLocations[name] = GL.GetUniformLocation(o.Number, name);
+            
+            switch (objects[0])
+            {
+                case float:
+                    GL.SetUniform(loc, objects.Length, objects.Cast<float>().ToArray());
+                    break;
+                case int:
+                    GL.SetUniform(loc, objects.Length, objects.Cast<int>().ToArray());
+                    break;
+                case double:
+                    GL.SetUniform(loc, objects.Length, objects.Cast<double>().ToArray());
+                    break;
+                case Vector2:
+                    GL.SetUniformVector2(loc, objects.Length, objects
+                        .Cast<Vector2>()
+                        .SelectMany(v => new[] {v.X, v.Y})
+                        .ToArray());
+                    break;
+                case Vector3:
+                    GL.SetUniformVector3(loc, objects.Length, objects
+                        .Cast<Vector3>()
+                        .SelectMany(v => new[] {v.X, v.Y, v.Z})
+                        .ToArray());
+                    break;
+                case Vector4:
+                    GL.SetUniformVector4(loc, objects.Length, objects
+                        .Cast<Vector4>()
+                        .SelectMany(v => new[] {v.X, v.Y, v.Z, v.W})
+                        .ToArray());
+                    break;
+                case Matrix2:
+                    GL.SetUniformMatrix2(loc, objects.Length, false, objects
+                        .Cast<Matrix2>()
+                        .SelectMany(m => new[] {m.X, m.Y})
+                        .SelectMany(v => new[] {v.X, v.Y})
+                        .ToArray());
+                    break;
+                case Matrix3:
+                    GL.SetUniformMatrix3(loc, objects.Length, false, objects
+                        .Cast<Matrix3>()
+                        .SelectMany(m => new[] {m.X, m.Y, m.Z})
+                        .SelectMany(v => new[] {v.X, v.Y, v.Z})
+                        .ToArray());
+                    break;
+                case Matrix4:
+                    GL.SetUniformMatrix4(loc, objects.Length, false, objects
+                        .Cast<Matrix4>()
+                        .SelectMany(m => new[] {m.X, m.Y, m.Z, m.W})
+                        .SelectMany(v => new[] {v.X, v.Y, v.Z, v.W})
+                        .ToArray());
+                    break;
+            }
+            
+            o.MarkDirty();
+        }
+
+        public void SetUniform(UniformType name, object @object)
+        {
+            SetUniform(name, new[] {@object});
+        }
+
+        public void SetUniform(UniformType name, object[] objects)
+        {
+            if (_currentProgram is not GLProgram o) throw new InvalidOperationException("Current program is not an OpenGL program instance.");
+            if (!_currentProgram.IsValid) throw new InvalidOperationException("Cannot modify invalid program.");
+            
+            foreach (var (k, v) in o.Uniforms)
+            {
+                if (name != v) continue;
+                SetUniform(k!, objects);
+                return;
+            }
         }
 
         public void Clear()

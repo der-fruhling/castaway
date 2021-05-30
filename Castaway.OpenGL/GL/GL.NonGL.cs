@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castaway.Rendering;
-using GLFW;
 // ReSharper disable InconsistentNaming
 
 namespace Castaway.OpenGL
