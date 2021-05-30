@@ -171,7 +171,13 @@ namespace Castaway.OpenGL
 
         public void Destroy(IProgram program)
         {
-            throw new NotImplementedException();
+            if (program is not GLProgram o) throw new InvalidOperationException("Object is not an OpenGL program instance.");
+            if (!program.IsValid) throw new InvalidOperationException("Cannot destroy an invalid program.");
+
+            GL.DeleteProgram(o.Number);
+            foreach(var s in o.Shaders)
+                if(s is GLShader {IsValid: true} os)
+                    GL.DeleteShader(os.Number);
         }
 
         public void Use(IProgram program)
