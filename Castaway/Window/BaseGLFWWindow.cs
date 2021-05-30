@@ -52,6 +52,19 @@ namespace Castaway.Window
         private bool _mouseInWindow;
         private (int X, int Y) _mousePos = (0, 0);
 
+        private readonly KeyCallback _keyCallback;
+        private readonly MouseCallback _mouseCallback;
+        private readonly MouseButtonCallback _mouseButtonCallback;
+        private readonly SizeCallback _sizeCallback;
+
+        protected BaseGLFWWindow()
+        {
+            _keyCallback = KeyCallback;
+            _mouseCallback = CursorPosCallback;
+            _mouseButtonCallback = MouseCallback;
+            _sizeCallback = SizeCallback;
+        }
+
         public void Open(string name, int width, int height, bool resizeable)
         {
             Glfw.DefaultWindowHints();
@@ -62,14 +75,19 @@ namespace Castaway.Window
             Window = Glfw.CreateWindow(width, height, name, Monitor.None, GLFW.Window.None);
             if (Glfw.GetError(out var desc) != ErrorCode.None)
                 throw new GraphicsException($"GLFW Error: {desc}");
-            Glfw.SetKeyCallback(Window, KeyCallback);
-            Glfw.SetMouseButtonCallback(Window, MouseCallback);
-            Glfw.SetCursorPositionCallback(Window, CursorPosCallback);
-            Glfw.SetWindowSizeCallback(Window, (_, w, h) => OnResize?.Invoke(this, (w, h)));
+            Glfw.SetKeyCallback(Window, _keyCallback);
+            Glfw.SetMouseButtonCallback(Window, _mouseButtonCallback);
+            Glfw.SetCursorPositionCallback(Window, _mouseCallback);
+            Glfw.SetWindowSizeCallback(Window, _sizeCallback);
             if (Glfw.GetError(out desc) != ErrorCode.None)
                 throw new GraphicsException($"GLFW Error: {desc}");
             Use();
             Visible = true;
+        }
+
+        private void SizeCallback(IntPtr _, int w, int h)
+        {
+            OnResize?.Invoke(this, (w, h));
         }
 
         protected virtual void CursorPosCallback(IntPtr window, double x, double y)
