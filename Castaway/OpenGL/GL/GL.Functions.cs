@@ -317,5 +317,29 @@ namespace Castaway.OpenGL
             var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix2fv);
             fixed (void* p = values) f(location, count, transpose, p);
         }
+
+        public static void GetShaderInfoLog(uint shader, out int length, out string log)
+        {
+            var lengthB = Marshal.AllocHGlobal(sizeof(int));
+            var logB = Marshal.AllocHGlobal(1 << 16);
+            var f = (delegate*<uint, int, IntPtr, IntPtr, void>) Load(GLF.glGetShaderInfoLog);
+            f(shader, 1 << 16, lengthB, logB);
+            length = Marshal.ReadInt32(lengthB);
+            log = Marshal.PtrToStringAnsi(logB);
+            Marshal.FreeHGlobal(lengthB);
+            Marshal.FreeHGlobal(logB);
+        }
+
+        public static void GetProgramInfoLog(uint shader, out int length, out string log)
+        {
+            var lengthB = Marshal.AllocHGlobal(sizeof(int));
+            var logB = Marshal.AllocHGlobal(1 << 16);
+            var f = (delegate*<uint, int, IntPtr, IntPtr, void>) Load(GLF.glGetProgramInfoLog);
+            f(shader, 1 << 16, lengthB, logB);
+            length = Marshal.ReadInt32(lengthB);
+            log = Marshal.PtrToStringAnsi(logB);
+            Marshal.FreeHGlobal(lengthB);
+            Marshal.FreeHGlobal(logB);
+        }
     }
 }

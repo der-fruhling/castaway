@@ -141,13 +141,12 @@ namespace Castaway.OpenGL
             });
             GL.ShaderSource(n, source);
             GL.CompileShader(n);
-            if (GL.GetShader(n, GL.ShaderQuery.CompileStatus) == 0)
-            {
-                // TODO Add compile log.
-                throw new GraphicsException($"{stage} shader failed to compile.");
-            }
+            GL.GetShaderInfoLog(n, out _, out var log);
+            if (log.Any()) Console.Error.WriteLine($"{stage} shader log:\n{log}");
+            if (GL.GetShader(n, GL.ShaderQuery.CompileStatus) != 0) return new GLShader(n);
+            Console.Error.Flush();
+            throw new GraphicsException($"{stage} shader failed to compile. Check above log.");
 
-            return new GLShader(n);
         }
 
         public void Destroy(IShader shader)
@@ -253,11 +252,10 @@ namespace Castaway.OpenGL
                 GL.BindFragDataLocation(o.Number, c, n!);
 
             GL.LinkProgram(o.Number);
+            GL.GetProgramInfoLog(o.Number, out _, out var log);
+            if (log.Any()) Console.Error.WriteLine($"Program link log:\n{log}");
             if (GL.GetProgram(o.Number, GL.ProgramQuery.LinkStatus) == 0)
-            {
-                // TODO Add link log.
-                throw new GraphicsException($"Program (with {program.Shaders.Length} failed to link.");
-            }
+                throw new GraphicsException($"Program (with {program.Shaders.Length} failed to link. Check above log.");
 
             o.IsLinked = true;
             Use(o);
