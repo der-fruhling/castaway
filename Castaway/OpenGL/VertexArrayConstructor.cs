@@ -8,6 +8,7 @@ using static Castaway.Rendering.VertexInputType;
 
 namespace Castaway.OpenGL
 {
+    [Obsolete("Use Mesh instead.", true)]
     public class VertexArrayConstructor
     {
         private ShaderProgram _program;
