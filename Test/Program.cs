@@ -87,7 +87,7 @@ namespace Test
             var renderProgram = CreateRenderProgram(g);
             g.SetUniform(renderProgram, "tex1", 0);
             g.SetUniform(renderProgram, "tex2", 1);
-            g.SetUniform(renderProgram, "transform", CameraMath.Persp(g, window, 100f, 0.01f, 1.5708f));
+            g.SetUniform(renderProgram, "transform", CameraMath.Persp(g, window, 100f, 0.01f, MathEx.ToRadians(90f)));
             
             var copyProgram = CreateCopyProgram(g);
 
