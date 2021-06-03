@@ -1,5 +1,6 @@
 ﻿using System;
 using Castaway.Assets;
+using Castaway.Math;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using Graphics = Castaway.Rendering.Graphics;
@@ -88,22 +89,15 @@ namespace Test
             
             var copyProgram = CreateCopyProgram(g);
 
-            // Construct a buffer that just spans the middle of the area.
-            var buffer = g.CreateBuffer(BufferTarget.VertexArray);
-            g.Upload(buffer, new float[]
+            // Construct a mesh that just spans the middle of the area.
+            var mesh = new Mesh(new Mesh.Vertex[]
             {
-                -.75f, -.75f, 0, 1, 1, 1, 1, 0, 0,
-                -.75f, .75f, 0, 1, 1, 1, 1, 0, 1,
-                .75f, -.75f, 0, 1, 1, 1, 1, 1, 0,
-                .75f, .75f, 0, 1, 1, 1, 1, 1, 1
-            });
-
-            var bufferE = g.CreateBuffer(BufferTarget.ElementArray);
-            g.Upload(bufferE, new uint[]
-            {
-                0, 1, 2,
-                3, 1, 2
-            });
+                new() {Position = new Vector3(-.75f, -.75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 0, 0)},
+                new() {Position = new Vector3(.75f, -.75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 0, 0)},
+                new() {Position = new Vector3(-.75f, .75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 1, 0)},
+                new() {Position = new Vector3(.75f, .75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 1, 0)},
+            }, new uint[] {0, 1, 2, 3, 1, 2});
+            var meshD = mesh.ConstructFor(g, renderProgram);
 
             // Construct a buffer that spans the entire area.
             var fulls = g.CreateBuffer(BufferTarget.VertexArray);
@@ -138,7 +132,7 @@ namespace Test
                 g.Bind(texture2, 1);
                 g.Bind(renderProgram, framebuffer);
                 g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 480f * MathF.PI) + 1f) / 2f);
-                g.Draw(renderProgram, new ElementDrawable(buffer, bufferE, 6));
+                g.Draw(renderProgram, meshD);
                 g.UnbindFramebuffer();
 
                 // Allow another shader to modify what actually rendered.
@@ -158,7 +152,7 @@ namespace Test
                 // Framebuffers
                 framebuffer,
                 // Buffers
-                buffer, fulls
+                meshD.VertexArray!.Value, meshD.ElementArray!.Value, fulls
             );
             g.Destroy(window); // Absolutely ensure that the window is
                                // destroyed last. If it isn't all destroy
