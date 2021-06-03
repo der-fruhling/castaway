@@ -15,8 +15,8 @@ namespace Castaway.Rendering
         TFramebuffer
     > : IDisposable
     {
-        TWindow CreateWindowWindowed(string title, int width, int height);
-        TWindow CreateWindowFullscreen(string title);
+        TWindow CreateWindowWindowed(string title, int width, int height, bool visible = true);
+        TWindow CreateWindowFullscreen(string title, bool visible = true);
         TBuffer CreateBuffer(BufferTarget target);
         TShader CreateShader(ShaderStage stage, string source);
         TShader CreateShader(ShaderStage stage, Asset source);
@@ -78,6 +78,8 @@ namespace Castaway.Rendering
         void SetWindowTitle(TWindow window, string title);
         (int Width, int Height) GetWindowSize(TWindow window);
         bool WindowShouldBeOpen(TWindow window);
+        void ShowWindow(TWindow window);
+        void HideWindow(TWindow window);
 
         void Destroy(params object[] things);
         void Bind(params object[] things);

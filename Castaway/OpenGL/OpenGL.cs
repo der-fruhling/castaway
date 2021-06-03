@@ -36,17 +36,19 @@ namespace Castaway.OpenGL
         /// <param name="title">Title to be displayed at the top of the window.</param>
         /// <param name="width">Width of the window, in pixels.</param>
         /// <param name="height">Height of the window, in pixels.</param>
+        /// <param name="visible">Should the window be visible?</param>
         /// <returns>New <see cref="Window"/> object pointing to the newly
         /// created window.</returns>
         /// <seealso cref="Bind(Castaway.OpenGL.Window)"/>
         /// <seealso cref="Destroy(Castaway.OpenGL.Window[])"/>
-        public Window CreateWindowWindowed(string title, int width, int height)
+        public Window CreateWindowWindowed(string title, int width, int height, bool visible = true)
         {
             Window w = new();
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
             Glfw.WindowHint(Hint.ContextVersionMajor, 4);
             Glfw.WindowHint(Hint.ContextVersionMinor, 5);
+            Glfw.WindowHint(Hint.Visible, visible);
             w.GlfwWindow = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             Bind(w);
             return w;
@@ -59,17 +61,19 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="title">Title to be displayed in some places.
         /// Fullscreen windows do not display the title at their top.</param>
+        /// <param name="visible">Should the window be visible?</param>
         /// <returns>New <see cref="Window"/> object pointing to the newly
         /// created window.</returns>
         /// <seealso cref="Bind(Castaway.OpenGL.Window)"/>
         /// <seealso cref="Destroy(Castaway.OpenGL.Window[])"/>
-        public Window CreateWindowFullscreen(string title)
+        public Window CreateWindowFullscreen(string title, bool visible = true)
         {
             Window w = new();
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
             Glfw.WindowHint(Hint.ContextVersionMajor, 4);
             Glfw.WindowHint(Hint.ContextVersionMinor, 5);
+            Glfw.WindowHint(Hint.Visible, visible);
             var v = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
             w.GlfwWindow = Glfw.CreateWindow(v.Width, v.Height, title, Glfw.PrimaryMonitor, GLFW.Window.None);
             return w;
@@ -744,6 +748,24 @@ namespace Castaway.OpenGL
         public bool WindowShouldBeOpen(Window window)
         {
             return !Glfw.WindowShouldClose(window.GlfwWindow);
+        }
+
+        /// <summary>
+        /// Sets the window to visible.
+        /// </summary>
+        /// <param name="window">Window to visibleize.</param>
+        public void ShowWindow(Window window)
+        {
+            Glfw.ShowWindow(window.GlfwWindow);
+        }
+
+        /// <summary>
+        /// Sets the window to invisible.
+        /// </summary>
+        /// <param name="window">Window to invisibleize.</param>
+        public void HideWindow(Window window)
+        {
+            Glfw.HideWindow(window.GlfwWindow);
         }
 
         /// <summary>
