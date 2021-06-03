@@ -118,7 +118,7 @@ namespace Test
             // Rendering loop!
             while (g.WindowShouldBeOpen(window))
             {
-                g.StartFrame(window);
+                g.StartFrame();
                 
                 // Render base data to framebuffer.
                 g.Bind(renderProgram, texture, buffer, framebuffer);

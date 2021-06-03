@@ -442,10 +442,8 @@ namespace Castaway.OpenGL
         /// <summary>
         /// Should be called at the start of the frame.
         /// </summary>
-        /// <param name="window"><i>Not used.</i></param>
-        public void StartFrame(Window window)
+        public void StartFrame()
         {
-            // TODO Remove window parameter?
             Clear();
         }
 

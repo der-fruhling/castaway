@@ -40,7 +40,7 @@ namespace Castaway.Rendering
         void UnbindFramebuffer();
 
         void FinishFrame(TWindow window);
-        void StartFrame(TWindow window);
+        void StartFrame();
 
         void Upload(TBuffer buffer, float[] data);
         void Draw(TProgram program, TBuffer buffer, int vertexCount);
