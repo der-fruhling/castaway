@@ -26,7 +26,6 @@ namespace Castaway.OpenGL
         }
 
         public Window? BoundWindow { get; private set; }
-        public Buffer? BoundBuffer { get; private set; }
         public ShaderProgram? BoundProgram { get; private set; }
         public Texture? BoundTexture { get; private set; }
         public Framebuffer? BoundFramebuffer { get; private set; }
@@ -182,7 +181,6 @@ namespace Castaway.OpenGL
             for (var i = 0; i < buffers.Length; i++)
             {
                 buffers[i].Destroyed = true;
-                if (buffers[i] == BoundBuffer) BoundBuffer = null;
             }
         }
 
@@ -238,7 +236,6 @@ namespace Castaway.OpenGL
                 BufferTarget.ElementArray => GL.BufferTarget.ElementArrayBuffer,
                 _ => throw new ArgumentOutOfRangeException(nameof(buffer), buffer.Target, "Buffer target out of range.")
             }, buffer.Number);
-            BoundBuffer = buffer;
         }
 
         public void Bind(ShaderProgram program)
@@ -496,7 +493,6 @@ namespace Castaway.OpenGL
         public void Bind(params object[] things)
         {
             var bw = false;
-            var bb = false;
             var bp = false;
             var bt = false;
             var bf = false;
@@ -510,9 +506,7 @@ namespace Castaway.OpenGL
                         bw = true;
                         break;
                     case Buffer buffer: 
-                        if (bb) throw new InvalidOperationException("Cannot bind multiple buffers.");
                         Bind(buffer);
-                        bb = true;
                         break;
                     case ShaderProgram program:
                         if (bp) throw new InvalidOperationException("Cannot bind multiple programs.");
