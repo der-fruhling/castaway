@@ -38,6 +38,7 @@ namespace Test
             g.BindUniform(program, "tex1");
             g.BindUniform(program, "tex2");
             g.BindUniform(program, "intensity");
+            g.BindUniform(program, "transform");
             
             // Done!
             g.FinishProgram(ref program);
@@ -86,6 +87,7 @@ namespace Test
             var renderProgram = CreateRenderProgram(g);
             g.SetUniform(renderProgram, "tex1", 0);
             g.SetUniform(renderProgram, "tex2", 1);
+            g.SetUniform(renderProgram, "transform", Matrix4.Translate(.125f, 0, 0));
             
             var copyProgram = CreateCopyProgram(g);
 
