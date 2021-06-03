@@ -518,5 +518,11 @@ namespace Castaway.OpenGL
                 f(count, pTextures);
             }
         }
+
+        public static void ActiveTexture(GLC texture)
+        {
+            var f = (delegate*<GLC, void>) Load(GLF.glActiveTexture);
+            f(texture);
+        }
     }
 }

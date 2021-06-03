@@ -36,6 +36,7 @@ namespace Castaway.Rendering
         void Bind(TBuffer buffer);
         void Bind(TProgram program);
         void Bind(TTexture texture);
+        void Bind(TTexture texture, int number);
         void Bind(TFramebuffer framebuffer);
         void UnbindFramebuffer();
 
