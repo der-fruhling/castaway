@@ -87,17 +87,17 @@ namespace Test
             var renderProgram = CreateRenderProgram(g);
             g.SetUniform(renderProgram, "tex1", 0);
             g.SetUniform(renderProgram, "tex2", 1);
-            g.SetUniform(renderProgram, "transform", Matrix4.Translate(.125f, 0, 0));
+            g.SetUniform(renderProgram, "transform", CameraMath.Ortho(g, window, 100f, 0.01f));
             
             var copyProgram = CreateCopyProgram(g);
 
             // Construct a mesh that just spans the middle of the area.
             var mesh = new Mesh(new Mesh.Vertex[]
             {
-                new() {Position = new Vector3(-.75f, -.75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 0, 0)},
-                new() {Position = new Vector3(.75f, -.75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 0, 0)},
-                new() {Position = new Vector3(-.75f, .75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 1, 0)},
-                new() {Position = new Vector3(.75f, .75f, 0), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 1, 0)},
+                new() {Position = new Vector3(-.75f, -.75f, -1), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 0, 0)},
+                new() {Position = new Vector3(.75f, -.75f, -1), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 0, 0)},
+                new() {Position = new Vector3(-.75f, .75f, -1), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(0, 1, 0)},
+                new() {Position = new Vector3(.75f, .75f, -1), Color = new Vector4(1, 1, 1, 1), Texture = new Vector3(1, 1, 0)},
             }, new uint[] {0, 1, 2, 3, 1, 2});
             var meshD = mesh.ConstructFor(g, renderProgram);
 
