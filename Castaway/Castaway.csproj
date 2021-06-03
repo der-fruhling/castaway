@@ -2,6 +2,13 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.1.0-pg</PackageVersion>
+        <Title>Castaway Game Engine</Title>
+        <Authors>Liam Cole</Authors>
+        <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
