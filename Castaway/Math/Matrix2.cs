@@ -9,8 +9,8 @@ namespace Castaway.Math
 
         public float[] Array => new[]
         {
-            X.X, X.Y,
-            Y.X, Y.Y
+            X.X, Y.X,
+            X.Y, Y.Y
         };
 
         public Matrix2(Vector2 x, Vector2 y)

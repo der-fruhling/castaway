@@ -11,10 +11,10 @@ namespace Castaway.Math
 
         public float[] Array => new[]
         {
-            X.X, X.Y, X.Z, X.W,
-            Y.X, Y.Y, Y.Z, Y.W,
-            Z.X, Z.Y, Z.Z, Z.W,
-            W.X, W.Y, W.Z, W.W
+            X.X, Y.X, Z.X, W.X,
+            X.Y, Y.Y, Z.Y, W.Y,
+            X.Z, Y.Z, Z.Z, W.Z,
+            X.W, Y.W, Z.W, W.W
         };
 
         public Matrix4(Vector4 x, Vector4 y, Vector4 z, Vector4 w)
