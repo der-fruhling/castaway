@@ -1,7 +1,5 @@
 using System;
-using Castaway.Math;
 using Castaway.Rendering;
-using GLFW;
 
 namespace Castaway.OpenGL
 {

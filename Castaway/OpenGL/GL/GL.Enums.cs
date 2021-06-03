@@ -1,5 +1,3 @@
-using System;
-
 namespace Castaway.OpenGL
 {
     public static partial class GL

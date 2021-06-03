@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Castaway.Assets;
+﻿using Castaway.Assets;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using Graphics = Castaway.Rendering.Graphics;

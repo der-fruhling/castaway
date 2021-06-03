@@ -8,7 +8,6 @@ using Castaway.Math;
 using Castaway.Rendering;
 using GLFW;
 using static Castaway.OpenGL.GLC;
-using Image = System.Drawing.Image;
 
 namespace Castaway.OpenGL
 {
