@@ -1,4 +1,5 @@
-﻿using Castaway.Assets;
+﻿using System;
+using Castaway.Assets;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using Graphics = Castaway.Rendering.Graphics;
@@ -33,7 +34,9 @@ namespace Test
             g.CreateOutput(program, 0, "outCol");
             
             // Uniforms
-            g.BindUniform(program, "tex");
+            g.BindUniform(program, "tex1");
+            g.BindUniform(program, "tex2");
+            g.BindUniform(program, "intensity");
             
             // Done!
             g.FinishProgram(ref program);
@@ -106,8 +109,9 @@ namespace Test
                 1, -1, 1, 0
             });
 
-            // Load the texture from the assets.
-            var texture = g.CreateTexture(Loader.GetAssetByName("/test.jpg"));
+            // Load the textures from the assets.
+            var texture1 = g.CreateTexture(Loader.GetAssetByName("/cat1.jpg"));
+            var texture2 = g.CreateTexture(Loader.GetAssetByName("/cat2.jpg"));
 
             // Create a new framebuffer.
             var framebuffer = g.CreateFramebuffer(window);
@@ -116,27 +120,35 @@ namespace Test
             g.ShowWindow(window);
             
             // Rendering loop!
+            var frames = 0;
             while (g.WindowShouldBeOpen(window))
             {
                 g.StartFrame();
                 
                 // Render base data to framebuffer.
-                g.Bind(renderProgram, texture, buffer, framebuffer);
+                g.Bind(texture1, 0);
+                g.Bind(texture2, 1);
+                g.Bind(renderProgram, buffer, framebuffer);
+                g.SetUniform(renderProgram, "tex1", 0);
+                g.SetUniform(renderProgram, "tex2", 1);
+                g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 60f * MathF.PI) + 1f) / 2f);
                 g.Draw(renderProgram, buffer, 6);
                 g.UnbindFramebuffer();
 
                 // Allow another shader to modify what actually rendered.
-                g.Bind(copyProgram, framebuffer.Texture, fulls);
+                g.Bind(framebuffer.Texture, 0);
+                g.Bind(copyProgram, fulls);
                 g.Draw(copyProgram, fulls, 6);
 
                 g.FinishFrame(window);
+                frames++;
             }
 
             g.Destroy(
                 // Programs
                 renderProgram, copyProgram,
                 // Textures
-                texture,
+                texture1, texture2,
                 // Framebuffers
                 framebuffer,
                 // Buffers
