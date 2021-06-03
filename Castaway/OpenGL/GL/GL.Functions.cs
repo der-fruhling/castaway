@@ -214,7 +214,7 @@ namespace Castaway.OpenGL
         public static void Clear()
         {
             var f = (delegate*<int, void>) Load(GLF.glClear);
-            f((int) GLC.GL_COLOR_BUFFER_BIT | (int) GLC.GL_DEPTH_BUFFER_BIT);
+            f((int) GLC.GL_COLOR_BUFFER_BIT | (int) GLC.GL_DEPTH_BUFFER_BIT | (int) GLC.GL_STENCIL_BUFFER_BIT);
         }
 
         public static void ClearColor(float r, float g, float b, float a)
