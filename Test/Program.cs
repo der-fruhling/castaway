@@ -14,7 +14,7 @@ namespace Test
         // Set to:
         // "copy" for just a copy
         // "blur/box" for a box blur effect
-        private const string CopyShaderDir = "blur/box";
+        private const string CopyShaderDir = "copy";
 
         private static ShaderProgram CreateRenderProgram(OpenGL g)
         {
@@ -131,7 +131,7 @@ namespace Test
                 g.Bind(renderProgram, buffer, framebuffer);
                 g.SetUniform(renderProgram, "tex1", 0);
                 g.SetUniform(renderProgram, "tex2", 1);
-                g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 60f * MathF.PI) + 1f) / 2f);
+                g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 480f * MathF.PI) + 1f) / 2f);
                 g.Draw(renderProgram, buffer, 6);
                 g.UnbindFramebuffer();
 
