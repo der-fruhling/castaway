@@ -189,7 +189,6 @@ namespace Castaway.OpenGL
             GL.GenerateVertexArrays(1, out var a);
             p.VAO = a[0];
 
-            Bind(p);
             return p;
         }
 
