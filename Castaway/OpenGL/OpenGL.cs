@@ -388,7 +388,7 @@ namespace Castaway.OpenGL
         /// <param name="program">Program to bind.</param>
         public void Bind(ShaderProgram program)
         {
-            // TODO Check if program is linked before binding.
+            if (!program.LinkSuccess) throw new InvalidOperationException("Cannot bind program that isn't linked");
             GL.UseProgram(program.Number);
             GL.BindVertexArray(program.VAO);
             BoundProgram = program;
