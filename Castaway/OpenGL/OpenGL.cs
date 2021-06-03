@@ -318,17 +318,20 @@ namespace Castaway.OpenGL
         {
             p.UniformBindings[name] = type;
         }
-
+        
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         public void RemoveInput(ShaderProgram p, string name)
         {
             p.Inputs.Remove(name);
         }
 
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         public void RemoveOutput(ShaderProgram p, string name)
         {
             p.Outputs.Remove(name);
         }
 
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         public void UnbindUniform(ShaderProgram p, string name)
         {
             p.UniformBindings.Remove(name);

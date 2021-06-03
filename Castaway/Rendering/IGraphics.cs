@@ -48,8 +48,11 @@ namespace Castaway.Rendering
         void CreateInput(TProgram p, VertexInputType inputType, string name);
         void CreateOutput(TProgram p, uint color, string name);
         void BindUniform(TProgram p, string name, UniformType type);
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         void RemoveInput(TProgram p, string name);
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         void RemoveOutput(TProgram p, string name);
+        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         void UnbindUniform(TProgram p, string name);
         void FinishProgram(ref TProgram p);
 
