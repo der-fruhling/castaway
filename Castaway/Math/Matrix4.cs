@@ -8,6 +8,14 @@ namespace Castaway.Math
         public Vector4 Y;
         public Vector4 Z;
         public Vector4 W;
+        
+        public float[] Array => new[]
+        {
+            X.X, X.Y, X.Z, X.W,
+            Y.X, Y.Y, Y.Z, Y.W,
+            Z.X, Z.Y, Z.Z, Z.W,
+            W.X, W.Y, W.Z, W.W
+        };
 
         public Matrix4(Vector4 x, Vector4 y, Vector4 z, Vector4 w)
         {

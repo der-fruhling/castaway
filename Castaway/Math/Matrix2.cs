@@ -7,6 +7,12 @@ namespace Castaway.Math
         public Vector2 X;
         public Vector2 Y;
 
+        public float[] Array => new[]
+        {
+            X.X, X.Y,
+            Y.X, Y.Y
+        };
+
         public Matrix2(Vector2 x, Vector2 y)
         {
             X = x;

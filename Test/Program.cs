@@ -1,80 +1,109 @@
-﻿using System;
-using Castaway.Math;
+﻿using System.Drawing;
+using Castaway.Assets;
 using Castaway.OpenGL;
 using Castaway.Rendering;
+using Graphics = Castaway.Rendering.Graphics;
 
 namespace Test
 {
-    internal static class Program
+    internal class Program
     {
+        public static AssetLoader Loader = new();
+
+        // Set to "blur/box" for a box blur effect
+        private const string CopyShaderDir = "copy";
+
+        private static ShaderProgram CreateRenderProgram(OpenGL g)
+        {
+            var vertexShader = g.CreateShader(ShaderStage.Vertex, Loader.GetAssetByName("/default/vertex.glsl"));
+            var fragmentShader = g.CreateShader(ShaderStage.Fragment, Loader.GetAssetByName("/default/fragment.glsl"));
+            var program = g.CreateProgram(vertexShader, fragmentShader);
+            g.CreateInput(program, VertexInputType.PositionXYZ, "inPos");
+            g.CreateInput(program, VertexInputType.ColorRGBA, "inCol");
+            g.CreateInput(program, VertexInputType.TextureUV, "inTex");
+            g.CreateOutput(program, 0, "outCol");
+            g.FinishProgram(ref program);
+
+            return program;
+        }
+
+        private static ShaderProgram CreateCopyProgram(OpenGL g)
+        {
+            var vertexShader = g.CreateShader(ShaderStage.Vertex, Loader.GetAssetByName($"/{CopyShaderDir}/vertex.glsl"));
+            var fragmentShader = g.CreateShader(ShaderStage.Fragment, Loader.GetAssetByName($"/{CopyShaderDir}/fragment.glsl"));
+            var program = g.CreateProgram(vertexShader, fragmentShader);
+            g.CreateInput(program, VertexInputType.PositionXY, "inPos");
+            g.CreateInput(program, VertexInputType.TextureUV, "inTex");
+            g.CreateOutput(program, 0, "outCol");
+            g.BindUniform(program, "tex");
+            g.FinishProgram(ref program);
+
+            return program;
+        }
+        
         private static void Main()
         {
-            Graphics.SetImpl<GLGraphics>();
-            var g = Graphics.GetImpl();
-            var w = g.CreateWindow("Test", 800, 600);
-
-            var v = g.CreateShader(ShaderStage.Vertex, "#version 400 core\nin vec2 inPos;\nvoid main() { gl_Position = vec4(inPos, 0, 1); }");
-            var f = g.CreateShader(ShaderStage.Fragment, "#version 400 core\nout vec4 outCol;\nuniform vec3 color;\nvoid main() { outCol = vec4(color, 1); }");
-            var p = g.CreateProgram(v, f);
-            g.CreateInput(p, VertexInputType.PositionXY, "inPos");
-            g.CreateOutput(p, 0, "outCol");
-            g.CreateUniform(p, "color", UniformType.Custom);
-            g.FinishProgram(p);
-
-            g.SetClearColor(0, 0, 0);
-
-            var frame = 0;
+            Loader.Discover("Assets");
             
-            g.Use(p);
-                
-            var b = g.CreateBuffer(BufferTarget.VertexArray);
-            var va = new VertexArray()
-                .Position(0, 0).Next()
-                .Position(0, 1).Next()
-                .Position(1, 0).Next()
-                .Position(0, 0).Next()
-                .Position(0, -1).Next()
-                .Position(1, 0).Next()
-                .Position(0, 0).Next()
-                .Position(0, -1).Next()
-                .Position(-1, 0).Next()
-                .Position(0, 0).Next()
-                .Position(0, 1).Next()
-                .Position(-1, 0).Next()
-                .Position(1, 1).Next()
-                .Position(0, 1).Next()
-                .Position(1, 0).Next()
-                .Position(1, -1).Next()
-                .Position(0, -1).Next()
-                .Position(1, 0).Next()
-                .Position(-1, 1).Next()
-                .Position(0, 1).Next()
-                .Position(-1, 0).Next()
-                .Position(-1, -1).Next()
-                .Position(0, -1).Next()
-                .Position(-1, 0).Next();
-            b.Upload(va);
-            var db = g.CreateDrawBuffer(b, 24);
+            using var g = Graphics.Setup<OpenGL>();
+            var window = g.CreateWindowWindowed("name", 800, 600);
+            g.Bind(window);
 
-            while (!w.ShouldClose)
+            var renderProgram = CreateRenderProgram(g);
+            var copyProgram = CreateCopyProgram(g);
+
+            var buffer = g.CreateBuffer(BufferTarget.VertexArray);
+            g.Upload(buffer, new float[]
             {
-                g.StartFrame(w);
-                g.Clear();
+                -.75f, -.75f, 0,  1, 1, 1, 1,  0, 0,
+                -.75f,  .75f, 0,  1, 1, 1, 1,  0, 1,
+                 .75f, -.75f, 0,  1, 1, 1, 1,  1, 0,
+                 .75f,  .75f, 0,  1, 1, 1, 1,  1, 1,
+                -.75f,  .75f, 0,  1, 1, 1, 1,  0, 1,
+                 .75f, -.75f, 0,  1, 1, 1, 1,  1, 0,
+            });
 
-                var red = (-MathF.Sin(frame / 60f * MathF.PI) + 1) / 2;
-                var green = (-MathF.Sin(frame / 60f * MathF.PI + MathF.PI / 2) + 1) / 2;
-                var blue = (-MathF.Sin(frame / 60f * MathF.PI + MathF.PI) + 1) / 2;
-                g.SetUniform("color", new Vector3(red, green, blue));
-                g.Draw(db);
-                
-                g.FinishFrame(w);
-                frame++;
-            }
+            var fulls = g.CreateBuffer(BufferTarget.VertexArray);
+            g.Upload(fulls, new float[]
+            {
+                -1, -1,  0, 0,
+                -1,  1,  0, 1,
+                 1, -1,  1, 0,
+                 1,  1,  1, 1,
+                -1,  1,  0, 1,
+                 1, -1,  1, 0,
+            });
+
+            var texture = g.CreateTexture(Loader.GetAssetByName("/test.jpg"));
+
+            var framebuffer = g.CreateFramebuffer(window);
+            g.Bind(copyProgram);
             
-            // g.Destroy(p);
-            g.Destroy(b);
-            w.Close();
-            g.Dispose();
+            while (g.WindowShouldBeOpen(window))
+            {
+                g.StartFrame(window);
+                
+                g.Bind(renderProgram);
+                g.Bind(framebuffer);
+                g.Bind(texture);
+                
+                g.Bind(buffer);
+                g.Draw(renderProgram, buffer, 6);
+                
+                g.UnbindFramebuffer();
+                
+                g.Bind(copyProgram);
+                g.Bind(framebuffer.Texture);
+                g.Bind(fulls);
+                g.Draw(copyProgram, fulls, 6);
+
+                g.FinishFrame(window);
+            }
+
+            g.Destroy(renderProgram, copyProgram);
+            g.Destroy(texture);
+            g.Destroy(framebuffer);
+            g.Destroy(window);
         }
     }
 }

@@ -1,40 +1,79 @@
 #nullable enable
 using System;
+using System.Drawing;
+using Castaway.Assets;
+using Castaway.Math;
 
 namespace Castaway.Rendering
 {
-    public interface IGraphics : IDisposable
+    public interface IGraphics<
+        TWindow,
+        TBuffer,
+        TShader,
+        TProgram,
+        TTexture,
+        TFramebuffer
+    > : IDisposable
     {
-        IWindow CreateWindow(string title, int width, int height);
-        void FinishFrame(IWindow w);
-        void StartFrame(IWindow w);
-
-        IBuffer CreateBuffer(BufferTarget target);
-        void Destroy(IBuffer buf);
-        void Use(IBuffer buf);
-        DrawBuffer CreateDrawBuffer(IBuffer buf, int vertexCount);
-        void Draw(DrawBuffer drawBuffer);
+        TWindow CreateWindowWindowed(string title, int width, int height);
+        TWindow CreateWindowFullscreen(string title);
+        TBuffer CreateBuffer(BufferTarget target);
+        TShader CreateShader(ShaderStage stage, string source);
+        TShader CreateShader(ShaderStage stage, Asset source);
+        TProgram CreateProgram(params TShader[] shaders);
+        TTexture CreateTexture(Bitmap image);
+        TTexture CreateTexture(Asset image);
+        TFramebuffer CreateFramebuffer(TWindow window);
         
-        IShader CreateShader(ShaderStage stage, string source);
-        void Destroy(IShader shader);
-        IProgram CreateProgram(params IShader[] shaders);
-        void Destroy(IProgram program);
-        void Use(IProgram program);
+        void Destroy(params TWindow[] windows);
+        void Destroy(params TBuffer[] buffers);
+        void Destroy(params TShader[] shaders);
+        void Destroy(params TProgram[] programs);
+        void Destroy(params TTexture[] textures);
+        void Destroy(params TFramebuffer[] framebuffers);
         
-        void CreateInput(IProgram program, VertexInputType inputType, string name);
-        void CreateOutput(IProgram program, uint color, string name);
-        void CreateUniform(IProgram program, string name, UniformType type);
-        void RemoveInput(IProgram program, string name);
-        void RemoveOutput(IProgram program, string name);
-        void RemoveUniform(IProgram program, string name);
-        void FinishProgram(IProgram program);
+        void Bind(TWindow window);
+        void Bind(TBuffer buffer);
+        void Bind(TProgram program);
+        void Bind(TTexture texture);
+        void Bind(TFramebuffer framebuffer);
+        void UnbindFramebuffer();
+        
+        void FinishFrame(TWindow window);
+        void StartFrame(TWindow window);
 
-        void SetUniform(string name, object @object);
-        void SetUniform(string name, object[] objects);
-        void SetUniform(UniformType name, object @object);
-        void SetUniform(UniformType name, object[] objects);
+        void Upload(TBuffer buffer, float[] data);
+        void Draw(TProgram program, TBuffer buffer, int vertexCount);
+        
+        void CreateInput(TProgram p, VertexInputType inputType, string name);
+        void CreateOutput(TProgram p, uint color, string name);
+        void BindUniform(TProgram p, string name, UniformType type);
+        void RemoveInput(TProgram p, string name);
+        void RemoveOutput(TProgram p, string name);
+        void UnbindUniform(TProgram p, string name);
+        void FinishProgram(ref TProgram p);
+
+        void SetUniform(TProgram p, string name, float f);
+        void SetUniform(TProgram p, string name, float x, float y);
+        void SetUniform(TProgram p, string name, float x, float y, float z);
+        void SetUniform(TProgram p, string name, float x, float y, float z, float w);
+        void SetUniform(TProgram p, string name, int i);
+        void SetUniform(TProgram p, string name, int x, int y);
+        void SetUniform(TProgram p, string name, int x, int y, int z);
+        void SetUniform(TProgram p, string name, int x, int y, int z, int w);
+        void SetUniform(TProgram p, string name, Vector2 v);
+        void SetUniform(TProgram p, string name, Vector3 v);
+        void SetUniform(TProgram p, string name, Vector4 v);
+        void SetUniform(TProgram p, string name, Matrix2 m);
+        void SetUniform(TProgram p, string name, Matrix3 m);
+        void SetUniform(TProgram p, string name, Matrix4 m);
         
         void Clear();
         void SetClearColor(float r, float g, float b);
+
+        void SetWindowSize(TWindow window, int width, int height);
+        void SetWindowTitle(TWindow window, string title);
+        (int Width, int Height) GetWindowSize(TWindow window);
+        bool WindowShouldBeOpen(TWindow window);
     }
 }

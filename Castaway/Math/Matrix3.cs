@@ -7,6 +7,13 @@ namespace Castaway.Math
         public Vector3 X;
         public Vector3 Y;
         public Vector3 Z;
+        
+        public float[] Array => new[]
+        {
+            X.X, X.Y, X.Z,
+            Y.X, Y.Y, Y.Z,
+            Z.X, Z.Y, Z.Z
+        };
 
         public Matrix3(Vector3 x, Vector3 y, Vector3 z)
         {

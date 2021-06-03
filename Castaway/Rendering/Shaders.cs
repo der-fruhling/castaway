@@ -2,12 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Castaway.Rendering
 {
-    public enum ShaderStage
-    {
-        Vertex,
-        Fragment
-    }
-
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum VertexInputType
     {
@@ -23,12 +17,18 @@ namespace Castaway.Rendering
         TextureUV,
         TextureUVT
     }
-    
-    public interface IShader
-    {
-        bool IsValid { get; }
 
-        bool IsVertexShader();
-        bool IsFragmentShader();
+    public enum UniformType
+    {
+        Custom,
+        TransformPerspective,
+        TransformView,
+        TransformModel,
+    }
+
+    public enum ShaderStage
+    {
+        Vertex,
+        Fragment
     }
 }

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -340,6 +341,101 @@ namespace Castaway.OpenGL
             log = Marshal.PtrToStringAnsi(logB);
             Marshal.FreeHGlobal(lengthB);
             Marshal.FreeHGlobal(logB);
+        }
+
+        public static void GenTextures(int count, out uint[] textures)
+        {
+            textures = new uint[count];
+            var f = (delegate*<int, uint*, void>) Load(GLF.glGenTextures);
+            fixed (uint* pTextures = textures) f(count, pTextures);
+        }
+
+        public static void BindTexture(GLC where, uint texture)
+        {
+            var f = (delegate*<GLC, uint, void>) Load(GLF.glBindTexture);
+            f(where, texture);
+        }
+
+        public static void TexParameter(GLC where, GLC param, int value)
+        {
+            var f = (delegate*<GLC, GLC, int, void>) Load(GLF.glTexParameteri);
+            f(where, param, value);
+        }
+
+        public static void TexParameter(GLC where, GLC param, float[] value)
+        {
+            var f = (delegate*<GLC, GLC, float*, void>) Load(GLF.glTexParameterfv);
+            fixed(float* pValue = value) f(where, param, pValue);
+        }
+
+        public static void TexImage2D(GLC where, GLC level, GLC internalFormat, int width, int height,
+            GLC format, GLC type, float[]? data)
+        {
+            var f = (delegate*<GLC, GLC, GLC, int, int, int, GLC, GLC, float*, void>) Load(GLF.glTexImage2D);
+            if (data != null)
+            {
+                fixed(float* pData = data) f(where, level, internalFormat, width, height, 0, format, type, pData);
+            }
+            else
+            {
+                f(where, level, internalFormat, width, height, 0, format, type, null);
+            }
+        }
+
+        public static void GenFramebuffers(int count, out uint[] framebuffers)
+        {
+            framebuffers = new uint[count];
+            var f = (delegate*<int, uint*, void>) Load(GLF.glGenFramebuffers);
+            fixed (uint* pFramebuffers = framebuffers) f(count, pFramebuffers);
+        }
+
+        public static void BindFramebuffer(GLC where, uint framebuffer)
+        {
+            var f = (delegate*<GLC, uint, void>) Load(GLF.glBindFramebuffer);
+            f(where, framebuffer);
+        }
+
+        public static void DeleteFramebuffers(int count, params uint[] framebuffers)
+        {
+            var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteFramebuffers);
+            fixed (uint* pFramebuffers = framebuffers) f(count, pFramebuffers);
+        }
+
+        public static void FramebufferTexture2D(GLC where, GLC attachment, GLC target, uint texture, int level)
+        {
+            var f = (delegate*<GLC, GLC, GLC, uint, int, void>) Load(GLF.glFramebufferTexture2D);
+            f(where, attachment, target, texture, level);
+        }
+
+        public static void GenRenderbuffers(int count, out uint[] renderbuffers)
+        {
+            renderbuffers = new uint[count];
+            var f = (delegate*<int, uint*, void>) Load(GLF.glGenRenderbuffers);
+            fixed (uint* pRenderbuffers = renderbuffers) f(count, pRenderbuffers);
+        }
+
+        public static void BindRenderbuffer(GLC where, uint renderbuffer)
+        {
+            var f = (delegate*<GLC, uint, void>) Load(GLF.glBindRenderbuffer);
+            f(where, renderbuffer);
+        }
+
+        public static void RenderbufferStorage(GLC where, GLC what, int width, int height)
+        {
+            var f = (delegate*<GLC, GLC, int, int, void>) Load(GLF.glRenderbufferStorage);
+            f(where, what, width, height);
+        }
+
+        public static void FramebufferRenderbuffer(GLC where, GLC attachment, GLC target, uint renderbuffer)
+        {
+            var f = (delegate*<GLC, GLC, GLC, uint, void>) Load(GLF.glFramebufferRenderbuffer);
+            f(where, attachment, target, renderbuffer);
+        }
+        
+        public static void DeleteTextures(int count, params uint[] textures)
+        {
+            var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteTextures);
+            fixed (uint* pTextures = textures) f(count, pTextures);
         }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "gl": "opengl",
+  "window": {
+    "width": 800,
+    "height": 600,
+    "title": "Test"
+  },
+  "load": []
+}

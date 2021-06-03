@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj" />
       <ProjectReference Include="..\Castaway\Castaway.csproj" />
     </ItemGroup>
 
