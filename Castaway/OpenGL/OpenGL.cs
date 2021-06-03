@@ -18,7 +18,7 @@ namespace Castaway.OpenGL
             GL.Init();
             Glfw.Init();
         }
-        
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -64,12 +64,15 @@ namespace Castaway.OpenGL
 
         public Shader CreateShader(ShaderStage stage, string source)
         {
-            Shader s = new() {SourceCode = source, Stage = stage, Number = GL.CreateShader(stage switch
+            Shader s = new()
             {
-                ShaderStage.Vertex => GL.ShaderStage.VertexShader,
-                ShaderStage.Fragment => GL.ShaderStage.FragmentShader,
-                _ => throw new ArgumentOutOfRangeException(nameof(stage), stage, null)
-            })};
+                SourceCode = source, Stage = stage, Number = GL.CreateShader(stage switch
+                {
+                    ShaderStage.Vertex => GL.ShaderStage.VertexShader,
+                    ShaderStage.Fragment => GL.ShaderStage.FragmentShader,
+                    _ => throw new ArgumentOutOfRangeException(nameof(stage), stage, null)
+                })
+            };
             GL.ShaderSource(s.Number, source);
             GL.CompileShader(s.Number);
 
@@ -79,7 +82,7 @@ namespace Castaway.OpenGL
                 Console.Error.WriteLine(log);
                 Console.Error.Flush();
             }
-            
+
             if (!s.CompileSuccess)
                 throw new GraphicsException("Failed to compile shader.");
 
@@ -95,7 +98,7 @@ namespace Castaway.OpenGL
         {
             ShaderProgram p = new()
             {
-                Shaders = shaders.Select(s => s.Number).ToArray(), 
+                Shaders = shaders.Select(s => s.Number).ToArray(),
                 Number = GL.CreateProgram(),
                 Inputs = new Dictionary<string, VertexInputType>(),
                 Outputs = new Dictionary<string, uint>(),
@@ -105,7 +108,7 @@ namespace Castaway.OpenGL
             foreach (var s in shaders) GL.AttachShader(p.Number, s.Number);
             GL.GenerateVertexArrays(1, out var a);
             p.VAO = a[0];
-            
+
             Bind(p);
             return p;
         }
@@ -114,22 +117,21 @@ namespace Castaway.OpenGL
         {
             List<float> data = new();
             for (var i = image.Height - 1; i >= 0; i--)
+            for (var j = 0; j < image.Width; j++)
             {
-                for (var j = 0; j < image.Width; j++)
-                {
-                    var c = image.GetPixel(j, i);
-                    data.AddRange(new float[]{c.R, c.G, c.B, c.A}.Select(f => f / byte.MaxValue));
-                }
+                var c = image.GetPixel(j, i);
+                data.AddRange(new float[] {c.R, c.G, c.B, c.A}.Select(f => f / byte.MaxValue));
             }
 
             GL.GenTextures(1, out var a);
             Texture t = new() {Number = a[0]};
             Bind(t);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int)GL_CLAMP_TO_EDGE);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)GL_CLAMP_TO_EDGE);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_LINEAR);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_LINEAR);
-            GL.TexImage2D(GL_TEXTURE_2D, GL_ZERO, GL_RGBA, image.Width, image.Height, GL_RGBA, GL_FLOAT, data.ToArray());
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int) GL_CLAMP_TO_EDGE);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int) GL_CLAMP_TO_EDGE);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int) GL_LINEAR);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int) GL_LINEAR);
+            GL.TexImage2D(GL_TEXTURE_2D, GL_ZERO, GL_RGBA, image.Width, image.Height, GL_RGBA, GL_FLOAT,
+                data.ToArray());
             return t;
         }
 
@@ -144,17 +146,17 @@ namespace Castaway.OpenGL
             GL.GenFramebuffers(1, out var a);
             Framebuffer f = new() {Number = a[0]};
             GL.BindFramebuffer(GL_FRAMEBUFFER, f.Number);
-            
+
             GL.GenTextures(1, out a);
             GL.BindTexture(GL_TEXTURE_2D, a[0]);
             GL.TexImage2D(GL_TEXTURE_2D, GL_ZERO, GL_RGB, width, height, GL_RGB, GL_FLOAT, null);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int)GL_CLAMP_TO_EDGE);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)GL_CLAMP_TO_EDGE);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
-            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int) GL_CLAMP_TO_EDGE);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int) GL_CLAMP_TO_EDGE);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int) GL_NEAREST);
+            GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int) GL_NEAREST);
             GL.FramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, a[0], 0);
             f.Texture = new Texture {Number = a[0]};
-            
+
             GL.GenRenderbuffers(1, out a);
             GL.BindRenderbuffer(GL_RENDERBUFFER, a[0]);
             GL.RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
@@ -217,10 +219,9 @@ namespace Castaway.OpenGL
         {
             GL.DeleteFramebuffers(framebuffers.Length, framebuffers.Select(f => f.Number).ToArray());
             Destroy(framebuffers.Select(f => f.Texture).ToArray());
-            foreach(var f in framebuffers)
-            {
-                if (f == BoundFramebuffer) BoundFramebuffer = null;
-            }
+            foreach (var f in framebuffers)
+                if (f == BoundFramebuffer)
+                    BoundFramebuffer = null;
         }
 
         public void Bind(Window window)
@@ -283,9 +284,10 @@ namespace Castaway.OpenGL
                 fixed (float* p = data)
                 {
                     bytes = new byte[data.Length * sizeof(float)];
-                    Marshal.Copy((IntPtr)p, bytes, 0, bytes.Length);
+                    Marshal.Copy((IntPtr) p, bytes, 0, bytes.Length);
                 }
             }
+
             Bind(buffer);
             GL.BufferData(buffer.Target switch
             {
@@ -297,7 +299,7 @@ namespace Castaway.OpenGL
 
         public void Draw(ShaderProgram program, Buffer buffer, int vertexCount)
         {
-            if(buffer.SetupProgram != program.Number)
+            if (buffer.SetupProgram != program.Number)
                 program.InputBinder.Apply(buffer);
             GL.DrawArrays(GL_TRIANGLES, 0, vertexCount);
         }
@@ -334,9 +336,9 @@ namespace Castaway.OpenGL
 
         public void FinishProgram(ref ShaderProgram p)
         {
-            foreach(var (name, color) in p.Outputs)
+            foreach (var (name, color) in p.Outputs)
                 GL.BindFragDataLocation(p.Number, color, name);
-            
+
             GL.LinkProgram(p.Number);
 
             string log;
@@ -348,10 +350,10 @@ namespace Castaway.OpenGL
 
             if (!p.LinkSuccess)
                 throw new GraphicsException("Failed to link shader program.");
-            
-            foreach(var s in p.Shaders) GL.DeleteShader(s);
+
+            foreach (var s in p.Shaders) GL.DeleteShader(s);
             p.InputBinder = new ShaderInputBinder(p);
-            
+
             Bind(p);
             foreach (var (name, _) in p.UniformBindings)
                 p.UniformLocations[name] = GL.GetUniformLocation(p.Number, name);
@@ -359,42 +361,42 @@ namespace Castaway.OpenGL
 
         public void SetUniform(ShaderProgram p, string name, float f)
         {
-            GL.SetUniform(p.UniformLocations[name], 1, new []{f});
+            GL.SetUniform(p.UniformLocations[name], 1, new[] {f});
         }
 
         public void SetUniform(ShaderProgram p, string name, float x, float y)
         {
-            GL.SetUniformVector2(p.UniformLocations[name], 1, new []{x, y});
+            GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
         }
 
         public void SetUniform(ShaderProgram p, string name, float x, float y, float z)
         {
-            GL.SetUniformVector3(p.UniformLocations[name], 1, new []{x, y, z});
+            GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
         }
 
         public void SetUniform(ShaderProgram p, string name, float x, float y, float z, float w)
         {
-            GL.SetUniformVector4(p.UniformLocations[name], 1, new []{x, y, z, w});
+            GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
         }
 
         public void SetUniform(ShaderProgram p, string name, int i)
         {
-            GL.SetUniform(p.UniformLocations[name], 1, new []{i});
+            GL.SetUniform(p.UniformLocations[name], 1, new[] {i});
         }
 
         public void SetUniform(ShaderProgram p, string name, int x, int y)
         {
-            GL.SetUniformVector2(p.UniformLocations[name], 1, new []{x, y});
+            GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
         }
 
         public void SetUniform(ShaderProgram p, string name, int x, int y, int z)
         {
-            GL.SetUniformVector3(p.UniformLocations[name], 1, new []{x, y, z});
+            GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
         }
 
         public void SetUniform(ShaderProgram p, string name, int x, int y, int z, int w)
         {
-            GL.SetUniformVector4(p.UniformLocations[name], 1, new []{x, y, z, w});
+            GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
         }
 
         public void SetUniform(ShaderProgram p, string name, Vector2 v)

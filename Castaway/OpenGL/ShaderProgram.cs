@@ -10,7 +10,7 @@ namespace Castaway.OpenGL
         public ObjectType Type => ObjectType.ShaderProgram;
         public bool Destroyed { get; set; }
         public uint Number { get; set; }
-        
+
         public uint[] Shaders;
         public bool LinkSuccess => GL.GetProgram(Number, GL.ProgramQuery.LinkStatus) == 1;
         public Dictionary<string, VertexInputType> Inputs;

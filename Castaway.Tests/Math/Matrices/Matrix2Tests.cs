@@ -3,7 +3,8 @@ using NUnit.Framework;
 
 namespace Castaway.Tests.Math.Matrices
 {
-    [TestFixture, TestOf(typeof(Matrix2))]
+    [TestFixture]
+    [TestOf(typeof(Matrix2))]
     public class Matrix2Tests
     {
         [Test]
@@ -14,7 +15,7 @@ namespace Castaway.Tests.Math.Matrices
                 1, 0,
                 0, 1), m);
         }
-        
+
         [Test]
         public void TestAdd()
         {
@@ -29,7 +30,7 @@ namespace Castaway.Tests.Math.Matrices
                 1 + 2, 2 + 3,
                 3 + 4, 4 + 5), m);
         }
-        
+
         [Test]
         public void TestSubtract()
         {
@@ -44,7 +45,7 @@ namespace Castaway.Tests.Math.Matrices
                 1 - 2, 2 - 3,
                 3 - 4, 4 - 5), m);
         }
-        
+
         [Test]
         public void TestMultiplyVector()
         {

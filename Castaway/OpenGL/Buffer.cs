@@ -14,7 +14,8 @@ namespace Castaway.OpenGL
 
         public bool Equals(Buffer other)
         {
-            return SetupProgram == other.SetupProgram && Target == other.Target && Destroyed == other.Destroyed && Number == other.Number;
+            return SetupProgram == other.SetupProgram && Target == other.Target && Destroyed == other.Destroyed &&
+                   Number == other.Number;
         }
 
         public override bool Equals(object obj)

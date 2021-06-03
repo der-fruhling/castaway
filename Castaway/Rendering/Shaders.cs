@@ -23,7 +23,7 @@ namespace Castaway.Rendering
         Custom,
         TransformPerspective,
         TransformView,
-        TransformModel,
+        TransformModel
     }
 
     public enum ShaderStage

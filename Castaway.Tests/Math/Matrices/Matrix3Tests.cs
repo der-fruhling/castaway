@@ -3,7 +3,8 @@ using NUnit.Framework;
 
 namespace Castaway.Tests.Math.Matrices
 {
-    [TestFixture, TestOf(typeof(Matrix3))]
+    [TestFixture]
+    [TestOf(typeof(Matrix3))]
     public class Matrix3Tests
     {
         [Test]

@@ -21,18 +21,21 @@ namespace Castaway.Assets
 
         public void Load()
         {
-            if(_isLoaded) return;
+            if (_isLoaded) return;
             _isLoaded = true;
             _bytes = _loader.GetBytes(this);
         }
 
         public void Unload()
         {
-            if(!_isLoaded) return;
+            if (!_isLoaded) return;
             _isLoaded = false;
             _bytes = null;
         }
 
-        public byte[] GetBytes() => _bytes ?? throw new InvalidOperationException("Not loaded.");
+        public byte[] GetBytes()
+        {
+            return _bytes ?? throw new InvalidOperationException("Not loaded.");
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+
 // ReSharper disable InconsistentNaming
 
 namespace Castaway.OpenGL
@@ -17,12 +18,11 @@ namespace Castaway.OpenGL
                 Value = value;
             }
         }
-        
+
         public static readonly (int Major, int Minor) MaxSupportedVersion = (2, 1);
-        
+
         public static void Init()
         {
-            
         }
 
         public static T ValueEnum<T>(uint c) where T : Enum

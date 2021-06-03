@@ -4,7 +4,8 @@ using NUnit.Framework;
 
 namespace Castaway.Tests.Math.Vectors
 {
-    [TestFixture, TestOf(typeof(Vector4))]
+    [TestFixture]
+    [TestOf(typeof(Vector4))]
     public class Vector4Tests
     {
         [Test]
@@ -16,7 +17,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(0f, v.Z);
             Assert.AreEqual(0f, v.W);
         }
-        
+
         [Test]
         public void TestAdd()
         {
@@ -28,7 +29,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f + 7f, v.Z);
             Assert.AreEqual(4f + 8f, v.W);
         }
-        
+
         [Test]
         public void TestSubtract()
         {
@@ -40,7 +41,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f - 7f, v.Z);
             Assert.AreEqual(4f - 8f, v.W);
         }
-        
+
         [Test]
         public void TestMultiply()
         {
@@ -52,7 +53,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f * 7f, v.Z);
             Assert.AreEqual(4f * 8f, v.W);
         }
-        
+
         [Test]
         public void TestDivide()
         {
@@ -64,7 +65,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f / 7f, v.Z);
             Assert.AreEqual(4f / 8f, v.W);
         }
-        
+
         [Test]
         public void TestAddScalar()
         {
@@ -75,7 +76,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f + 5f, v.Z);
             Assert.AreEqual(4f + 5f, v.W);
         }
-        
+
         [Test]
         public void TestSubtractScalar()
         {
@@ -86,7 +87,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f - 5f, v.Z);
             Assert.AreEqual(4f - 5f, v.W);
         }
-        
+
         [Test]
         public void TestMultiplyScalar()
         {
@@ -97,7 +98,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3f * 5f, v.Z);
             Assert.AreEqual(4f * 5f, v.W);
         }
-        
+
         [Test]
         public void TestDivideScalar()
         {

@@ -9,7 +9,10 @@ namespace Castaway.OpenGL
         public bool Destroyed { get; set; }
         public uint Number { get; set; }
 
-        public static implicit operator uint(Texture t) => t.Number;
+        public static implicit operator uint(Texture t)
+        {
+            return t.Number;
+        }
 
         public bool Equals(Texture other)
         {

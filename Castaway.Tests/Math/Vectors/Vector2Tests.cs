@@ -4,7 +4,8 @@ using NUnit.Framework;
 
 namespace Castaway.Tests.Math.Vectors
 {
-    [TestFixture, TestOf(typeof(Vector2))]
+    [TestFixture]
+    [TestOf(typeof(Vector2))]
     public class Vector2Tests
     {
         [Test]
@@ -54,7 +55,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(0.33333334F, c.X);
             Assert.AreEqual(0.5F, c.Y);
         }
-        
+
         [Test]
         public void TestAddScalar()
         {
@@ -63,7 +64,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(4F, c.X);
             Assert.AreEqual(5F, c.Y);
         }
-        
+
         [Test]
         public void TestSubtractScalar()
         {
@@ -72,7 +73,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(-2F, c.X);
             Assert.AreEqual(-1F, c.Y);
         }
-        
+
         [Test]
         public void TestMultiplyScalar()
         {
@@ -81,7 +82,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(3F, c.X);
             Assert.AreEqual(6F, c.Y);
         }
-        
+
         [Test]
         public void TestDivideScalar()
         {
@@ -90,7 +91,7 @@ namespace Castaway.Tests.Math.Vectors
             Assert.AreEqual(0.33333334F, c.X);
             Assert.AreEqual(0.6666667F, c.Y);
         }
-        
+
         [Test]
         public void TestToSpan()
         {

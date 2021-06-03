@@ -30,7 +30,7 @@ namespace Castaway.OpenGL
             [ConstValue(0x504)] StackUnderflow,
             [ConstValue(0x505)] OutOfMemory
         }
-        
+
         public enum ShaderStage
         {
             [ConstValue(0x91B9)] ComputeShader,
@@ -47,7 +47,7 @@ namespace Castaway.OpenGL
             [ConstValue(0x8b80)] DeleteStatus,
             [ConstValue(0x8b81)] CompileStatus,
             [ConstValue(0x8b84)] InfoLogLength,
-            [ConstValue(0x8b88)] SourceLength,
+            [ConstValue(0x8b88)] SourceLength
         }
 
         public enum ProgramQuery
@@ -71,7 +71,7 @@ namespace Castaway.OpenGL
             [ConstValue(0x8c76)] TransformFeedbackVaryingMaxLength,
             [ConstValue(0x8916)] GeometryVerticesOut,
             [ConstValue(0x8917)] GeometryInputType,
-            [ConstValue(0x8918)] GeometryOutputType,
+            [ConstValue(0x8918)] GeometryOutputType
         }
     }
 }

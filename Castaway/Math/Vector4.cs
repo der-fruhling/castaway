@@ -17,15 +17,50 @@ namespace Castaway.Math
             W = w;
         }
 
-        public static Vector4 operator +(Vector4 a, Vector4 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
-        public static Vector4 operator -(Vector4 a, Vector4 b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
-        public static Vector4 operator *(Vector4 a, Vector4 b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
-        public static Vector4 operator /(Vector4 a, Vector4 b) => new(a.X / b.X, a.Y / b.Y, a.Z / b.Z, a.W / b.W);
-        public static Vector4 operator +(Vector4 a, float b) => new(a.X + b, a.Y + b, a.Z + b, a.W + b);
-        public static Vector4 operator -(Vector4 a, float b) => new(a.X - b, a.Y - b, a.Z - b, a.W - b);
-        public static Vector4 operator *(Vector4 a, float b) => new(a.X * b, a.Y * b, a.Z * b, a.W * b);
-        public static Vector4 operator /(Vector4 a, float b) => new(a.X / b, a.Y / b, a.Z / b, a.W / b);
-        public static implicit operator ReadOnlySpan<float>(Vector4 v) => new[] {v.X, v.Y, v.Z, v.W};
+        public static Vector4 operator +(Vector4 a, Vector4 b)
+        {
+            return new(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+        }
+
+        public static Vector4 operator -(Vector4 a, Vector4 b)
+        {
+            return new(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+        }
+
+        public static Vector4 operator *(Vector4 a, Vector4 b)
+        {
+            return new(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
+        }
+
+        public static Vector4 operator /(Vector4 a, Vector4 b)
+        {
+            return new(a.X / b.X, a.Y / b.Y, a.Z / b.Z, a.W / b.W);
+        }
+
+        public static Vector4 operator +(Vector4 a, float b)
+        {
+            return new(a.X + b, a.Y + b, a.Z + b, a.W + b);
+        }
+
+        public static Vector4 operator -(Vector4 a, float b)
+        {
+            return new(a.X - b, a.Y - b, a.Z - b, a.W - b);
+        }
+
+        public static Vector4 operator *(Vector4 a, float b)
+        {
+            return new(a.X * b, a.Y * b, a.Z * b, a.W * b);
+        }
+
+        public static Vector4 operator /(Vector4 a, float b)
+        {
+            return new(a.X / b, a.Y / b, a.Z / b, a.W / b);
+        }
+
+        public static implicit operator ReadOnlySpan<float>(Vector4 v)
+        {
+            return new[] {v.X, v.Y, v.Z, v.W};
+        }
 
         public override string ToString()
         {

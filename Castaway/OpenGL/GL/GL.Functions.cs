@@ -12,32 +12,43 @@ namespace Castaway.OpenGL
     {
         private static readonly Dictionary<GLF, IntPtr> fn = new();
 
-        private static IntPtr Load(GLF f) =>
-            !fn.ContainsKey(f) || fn[f] == IntPtr.Zero
-                ? fn[f] = Glfw.GetProcAddress(Enum.GetName(f)) 
+        private static IntPtr Load(GLF f)
+        {
+            return !fn.ContainsKey(f) || fn[f] == IntPtr.Zero
+                ? fn[f] = Glfw.GetProcAddress(Enum.GetName(f))
                 : fn[f];
+        }
 
         public static void GenBuffers(int count, out uint[] output)
         {
             output = new uint[count];
-            if(count == 0) return;
+            if (count == 0) return;
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenBuffers);
-            fixed(uint* p = output) f(count, p);
+            fixed (uint* p = output)
+            {
+                f(count, p);
+            }
         }
 
         public static void CreateBuffers(int count, out uint[] output)
         {
             output = new uint[count];
-            if(count == 0) return;
+            if (count == 0) return;
             var f = (delegate*<int, uint*, void>) Load(GLF.glCreateBuffers);
-            fixed(uint* p = output) f(count, p);
+            fixed (uint* p = output)
+            {
+                f(count, p);
+            }
         }
 
         public static void DeleteBuffers(int count, uint[] buffers)
         {
-            if(count == 0) return;
+            if (count == 0) return;
             var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteBuffers);
-            fixed (uint* p = buffers) f(count, p);
+            fixed (uint* p = buffers)
+            {
+                f(count, p);
+            }
         }
 
         public static bool IsBuffer(uint obj)
@@ -80,9 +91,12 @@ namespace Castaway.OpenGL
             var lengths = sourceCode.Select(s => s.Length).ToArray();
 
             var f = (delegate*<uint, int, byte**, int*, void>) Load(GLF.glShaderSource);
-            fixed (int* lp = lengths) f(shader, sourceCode.Length, arrayArray, lp);
-            
-            for(var i = 0; i < sourceCode.Length; i++)
+            fixed (int* lp = lengths)
+            {
+                f(shader, sourceCode.Length, arrayArray, lp);
+            }
+
+            for (var i = 0; i < sourceCode.Length; i++)
                 Marshal.FreeHGlobal((IntPtr) arrayArray[i]);
             Marshal.FreeHGlobal((IntPtr) arrayArray);
         }
@@ -166,7 +180,7 @@ namespace Castaway.OpenGL
             var f = (delegate*<uint, bool>) Load(GLF.glIsShader);
             return f(obj);
         }
-        
+
         public static bool IsProgram(uint obj)
         {
             if (obj == 0) return false;
@@ -186,7 +200,9 @@ namespace Castaway.OpenGL
         {
             var f = (delegate*<uint, int, void*, int, void>) Load(GLF.glBufferData);
             fixed (void* p = &data.GetPinnableReference())
+            {
                 f(EnumValue(target), size, p, (int) usage);
+            }
         }
 
         public static void DrawArrays(GLC mode, int first, int count)
@@ -198,7 +214,7 @@ namespace Castaway.OpenGL
         public static void Clear()
         {
             var f = (delegate*<int, void>) Load(GLF.glClear);
-            f((int)GLC.GL_COLOR_BUFFER_BIT | (int)GLC.GL_DEPTH_BUFFER_BIT);
+            f((int) GLC.GL_COLOR_BUFFER_BIT | (int) GLC.GL_DEPTH_BUFFER_BIT);
         }
 
         public static void ClearColor(float r, float g, float b, float a)
@@ -211,7 +227,10 @@ namespace Castaway.OpenGL
         {
             arrays = new uint[count];
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenVertexArrays);
-            fixed (uint* p = arrays) f(count, p);
+            fixed (uint* p = arrays)
+            {
+                f(count, p);
+            }
         }
 
         public static void BindVertexArray(uint a)
@@ -232,91 +251,136 @@ namespace Castaway.OpenGL
         public static void SetUniformVector4(int location, int count, float[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform4fv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector3(int location, int count, float[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform3fv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector2(int location, int count, float[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform2fv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniform(int location, int count, float[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform1fv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector4(int location, int count, double[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform4dv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector3(int location, int count, double[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform3dv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector2(int location, int count, double[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform2dv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniform(int location, int count, double[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform1dv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector4(int location, int count, int[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform4iv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector3(int location, int count, int[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform3iv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformVector2(int location, int count, int[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform2iv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniform(int location, int count, int[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform1iv);
-            fixed (void* p = values) f(location, count, p);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
         }
 
         public static void SetUniformMatrix4(int location, int count, bool normalize, float[] values)
         {
             var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix4fv);
-            fixed (void* p = values) f(location, count, normalize, p);
+            fixed (void* p = values)
+            {
+                f(location, count, normalize, p);
+            }
         }
 
         public static void SetUniformMatrix3(int location, int count, bool normalize, float[] values)
         {
             var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix3fv);
-            fixed (void* p = values) f(location, count, normalize, p);
+            fixed (void* p = values)
+            {
+                f(location, count, normalize, p);
+            }
         }
 
         public static void SetUniformMatrix2(int location, int count, bool transpose, float[] values)
         {
             var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix2fv);
-            fixed (void* p = values) f(location, count, transpose, p);
+            fixed (void* p = values)
+            {
+                f(location, count, transpose, p);
+            }
         }
 
         public static void GetShaderInfoLog(uint shader, out int length, out string log)
@@ -347,7 +411,10 @@ namespace Castaway.OpenGL
         {
             textures = new uint[count];
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenTextures);
-            fixed (uint* pTextures = textures) f(count, pTextures);
+            fixed (uint* pTextures = textures)
+            {
+                f(count, pTextures);
+            }
         }
 
         public static void BindTexture(GLC where, uint texture)
@@ -365,7 +432,10 @@ namespace Castaway.OpenGL
         public static void TexParameter(GLC where, GLC param, float[] value)
         {
             var f = (delegate*<GLC, GLC, float*, void>) Load(GLF.glTexParameterfv);
-            fixed(float* pValue = value) f(where, param, pValue);
+            fixed (float* pValue = value)
+            {
+                f(@where, param, pValue);
+            }
         }
 
         public static void TexImage2D(GLC where, GLC level, GLC internalFormat, int width, int height,
@@ -373,20 +443,22 @@ namespace Castaway.OpenGL
         {
             var f = (delegate*<GLC, GLC, GLC, int, int, int, GLC, GLC, float*, void>) Load(GLF.glTexImage2D);
             if (data != null)
-            {
-                fixed(float* pData = data) f(where, level, internalFormat, width, height, 0, format, type, pData);
-            }
+                fixed (float* pData = data)
+                {
+                    f(@where, level, internalFormat, width, height, 0, format, type, pData);
+                }
             else
-            {
-                f(where, level, internalFormat, width, height, 0, format, type, null);
-            }
+                f(@where, level, internalFormat, width, height, 0, format, type, null);
         }
 
         public static void GenFramebuffers(int count, out uint[] framebuffers)
         {
             framebuffers = new uint[count];
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenFramebuffers);
-            fixed (uint* pFramebuffers = framebuffers) f(count, pFramebuffers);
+            fixed (uint* pFramebuffers = framebuffers)
+            {
+                f(count, pFramebuffers);
+            }
         }
 
         public static void BindFramebuffer(GLC where, uint framebuffer)
@@ -398,7 +470,10 @@ namespace Castaway.OpenGL
         public static void DeleteFramebuffers(int count, params uint[] framebuffers)
         {
             var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteFramebuffers);
-            fixed (uint* pFramebuffers = framebuffers) f(count, pFramebuffers);
+            fixed (uint* pFramebuffers = framebuffers)
+            {
+                f(count, pFramebuffers);
+            }
         }
 
         public static void FramebufferTexture2D(GLC where, GLC attachment, GLC target, uint texture, int level)
@@ -411,7 +486,10 @@ namespace Castaway.OpenGL
         {
             renderbuffers = new uint[count];
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenRenderbuffers);
-            fixed (uint* pRenderbuffers = renderbuffers) f(count, pRenderbuffers);
+            fixed (uint* pRenderbuffers = renderbuffers)
+            {
+                f(count, pRenderbuffers);
+            }
         }
 
         public static void BindRenderbuffer(GLC where, uint renderbuffer)
@@ -431,11 +509,14 @@ namespace Castaway.OpenGL
             var f = (delegate*<GLC, GLC, GLC, uint, void>) Load(GLF.glFramebufferRenderbuffer);
             f(where, attachment, target, renderbuffer);
         }
-        
+
         public static void DeleteTextures(int count, params uint[] textures)
         {
             var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteTextures);
-            fixed (uint* pTextures = textures) f(count, pTextures);
+            fixed (uint* pTextures = textures)
+            {
+                f(count, pTextures);
+            }
         }
     }
 }

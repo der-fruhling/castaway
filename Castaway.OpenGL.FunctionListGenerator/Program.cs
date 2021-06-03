@@ -7,7 +7,6 @@ using System.Xml;
 
 namespace Castaway.OpenGL.FunctionListGenerator
 {
-    
     internal static class Program
     {
         private const string Url = "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml";
@@ -18,7 +17,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
             var name = proto!.GetElementsByTagName("name").Item(0) as XmlElement;
             return name!.InnerText;
         }
-        
+
         private static void Search(ICollection<string> commands, IDictionary<string, string> constants, XmlElement e)
         {
             switch (e.Name)
@@ -32,14 +31,14 @@ namespace Castaway.OpenGL.FunctionListGenerator
                 case "enum" when e.HasAttribute("value"):
                     var v = e.GetAttribute("value");
                     var l = Convert.ToInt64(v, v.StartsWith("0x") ? 16 : 10);
-                    v = unchecked((int)l).ToString();
+                    v = unchecked((int) l).ToString();
 
                     constants[e.GetAttribute("name")] = v;
                     return;
                 case "extension":
                     return;
             }
-            
+
             if (e.IsEmpty || e.ChildNodes.Count == 0) return;
 
             foreach (var n in e.GetElementsByTagName("*"))
@@ -57,14 +56,14 @@ namespace Castaway.OpenGL.FunctionListGenerator
             Console.WriteLine("Loading content");
             doc.Load(reader);
             reader.Dispose();
-            
+
             Console.WriteLine("Searching");
             var root = doc.GetElementsByTagName("registry").Item(0) as XmlElement;
             var commands = new List<string>();
             var constants = new Dictionary<string, string>();
             Search(commands, constants, root!);
             commands = commands.OrderBy(a => a).Distinct().ToList();
-            
+
             Console.WriteLine("Parsing data");
             var commandLines = new List<string>();
             commandLines.Add("namespace Castaway.OpenGL");
@@ -74,7 +73,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
             commandLines.AddRange(commands.Select(c => $"        {c},"));
             commandLines.Add("    }");
             commandLines.Add("}");
-            
+
             File.WriteAllLines("GLF.Generated.cs", commandLines);
             Console.WriteLine("  Wrote GLF.Generated.cs");
 
@@ -86,7 +85,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
             constantLines.AddRange(constants.Select(c => $"        {c.Key}={c.Value},"));
             constantLines.Add("    }");
             constantLines.Add("}");
-            
+
             File.WriteAllLines("GLC.Generated.cs", constantLines);
             Console.WriteLine("  Wrote GLC.Generated.cs");
         }

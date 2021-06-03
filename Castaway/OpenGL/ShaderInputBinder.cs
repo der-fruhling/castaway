@@ -9,7 +9,7 @@ namespace Castaway.OpenGL
         private (int Location, int Index, int Size, VertexInputType Type)[] _bindings;
         private int _stride;
         private uint _number;
-        
+
         public ShaderInputBinder(ShaderProgram program)
         {
             var bindings = new List<(int, int, int, VertexInputType)>();
@@ -44,8 +44,9 @@ namespace Castaway.OpenGL
 
         internal void Apply(Buffer buffer)
         {
-            foreach (var (loc, index, size, _) in _bindings) GL.VertexAttribPointer(
-                loc, size, GLC.GL_FLOAT, false, _stride * sizeof(float), index * sizeof(float));
+            foreach (var (loc, index, size, _) in _bindings)
+                GL.VertexAttribPointer(
+                    loc, size, GLC.GL_FLOAT, false, _stride * sizeof(float), index * sizeof(float));
             foreach (var (loc, _, _, _) in _bindings) GL.EnableVertexAttrib(loc);
             buffer.SetupProgram = _number;
         }

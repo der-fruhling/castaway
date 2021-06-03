@@ -24,27 +24,27 @@ namespace Castaway.Rendering
         TTexture CreateTexture(Bitmap image);
         TTexture CreateTexture(Asset image);
         TFramebuffer CreateFramebuffer(TWindow window);
-        
+
         void Destroy(params TWindow[] windows);
         void Destroy(params TBuffer[] buffers);
         void Destroy(params TShader[] shaders);
         void Destroy(params TProgram[] programs);
         void Destroy(params TTexture[] textures);
         void Destroy(params TFramebuffer[] framebuffers);
-        
+
         void Bind(TWindow window);
         void Bind(TBuffer buffer);
         void Bind(TProgram program);
         void Bind(TTexture texture);
         void Bind(TFramebuffer framebuffer);
         void UnbindFramebuffer();
-        
+
         void FinishFrame(TWindow window);
         void StartFrame(TWindow window);
 
         void Upload(TBuffer buffer, float[] data);
         void Draw(TProgram program, TBuffer buffer, int vertexCount);
-        
+
         void CreateInput(TProgram p, VertexInputType inputType, string name);
         void CreateOutput(TProgram p, uint color, string name);
         void BindUniform(TProgram p, string name, UniformType type);
@@ -67,7 +67,7 @@ namespace Castaway.Rendering
         void SetUniform(TProgram p, string name, Matrix2 m);
         void SetUniform(TProgram p, string name, Matrix3 m);
         void SetUniform(TProgram p, string name, Matrix4 m);
-        
+
         void Clear();
         void SetClearColor(float r, float g, float b);
 
