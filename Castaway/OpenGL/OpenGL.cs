@@ -453,9 +453,7 @@ namespace Castaway.OpenGL
         /// <param name="data">Data to upload.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if the buffers target is out of range, for the same reason
-        /// that <see cref="Bind(Castaway.OpenGL.Buffer)"/> does. Actually, <c>Bind</c>
-        /// will throw first if that's a problem, so why am I even letting it throw again?
-        /// TODO, TODO, TODO...
+        /// that <see cref="Bind(Castaway.OpenGL.Buffer)"/> does.
         /// </exception>
         public void Upload(Buffer buffer, float[] data)
         {
@@ -474,7 +472,7 @@ namespace Castaway.OpenGL
             {
                 BufferTarget.VertexArray => GL.BufferTarget.ArrayBuffer,
                 BufferTarget.ElementArray => GL.BufferTarget.ElementArrayBuffer,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(buffer), buffer.Target, "Bad target")
             }, bytes.Length, bytes, GL_STATIC_DRAW);
         }
 
