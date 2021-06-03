@@ -75,5 +75,8 @@ namespace Castaway.Rendering
         void SetWindowTitle(TWindow window, string title);
         (int Width, int Height) GetWindowSize(TWindow window);
         bool WindowShouldBeOpen(TWindow window);
+
+        void Destroy(params object[] things);
+        void Bind(params object[] things);
     }
 }

@@ -84,27 +84,19 @@ namespace Test
             {
                 g.StartFrame(window);
 
-                g.Bind(renderProgram);
+                g.Bind(renderProgram, texture, buffer);
+                
                 g.Bind(framebuffer);
-                g.Bind(texture);
-
-                g.Bind(buffer);
                 g.Draw(renderProgram, buffer, 6);
-
                 g.UnbindFramebuffer();
 
-                g.Bind(copyProgram);
-                g.Bind(framebuffer.Texture);
-                g.Bind(fulls);
+                g.Bind(copyProgram, framebuffer.Texture, fulls);
                 g.Draw(copyProgram, fulls, 6);
 
                 g.FinishFrame(window);
             }
 
-            g.Destroy(renderProgram, copyProgram);
-            g.Destroy(texture);
-            g.Destroy(framebuffer);
-            g.Destroy(window);
+            g.Destroy(renderProgram, copyProgram, texture, framebuffer, window);
         }
     }
 }

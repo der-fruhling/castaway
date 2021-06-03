@@ -459,5 +459,77 @@ namespace Castaway.OpenGL
         {
             return !Glfw.WindowShouldClose(window.GlfwWindow);
         }
+
+        public void Destroy(params object[] things)
+        {
+            foreach (var thing in things)
+            {
+                switch (thing)
+                {
+                    case Window window: 
+                        Destroy(window); 
+                        break;
+                    case Buffer buffer: 
+                        Destroy(buffer);
+                        break;
+                    case Shader shader:
+                        Destroy(shader);
+                        break;
+                    case ShaderProgram program:
+                        Destroy(program);
+                        break;
+                    case Texture texture:
+                        Destroy(texture);
+                        break;
+                    case Framebuffer framebuffer:
+                        Destroy(framebuffer);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Cannot destroy objects of type {thing.GetType().FullName}");
+                }
+            }
+        }
+
+        public void Bind(params object[] things)
+        {
+            var bw = false;
+            var bb = false;
+            var bp = false;
+            var bt = false;
+            var bf = false;
+            foreach (var thing in things)
+            {
+                switch (thing)
+                {
+                    case Window window:
+                        if (bw) throw new InvalidOperationException("Cannot bind multiple windows.");
+                        Bind(window);
+                        bw = true;
+                        break;
+                    case Buffer buffer: 
+                        if (bb) throw new InvalidOperationException("Cannot bind multiple buffers.");
+                        Bind(buffer);
+                        bb = true;
+                        break;
+                    case ShaderProgram program:
+                        if (bp) throw new InvalidOperationException("Cannot bind multiple programs.");
+                        Bind(program);
+                        bp = true;
+                        break;
+                    case Texture texture:
+                        if (bt) throw new InvalidOperationException("Cannot bind multiple textures.");
+                        Bind(texture);
+                        bt = true;
+                        break;
+                    case Framebuffer framebuffer:
+                        if (bf) throw new InvalidOperationException("Cannot bind multiple framebuffers.");
+                        Bind(framebuffer);
+                        bf = true;
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Cannot bind objects of type {thing.GetType().FullName}");
+                }
+            }
+        }
     }
 }
