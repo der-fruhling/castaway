@@ -83,6 +83,9 @@ namespace Test
 
             // Create shader programs.
             var renderProgram = CreateRenderProgram(g);
+            g.SetUniform(renderProgram, "tex1", 0);
+            g.SetUniform(renderProgram, "tex2", 1);
+            
             var copyProgram = CreateCopyProgram(g);
 
             // Construct a buffer that just spans the middle of the area.
@@ -92,9 +95,14 @@ namespace Test
                 -.75f, -.75f, 0, 1, 1, 1, 1, 0, 0,
                 -.75f, .75f, 0, 1, 1, 1, 1, 0, 1,
                 .75f, -.75f, 0, 1, 1, 1, 1, 1, 0,
-                .75f, .75f, 0, 1, 1, 1, 1, 1, 1,
-                -.75f, .75f, 0, 1, 1, 1, 1, 0, 1,
-                .75f, -.75f, 0, 1, 1, 1, 1, 1, 0
+                .75f, .75f, 0, 1, 1, 1, 1, 1, 1
+            });
+
+            var bufferE = g.CreateBuffer(BufferTarget.ElementArray);
+            g.Upload(bufferE, new uint[]
+            {
+                0, 1, 2,
+                3, 1, 2
             });
 
             // Construct a buffer that spans the entire area.
@@ -128,17 +136,15 @@ namespace Test
                 // Render base data to framebuffer.
                 g.Bind(texture1, 0);
                 g.Bind(texture2, 1);
-                g.Bind(renderProgram, buffer, framebuffer);
-                g.SetUniform(renderProgram, "tex1", 0);
-                g.SetUniform(renderProgram, "tex2", 1);
+                g.Bind(renderProgram, framebuffer);
                 g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 480f * MathF.PI) + 1f) / 2f);
-                g.Draw(renderProgram, buffer, 6);
+                g.Draw(renderProgram, new ElementDrawable(buffer, bufferE, 6));
                 g.UnbindFramebuffer();
 
                 // Allow another shader to modify what actually rendered.
                 g.Bind(framebuffer.Texture, 0);
                 g.Bind(copyProgram, fulls);
-                g.Draw(copyProgram, fulls, 6);
+                g.Draw(copyProgram, new BufferDrawable(fulls, 6));
 
                 g.FinishFrame(window);
                 frames++;

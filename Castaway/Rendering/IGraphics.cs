@@ -12,7 +12,8 @@ namespace Castaway.Rendering
         TShader,
         TProgram,
         TTexture,
-        TFramebuffer
+        TFramebuffer,
+        TDrawable
     > : IDisposable
     {
         TWindow CreateWindowWindowed(string title, int width, int height, bool visible = true);
@@ -43,8 +44,8 @@ namespace Castaway.Rendering
         void FinishFrame(TWindow window);
         void StartFrame();
 
-        void Upload(TBuffer buffer, float[] data);
-        void Draw(TProgram program, TBuffer buffer, int vertexCount);
+        void Upload<T>(TBuffer buffer, T[] data) where T : unmanaged;
+        void Draw(TProgram program, TDrawable buffer);
 
         void CreateInput(TProgram p, VertexInputType inputType, string name);
         void CreateOutput(TProgram p, uint color, string name);

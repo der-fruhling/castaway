@@ -524,5 +524,11 @@ namespace Castaway.OpenGL
             var f = (delegate*<GLC, void>) Load(GLF.glActiveTexture);
             f(texture);
         }
+
+        public static void DrawElements(GLC mode, int count, GLC type, nuint indices)
+        {
+            var f = (delegate*<GLC, int, GLC, void*, void>) Load(GLF.glDrawElements);
+            f(mode, count, type, (void*) indices);
+        }
     }
 }

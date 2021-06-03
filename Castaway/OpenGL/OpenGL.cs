@@ -12,7 +12,15 @@ using static Castaway.OpenGL.GLC;
 
 namespace Castaway.OpenGL
 {
-    public class OpenGL : IGraphics<Window, Buffer, Shader, ShaderProgram, Texture, Framebuffer>
+    public class OpenGL : IGraphics<
+        Window, 
+        Buffer, 
+        Shader, 
+        ShaderProgram, 
+        Texture, 
+        Framebuffer, 
+        IDrawable
+    >
     {
         public OpenGL()
         {
@@ -480,14 +488,14 @@ namespace Castaway.OpenGL
         /// Thrown if the buffers target is out of range, for the same reason
         /// that <see cref="Bind(Castaway.OpenGL.Buffer)"/> does.
         /// </exception>
-        public void Upload(Buffer buffer, float[] data)
+        public void Upload<T>(Buffer buffer, T[] data) where T : unmanaged
         {
             byte[] bytes;
             unsafe
             {
-                fixed (float* p = data)
+                fixed (T* p = data)
                 {
-                    bytes = new byte[data.Length * sizeof(float)];
+                    bytes = new byte[data.Length * sizeof(T)];
                     Marshal.Copy((IntPtr) p, bytes, 0, bytes.Length);
                 }
             }
@@ -506,18 +514,30 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="program">Shader program to use. The object is not
         /// bound by this method.</param>
-        /// <param name="buffer">Buffer to draw. The object is not bound by
+        /// <param name="drawable">Object to draw. The object <i>is</i> bound by
         /// this method.</param>
-        /// <param name="vertexCount">Number of vertices to draw. Drawing too
-        /// many vertices will probably end in a segmentation fault, which
-        /// unlike exceptions, do not tell you anything about where it came
-        /// from. This is especially bad since this isn't native code, and C#
-        /// does not support such powerful errors.</param>
-        public void Draw(ShaderProgram program, Buffer buffer, int vertexCount)
+        /// <exception cref="InvalidOperationException">Thrown if the drawable
+        /// does not have a vertex array attached.</exception>
+        public void Draw(ShaderProgram program, IDrawable drawable)
         {
-            if (buffer.SetupProgram != program.Number)
-                program.InputBinder.Apply(buffer);
-            GL.DrawArrays(GL_TRIANGLES, 0, vertexCount);
+            if (!drawable.VertexArray.HasValue)
+                throw new InvalidOperationException("Drawables must have an attached vertex array.");
+            if (drawable.ElementArray.HasValue)
+            {
+                // Draw Element Buffer
+                GL.BindBuffer(GL.BufferTarget.ElementArrayBuffer, drawable.ElementArray.Value.Number);
+                GL.BindBuffer(GL.BufferTarget.ArrayBuffer, drawable.VertexArray.Value.Number);
+                if (drawable.VertexArray.Value.SetupProgram != program.Number)
+                    program.InputBinder.Apply(drawable.VertexArray.Value);
+                GL.DrawElements(GL_TRIANGLES, drawable.VertexCount, GL_UNSIGNED_INT, 0);
+            }
+            else
+            {
+                GL.BindBuffer(GL.BufferTarget.ArrayBuffer, drawable.VertexArray.Value.Number);
+                if (drawable.VertexArray.Value.SetupProgram != program.Number)
+                    program.InputBinder.Apply(drawable.VertexArray.Value);
+                GL.DrawArrays(GL_TRIANGLES, 0, drawable.VertexCount);
+            }
         }
 
         /// <summary>
