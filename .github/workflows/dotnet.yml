@@ -1,6 +1,11 @@
 name: .NET
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,5 +22,22 @@ jobs:
       run: dotnet build -c Release --no-restore
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
-    - name: Publish NuGet
-      run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/LiamCoalStudio/index.json" && dotnet nuget push Castaway/bin/Release/Castaway.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+    - name: Upload
+      if: ${{ github.event_name == workflow_dispatch }}
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        path: Castaway/bin/Release/Castaway.*.nupkg
+        name: nuget-package
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == workflow_dispatch }}
+    steps:
+    - name: Download
+      uses: actions/download-artifact@v2.0.9
+      with:
+        name: nuget-package
+        path: package.nupkg
+    - name: Add Source
+      run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
+    - name: Publish
+      run: dotnet nuget push package.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
