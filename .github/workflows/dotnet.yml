@@ -22,4 +22,4 @@ jobs:
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
     - name: Publish NuGet
-      run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/LiamCoalStudio/index.json" && dotnet nuget push "Castaway/bin/Release/Castaway.*.nuget" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/LiamCoalStudio/index.json" && dotnet nuget push Castaway/bin/Release/Castaway.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
