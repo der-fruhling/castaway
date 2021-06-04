@@ -28,7 +28,7 @@ namespace Test
             // Inputs
             g.CreateInput(program, VertexInputType.PositionXYZ, "inPos");
             g.CreateInput(program, VertexInputType.ColorRGBA, "inCol");
-            g.CreateInput(program, VertexInputType.TextureUV, "inTex");
+            g.CreateInput(program, VertexInputType.TextureST, "inTex");
             
             // Outputs
             g.CreateOutput(program, 0, "outCol");
@@ -57,7 +57,7 @@ namespace Test
             
             // Inputs
             g.CreateInput(program, VertexInputType.PositionXY, "inPos");
-            g.CreateInput(program, VertexInputType.TextureUV, "inTex");
+            g.CreateInput(program, VertexInputType.TextureST, "inTex");
             
             // Outputs
             g.CreateOutput(program, 0, "outCol");

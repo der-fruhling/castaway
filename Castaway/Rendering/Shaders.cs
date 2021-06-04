@@ -13,9 +13,9 @@ namespace Castaway.Rendering
         ColorBGRA,
         NormalXY,
         NormalXYZ,
-        TextureU,
-        TextureUV,
-        TextureUVT
+        TextureS,
+        TextureST,
+        TextureSTV
     }
 
     public enum UniformType

@@ -54,13 +54,13 @@ namespace Castaway.OpenGL
                     case NormalXYZ:
                         realData.AddRange(_data.Last()[7..10]);
                         break;
-                    case TextureU:
+                    case TextureS:
                         realData.Add(_data.Last()[10]);
                         break;
-                    case TextureUV:
+                    case TextureST:
                         realData.AddRange(_data.Last()[10..12]);
                         break;
-                    case TextureUVT:
+                    case TextureSTV:
                         realData.AddRange(_data.Last()[10..13]);
                         break;
                     default:

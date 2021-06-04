@@ -83,14 +83,14 @@ namespace Castaway.OpenGL
                             value[j++] = v.Normal.Y;
                             value[j++] = v.Normal.Z;
                             break;
-                        case VertexInputType.TextureU:
+                        case VertexInputType.TextureS:
                             value[j++] = v.Texture.X;
                             break;
-                        case VertexInputType.TextureUV:
+                        case VertexInputType.TextureST:
                             value[j++] = v.Texture.X;
                             value[j++] = v.Texture.Y;
                             break;
-                        case VertexInputType.TextureUVT:
+                        case VertexInputType.TextureSTV:
                             value[j++] = v.Texture.X;
                             value[j++] = v.Texture.Y;
                             value[j++] = v.Texture.Z;
@@ -116,9 +116,9 @@ namespace Castaway.OpenGL
                 VertexInputType.ColorBGRA => 4,
                 VertexInputType.NormalXY => 2,
                 VertexInputType.NormalXYZ => 3,
-                VertexInputType.TextureU => 1,
-                VertexInputType.TextureUV => 2,
-                VertexInputType.TextureUVT => 3,
+                VertexInputType.TextureS => 1,
+                VertexInputType.TextureST => 2,
+                VertexInputType.TextureSTV => 3,
                 _ => throw new ArgumentOutOfRangeException(nameof(values), v, null)
             });
         }

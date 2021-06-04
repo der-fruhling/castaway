@@ -28,9 +28,9 @@ namespace Castaway.OpenGL
                     VertexInputType.ColorBGRA => 4,
                     VertexInputType.NormalXY => 2,
                     VertexInputType.NormalXYZ => 3,
-                    VertexInputType.TextureU => 1,
-                    VertexInputType.TextureUV => 2,
-                    VertexInputType.TextureUVT => 3,
+                    VertexInputType.TextureS => 1,
+                    VertexInputType.TextureST => 2,
+                    VertexInputType.TextureSTV => 3,
                     _ => throw new ArgumentOutOfRangeException(nameof(program), from, null)
                 };
                 bindings.Add((loc, i, size, from));
