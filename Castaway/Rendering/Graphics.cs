@@ -2,7 +2,7 @@ namespace Castaway.Rendering
 {
     public class Graphics
     {
-        private static dynamic _global;
+        private static dynamic? _global;
 
         public static T Setup<T>() where T : class, new()
         {
@@ -11,7 +11,7 @@ namespace Castaway.Rendering
 
         public static T Get<T>() where T : class
         {
-            return _global as T;
+            return (_global as T)!;
         }
     }
 }

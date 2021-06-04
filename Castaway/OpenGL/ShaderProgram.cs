@@ -37,7 +37,7 @@ namespace Castaway.OpenGL
                    Number == other.Number;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is ShaderProgram other && Equals(other);
         }

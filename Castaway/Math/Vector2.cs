@@ -73,7 +73,7 @@ namespace Castaway.Math
             return X.Equals(other.X) && Y.Equals(other.Y);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Vector2 other && Equals(other);
         }

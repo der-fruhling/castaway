@@ -122,7 +122,7 @@ namespace Castaway.Math
             return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z) && W.Equals(other.W);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Matrix4 other && Equals(other);
         }

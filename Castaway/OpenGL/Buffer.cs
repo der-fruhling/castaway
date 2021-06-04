@@ -18,7 +18,7 @@ namespace Castaway.OpenGL
                    Number == other.Number;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Buffer other && Equals(other);
         }

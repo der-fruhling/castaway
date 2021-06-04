@@ -19,7 +19,7 @@ namespace Castaway.OpenGL
             return Destroyed == other.Destroyed && Number == other.Number;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Texture other && Equals(other);
         }

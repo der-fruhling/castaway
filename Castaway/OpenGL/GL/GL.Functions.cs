@@ -390,7 +390,7 @@ namespace Castaway.OpenGL
             var f = (delegate*<uint, int, IntPtr, IntPtr, void>) Load(GLF.glGetShaderInfoLog);
             f(shader, 1 << 16, lengthB, logB);
             length = Marshal.ReadInt32(lengthB);
-            log = Marshal.PtrToStringAnsi(logB);
+            log = Marshal.PtrToStringAnsi(logB)!;
             Marshal.FreeHGlobal(lengthB);
             Marshal.FreeHGlobal(logB);
         }
@@ -402,7 +402,7 @@ namespace Castaway.OpenGL
             var f = (delegate*<uint, int, IntPtr, IntPtr, void>) Load(GLF.glGetProgramInfoLog);
             f(shader, 1 << 16, lengthB, logB);
             length = Marshal.ReadInt32(lengthB);
-            log = Marshal.PtrToStringAnsi(logB);
+            log = Marshal.PtrToStringAnsi(logB)!;
             Marshal.FreeHGlobal(lengthB);
             Marshal.FreeHGlobal(logB);
         }

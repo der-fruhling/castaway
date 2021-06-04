@@ -31,7 +31,7 @@ namespace Castaway.OpenGL
                 .Where(f => f.GetCustomAttribute<ConstValueAttribute>() != null))
             {
                 var a = f.GetCustomAttribute<ConstValueAttribute>();
-                if (a!.Value == c) return (T) f.GetValue(null);
+                if (a!.Value == c) return ((T?) f.GetValue(null))!;
             }
 
             throw new ArgumentOutOfRangeException(nameof(c), c, $"No value of {typeof(T).Name} matches {c}");

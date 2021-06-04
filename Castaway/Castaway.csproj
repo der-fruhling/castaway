@@ -9,6 +9,7 @@
         <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
         <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

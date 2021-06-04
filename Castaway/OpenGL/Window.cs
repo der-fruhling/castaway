@@ -15,7 +15,7 @@ namespace Castaway.OpenGL
             return GlfwWindow.Equals(other.GlfwWindow) && Destroyed == other.Destroyed && Number == other.Number;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Window other && Equals(other);
         }
