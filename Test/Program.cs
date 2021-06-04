@@ -132,15 +132,14 @@ namespace Test
             while (g.WindowShouldBeOpen(window))
             {
                 g.StartFrame();
-                
-                level.Render();
-                
+
                 // Render base data to framebuffer.
                 g.Bind(texture1, 0);
                 g.Bind(texture2, 1);
                 g.Bind(renderProgram, framebuffer);
                 g.SetUniform(renderProgram, "intensity", (MathF.Sin(frames / 480f * MathF.PI) + 1f) / 2f);
                 g.Draw(renderProgram, meshD);
+                level.Render();
                 g.UnbindFramebuffer();
 
                 // Allow another shader to modify what actually rendered.
