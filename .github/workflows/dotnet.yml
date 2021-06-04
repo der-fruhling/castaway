@@ -38,10 +38,10 @@ jobs:
       uses: actions/download-artifact@v2.0.9
       with:
         name: nuget-package
-        path: package.nupkg
+        path: ~/package.nupkg
     - name: Add Source
       if: github.event_name == 'workflow_dispatch'
       run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
     - name: Publish
       if: github.event_name == 'workflow_dispatch'
-      run: dotnet nuget push package.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+      run: dotnet nuget push ~/package.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
