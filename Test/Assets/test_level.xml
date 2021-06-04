@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Level For="OpenGL">
+    <Object>
+        <Name>Object 1</Name>
+        
+        <Position>0,0,0</Position>
+
+        <Object>
+            <Name>Object 3</Name>
+            <RelPosition>0,0,0</RelPosition>
+        </Object>
+        
+        <Controllers>
+            <Test>
+                <Test1>1</Test1>
+                <Test2>5</Test2>
+            </Test>
+        </Controllers>
+    </Object>
+    
+    <Object>
+        <Name>Object 2</Name>
+        
+        <Position>1,2,3</Position>
+        
+        <Material>
+            <Color>0,1,0,1</Color>
+        </Material>
+    </Object>
+</Level>

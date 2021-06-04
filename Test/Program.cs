@@ -2,6 +2,7 @@
 using Castaway;
 using Castaway.Assets;
 using Castaway.Math;
+using Castaway.Level;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using static Castaway.Assets.AssetLoader;
@@ -82,6 +83,8 @@ namespace Test
             var window = g.CreateWindowWindowed("name", 800, 600, false);
             g.Bind(window);
 
+            var level = new Level(Loader!.GetAssetByName("/test_level.xml"));
+
             // Create shader programs.
             var renderProgram = CreateRenderProgram(g);
             g.SetUniform(renderProgram, "tex1", 0);
@@ -119,6 +122,8 @@ namespace Test
             // Create a new framebuffer.
             var framebuffer = g.CreateFramebuffer(window);
 
+            level.Start();
+            
             // Show window.
             g.ShowWindow(window);
             
@@ -127,6 +132,8 @@ namespace Test
             while (g.WindowShouldBeOpen(window))
             {
                 g.StartFrame();
+                
+                level.Render();
                 
                 // Render base data to framebuffer.
                 g.Bind(texture1, 0);
@@ -143,7 +150,10 @@ namespace Test
 
                 g.FinishFrame(window);
                 frames++;
+                level.Update();
             }
+            
+            level.End();
 
             g.Destroy(
                 // Programs
