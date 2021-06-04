@@ -48,6 +48,7 @@ namespace Castaway.Assets
                 "png" => new ImageAssetType(),
                 "jpg" => new ImageAssetType(),
                 "jpeg" => new ImageAssetType(),
+                "xml" => new XMLAssetType(),
                 _ => new TextAssetType()
             };
         }
