@@ -7,6 +7,8 @@ namespace Castaway.Assets
 {
     public class AssetLoader
     {
+        public static AssetLoader? Loader;
+        
         private Dictionary<string, (string, IAssetType)> Assets;
 
         public AssetLoader()

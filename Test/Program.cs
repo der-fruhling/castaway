@@ -1,17 +1,16 @@
 ﻿using System;
+using Castaway;
 using Castaway.Assets;
 using Castaway.Math;
 using Castaway.OpenGL;
 using Castaway.Rendering;
+using static Castaway.Assets.AssetLoader;
 using Graphics = Castaway.Rendering.Graphics;
 
 namespace Test
 {
     internal static class Program
     {
-        // Asset loader to load assets.
-        private static readonly AssetLoader Loader = new();
-
         // Set to:
         // "copy" for just a copy
         // "blur/box" for a box blur effect
@@ -20,7 +19,7 @@ namespace Test
         private static ShaderProgram CreateRenderProgram(OpenGL g)
         {
             // Create shaders.
-            var vertexShader = g.CreateShader(ShaderStage.Vertex, Loader.GetAssetByName("/default/vertex.glsl"));
+            var vertexShader = g.CreateShader(ShaderStage.Vertex, Loader!.GetAssetByName("/default/vertex.glsl"));
             var fragmentShader = g.CreateShader(ShaderStage.Fragment, Loader.GetAssetByName("/default/fragment.glsl"));
             
             // Link them into a program.
@@ -49,7 +48,7 @@ namespace Test
         {
             // Create shaders.
             var vertexShader =
-                g.CreateShader(ShaderStage.Vertex, Loader.GetAssetByName($"/{CopyShaderDir}/vertex.glsl"));
+                g.CreateShader(ShaderStage.Vertex, Loader!.GetAssetByName($"/{CopyShaderDir}/vertex.glsl"));
             var fragmentShader = g.CreateShader(ShaderStage.Fragment,
                 Loader.GetAssetByName($"/{CopyShaderDir}/fragment.glsl"));
             
@@ -73,8 +72,8 @@ namespace Test
 
         private static void Main()
         {
-            // Asset loader discovery.
-            Loader.Discover("Assets");
+            // Load assets from config.json
+            CastawayEngine.Init();
 
             // Graphics setup.
             using var g = Graphics.Setup<OpenGL>();
