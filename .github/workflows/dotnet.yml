@@ -6,7 +6,11 @@ on:
   pull_request:
     branches: [master]
   workflow_dispatch:
-
+    inputs:
+      allow-publish:
+        description: Allow Publishing
+        required: true
+        default: 'false'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,26 +26,9 @@ jobs:
       run: dotnet build -c Release --no-restore
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
-    - name: Upload
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v2.2.3
-      with:
-        path: Castaway/bin/Release/Castaway.*.nupkg
-        name: nuget-package
-  publish:
-    needs: build
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/download-artifact@v2.0.9
-      with:
-        name: nuget-package
-        path: ~/package.nupkg
     - name: Add Source
-      if: github.event_name == 'workflow_dispatch'
+      if: github.event.inputs.allow-publish == 'true'
       run: dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
     - name: Publish
-      if: github.event_name == 'workflow_dispatch'
-      run: dotnet nuget push ~/package.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+      if: github.event.inputs.allow-publish == 'true'
+      run: dotnet nuget push Castaway/bin/Release/Castaway.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
