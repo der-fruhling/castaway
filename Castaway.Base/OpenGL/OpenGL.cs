@@ -81,8 +81,10 @@ namespace Castaway.OpenGL
             Window w = new();
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 4);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 5);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+            Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
             Glfw.WindowHint(Hint.Visible, visible);
             w.GlfwWindow = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             Bind(w);
@@ -106,8 +108,10 @@ namespace Castaway.OpenGL
             Window w = new();
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.ClientApi, ClientApi.OpenGL);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 4);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 5);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+            Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
             Glfw.WindowHint(Hint.Visible, visible);
             var v = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
             w.GlfwWindow = Glfw.CreateWindow(v.Width, v.Height, title, Glfw.PrimaryMonitor, GLFW.Window.None);
