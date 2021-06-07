@@ -36,6 +36,8 @@ jobs:
         name: nupkgs
         path: |
           Castaway.Base/bin/Release/Castaway.Base.${{ github.event.inputs.version }}.nupkg
+          Castaway.Level/bin/Release/Castaway.Level.${{ github.event.inputs.version }}.nupkg
+          Castaway.Native/bin/Release/Castaway.Native.${{ github.event.inputs.version }}.nupkg
   publish:
     runs-on: ubuntu-latest
     if: github.event.inputs.allow-publish == 'true'
