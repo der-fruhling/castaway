@@ -41,6 +41,10 @@ jobs:
     if: github.event.inputs.allow-publish == 'true'
     needs: build
     steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
       - name: Download
         uses: actions/download-artifact@v2
         with: 
