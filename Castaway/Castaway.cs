@@ -4,7 +4,7 @@ using Castaway.Assets;
 
 namespace Castaway
 {
-    public class CastawayEngine
+    public static class CastawayEngine
     {
         public static void Init()
         {
