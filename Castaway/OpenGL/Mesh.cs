@@ -22,6 +22,31 @@ namespace Castaway.OpenGL
                 Normal = normal;
                 Texture = texture;
             }
+
+            public bool Equals(Vertex other)
+            {
+                return Position.Equals(other.Position) && Color.Equals(other.Color) && Normal.Equals(other.Normal) && Texture.Equals(other.Texture);
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is Vertex other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Position, Color, Normal, Texture);
+            }
+
+            public static bool operator ==(Vertex left, Vertex right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Vertex left, Vertex right)
+            {
+                return !left.Equals(right);
+            }
         }
 
         public Vertex[] Vertices;
