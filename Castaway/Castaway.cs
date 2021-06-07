@@ -15,7 +15,7 @@ namespace Castaway
             {
                 if (assetsElement.TryGetProperty("discover", out var discoverElement))
                 {
-                    foreach(var s in assetsElement.EnumerateArray())
+                    foreach(var s in discoverElement.EnumerateArray())
                         AssetLoader.Loader.Discover(s.GetString()!);
                 }
             }
