@@ -18,27 +18,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Remove="_native/Unix" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="glfw-net" Version="3.3.1" />
       <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.4.21253.7" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
       <EmbeddedResource Remove="bin\**" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="bin\**" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Castaway.Native\Castaway.Native.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Include="OpenGL\_shaders\*\*.glsl" />
+        <Compile Remove="OpenGL\_shaders\*\*.glsl" />
     </ItemGroup>
 </Project>

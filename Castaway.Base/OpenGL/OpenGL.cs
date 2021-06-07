@@ -88,6 +88,7 @@ namespace Castaway.OpenGL
             Glfw.WindowHint(Hint.Visible, visible);
             w.GlfwWindow = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             Bind(w);
+            BuiltinShaders.Init();
             return w;
         }
 
@@ -115,6 +116,8 @@ namespace Castaway.OpenGL
             Glfw.WindowHint(Hint.Visible, visible);
             var v = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
             w.GlfwWindow = Glfw.CreateWindow(v.Width, v.Height, title, Glfw.PrimaryMonitor, GLFW.Window.None);
+            Bind(w);
+            BuiltinShaders.Init();
             return w;
         }
 
@@ -312,6 +315,8 @@ namespace Castaway.OpenGL
         {
             for (var i = 0; i < windows.Length; i++)
             {
+                Bind(windows[i]);
+                BuiltinShaders.Destroy();
                 Glfw.DestroyWindow(windows[i].GlfwWindow);
                 windows[i].Destroyed = true;
                 if (windows[i] == BoundWindow) BoundWindow = null;
