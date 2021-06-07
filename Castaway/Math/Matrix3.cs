@@ -93,6 +93,9 @@ namespace Castaway.Math
             return a;
         }
 
+        public static Matrix3 Scale(Vector2 v) => Scale(v.X, v.Y);
+        public static Matrix3 Scale(Vector3 v) => Scale(v.X, v.Y, v.Z);
+
         public static Matrix3 Translate(float x, float y)
         {
             var a = Ident;
@@ -100,6 +103,8 @@ namespace Castaway.Math
             a.Y.Z = y;
             return a;
         }
+
+        public static Matrix3 Translate(Vector2 v) => Translate(v.X, v.Y);
 
         public bool Equals(Matrix3 other)
         {

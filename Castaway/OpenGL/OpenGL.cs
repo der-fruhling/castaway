@@ -12,7 +12,7 @@ using static Castaway.OpenGL.GLC;
 
 namespace Castaway.OpenGL
 {
-    public class OpenGL : IGraphics<
+    public class OpenGL : Graphics<
         Window, 
         Buffer, 
         Shader, 
@@ -22,16 +22,42 @@ namespace Castaway.OpenGL
         IDrawable
     >
     {
+        private static OpenGL? _global;
+
+        public static OpenGL Setup()
+        {
+            if (_global != null) throw new InvalidOperationException("Cannot Setup() after Setup()");
+            return _global = new OpenGL();
+        }
+
+        public static void Unsetup()
+        {
+            (_global ?? throw new InvalidOperationException("Cannot Unsetup() before Setup()"))
+                .Dispose();
+        }
+
+        public static OpenGL Get()
+        {
+            return _global ?? throw new InvalidOperationException("Cannot Get() before Setup()");
+        }
+        
         public OpenGL()
         {
             GL.Init();
             Glfw.Init();
         }
 
-        public void Dispose()
+        ~OpenGL() => DisposeGL();
+
+        private void DisposeGL()
+        {
+            Glfw.Terminate();
+        }
+
+        public override void Dispose()
         {
             GC.SuppressFinalize(this);
-            Glfw.Terminate();
+            DisposeGL();
         }
 
         public Window? BoundWindow { get; private set; }
@@ -49,7 +75,7 @@ namespace Castaway.OpenGL
         /// created window.</returns>
         /// <seealso cref="Bind(Castaway.OpenGL.Window)"/>
         /// <seealso cref="Destroy(Castaway.OpenGL.Window[])"/>
-        public Window CreateWindowWindowed(string title, int width, int height, bool visible = true)
+        public override Window CreateWindowWindowed(string title, int width, int height, bool visible = true)
         {
             Window w = new();
             Glfw.DefaultWindowHints();
@@ -74,7 +100,7 @@ namespace Castaway.OpenGL
         /// created window.</returns>
         /// <seealso cref="Bind(Castaway.OpenGL.Window)"/>
         /// <seealso cref="Destroy(Castaway.OpenGL.Window[])"/>
-        public Window CreateWindowFullscreen(string title, bool visible = true)
+        public override Window CreateWindowFullscreen(string title, bool visible = true)
         {
             Window w = new();
             Glfw.DefaultWindowHints();
@@ -96,7 +122,7 @@ namespace Castaway.OpenGL
         /// <seealso cref="Destroy(Buffer[])"/>
         /// <seealso cref="Draw"/>
         /// <seealso cref="Upload"/>
-        public Buffer CreateBuffer(BufferTarget target)
+        public override Buffer CreateBuffer(BufferTarget target)
         {
             var b = new Buffer {Number = GL.CreateBuffer(), Target = target};
             Bind(b);
@@ -123,7 +149,7 @@ namespace Castaway.OpenGL
         /// Thrown if the shader fails to compile. The log will be printed
         /// above the stacktrace.
         /// </exception>
-        public Shader CreateShader(ShaderStage stage, string source)
+        public override Shader CreateShader(ShaderStage stage, string source)
         {
             Shader s = new()
             {
@@ -164,7 +190,7 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <seealso cref="CreateShader(Castaway.Rendering.ShaderStage,string)"/>
         /// <inheritdoc cref="CreateShader(Castaway.Rendering.ShaderStage,string)" />
-        public Shader CreateShader(ShaderStage stage, Asset source)
+        public override Shader CreateShader(ShaderStage stage, Asset source)
         {
             return CreateShader(stage, source.Type.To<string>(source));
         }
@@ -182,7 +208,7 @@ namespace Castaway.OpenGL
         /// <seealso cref="CreateOutput"/>
         /// <seealso cref="BindUniform"/>
         /// <seealso cref="FinishProgram"/>
-        public ShaderProgram CreateProgram(params Shader[] shaders)
+        public override ShaderProgram CreateProgram(params Shader[] shaders)
         {
             ShaderProgram p = new()
             {
@@ -205,7 +231,7 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="image">Bitmap to load from.</param>
         /// <returns>New <see cref="Texture"/> object.</returns>
-        public Texture CreateTexture(Bitmap image)
+        public override Texture CreateTexture(Bitmap image)
         {
             List<float> data = new();
             for (var i = image.Height - 1; i >= 0; i--)
@@ -232,7 +258,7 @@ namespace Castaway.OpenGL
         /// <see cref="Asset"/>.
         /// </summary>
         /// <inheritdoc cref="CreateTexture(System.Drawing.Bitmap)"/>
-        public Texture CreateTexture(Asset image)
+        public override Texture CreateTexture(Asset image)
         {
             return CreateTexture(image.Type.To<Bitmap>(image));
         }
@@ -246,7 +272,7 @@ namespace Castaway.OpenGL
         /// <returns>New <see cref="Framebuffer"/> object.</returns>
         /// <remarks>Unlike other create methods, this one unbinds the object
         /// it creates after it is created.</remarks>
-        public Framebuffer CreateFramebuffer(Window window)
+        public override Framebuffer CreateFramebuffer(Window window)
         {
             var (width, height) = GetWindowSize(window);
             GL.GenFramebuffers(1, out var a);
@@ -277,7 +303,7 @@ namespace Castaway.OpenGL
         /// is bound, it is automatically unbound. 
         /// </summary>
         /// <param name="windows">Objects to destroy.</param>
-        public void Destroy(params Window[] windows)
+        public override void Destroy(params Window[] windows)
         {
             for (var i = 0; i < windows.Length; i++)
             {
@@ -292,7 +318,7 @@ namespace Castaway.OpenGL
         /// is bound, it is automatically unbound.
         /// </summary>
         /// <param name="buffers">Objects to destroy.</param>
-        public void Destroy(params Buffer[] buffers)
+        public override void Destroy(params Buffer[] buffers)
         {
             GL.DeleteBuffers(buffers.Length, buffers.Select(b => b.Number).ToArray());
             for (var i = 0; i < buffers.Length; i++)
@@ -305,7 +331,7 @@ namespace Castaway.OpenGL
         /// Destroys any amount of <see cref="Shader"/> objects.
         /// </summary>
         /// <param name="shaders">Objects to destroy.</param>
-        public void Destroy(params Shader[] shaders)
+        public override void Destroy(params Shader[] shaders)
         {
             for (var i = 0; i < shaders.Length; i++)
             {
@@ -319,7 +345,7 @@ namespace Castaway.OpenGL
         /// If the object is bound, it is automatically unbound.
         /// </summary>
         /// <param name="programs">Objects to destroy.</param>
-        public void Destroy(params ShaderProgram[] programs)
+        public override void Destroy(params ShaderProgram[] programs)
         {
             for (var i = 0; i < programs.Length; i++)
             {
@@ -334,7 +360,7 @@ namespace Castaway.OpenGL
         /// If the object is bound, it is automagically unbound.
         /// </summary>
         /// <param name="textures">Objects to destroy.</param>
-        public void Destroy(params Texture[] textures)
+        public override void Destroy(params Texture[] textures)
         {
             GL.DeleteTextures(textures.Length, textures.Select(t => t.Number).ToArray());
             for (var i = 0; i < textures.Length; i++)
@@ -348,7 +374,7 @@ namespace Castaway.OpenGL
         /// If the object is bound, it is automatically unbound.
         /// </summary>
         /// <param name="framebuffers"></param>
-        public void Destroy(params Framebuffer[] framebuffers)
+        public override void Destroy(params Framebuffer[] framebuffers)
         {
             GL.DeleteFramebuffers(framebuffers.Length, framebuffers.Select(f => f.Number).ToArray());
             Destroy(framebuffers.Select(f => f.Texture).ToArray());
@@ -362,7 +388,7 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="window">Window to bind.</param>
         /// <seealso cref="BoundWindow"/>
-        public void Bind(Window window)
+        public override void Bind(Window window)
         {
             Glfw.MakeContextCurrent(window.GlfwWindow);
             BoundWindow = window;
@@ -377,7 +403,7 @@ namespace Castaway.OpenGL
         /// Thrown if the buffer's target is out of range, which should never
         /// happen, but it's always good to make sure.
         /// </exception>
-        public void Bind(Buffer buffer)
+        public override void Bind(Buffer buffer)
         {
             GL.BindBuffer(buffer.Target switch
             {
@@ -392,7 +418,7 @@ namespace Castaway.OpenGL
         /// operations.
         /// </summary>
         /// <param name="program">Program to bind.</param>
-        public void Bind(ShaderProgram program)
+        public override void Bind(ShaderProgram program)
         {
             if (!program.LinkSuccess) throw new InvalidOperationException("Cannot bind program that isn't linked");
             GL.UseProgram(program.Number);
@@ -404,7 +430,7 @@ namespace Castaway.OpenGL
         /// Binds a texture.
         /// </summary>
         /// <param name="texture">Texture to bind.</param>
-        public void Bind(Texture texture)
+        public override void Bind(Texture texture)
         {
             GL.BindTexture(GL_TEXTURE_2D, texture.Number);
         }
@@ -416,7 +442,7 @@ namespace Castaway.OpenGL
         /// <param name="number">Texture number to bind to.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the texture
         /// number is out of range.</exception>
-        public void Bind(Texture texture, [Range(0, 31)] int number)
+        public override void Bind(Texture texture, [Range(0, 31)] int number)
         {
             GL.ActiveTexture(number switch
             {
@@ -443,7 +469,7 @@ namespace Castaway.OpenGL
         /// return to normal at any time.
         /// </summary>
         /// <param name="framebuffer"></param>
-        public void Bind(Framebuffer framebuffer)
+        public override void Bind(Framebuffer framebuffer)
         {
             GL.BindFramebuffer(GL_FRAMEBUFFER, framebuffer.Number);
             BoundFramebuffer = framebuffer;
@@ -454,7 +480,7 @@ namespace Castaway.OpenGL
         /// window instead.
         /// </summary>
         /// <seealso cref="Bind(Castaway.OpenGL.Framebuffer)"/>
-        public void UnbindFramebuffer()
+        public override void UnbindFramebuffer()
         {
             GL.BindFramebuffer(GL_FRAMEBUFFER, 0);
         }
@@ -465,7 +491,7 @@ namespace Castaway.OpenGL
         /// and mouse moving.
         /// </summary>
         /// <param name="window">Window of to render to.</param>
-        public void FinishFrame(Window window)
+        public override void FinishFrame(Window window)
         {
             Glfw.SwapBuffers(window.GlfwWindow);
             Glfw.PollEvents();
@@ -474,7 +500,7 @@ namespace Castaway.OpenGL
         /// <summary>
         /// Should be called at the start of the frame.
         /// </summary>
-        public void StartFrame()
+        public override void StartFrame()
         {
             Clear();
         }
@@ -488,7 +514,7 @@ namespace Castaway.OpenGL
         /// Thrown if the buffers target is out of range, for the same reason
         /// that <see cref="Bind(Castaway.OpenGL.Buffer)"/> does.
         /// </exception>
-        public void Upload<T>(Buffer buffer, T[] data) where T : unmanaged
+        public override void Upload<T>(Buffer buffer, T[] data)
         {
             byte[] bytes;
             unsafe
@@ -518,7 +544,7 @@ namespace Castaway.OpenGL
         /// this method.</param>
         /// <exception cref="InvalidOperationException">Thrown if the drawable
         /// does not have a vertex array attached.</exception>
-        public void Draw(ShaderProgram program, IDrawable drawable)
+        public override void Draw(ShaderProgram program, IDrawable drawable)
         {
             if (!drawable.VertexArray.HasValue)
                 throw new InvalidOperationException("Drawables must have an attached vertex array.");
@@ -548,7 +574,7 @@ namespace Castaway.OpenGL
         /// <param name="p">Program to add the input to.</param>
         /// <param name="inputType">Type of the input to create.</param>
         /// <param name="name">Name of the input to create.</param>
-        public void CreateInput(ShaderProgram p, VertexInputType inputType, string name)
+        public override void CreateInput(ShaderProgram p, VertexInputType inputType, string name)
         {
             p.Inputs[name] = inputType;
         }
@@ -566,7 +592,7 @@ namespace Castaway.OpenGL
         /// TODO Find out what this means.
         /// -->
         /// <param name="name">Name of the output to create.</param>
-        public void CreateOutput(ShaderProgram p, uint color, string name)
+        public override void CreateOutput(ShaderProgram p, uint color, string name)
         {
             p.Outputs[name] = color;
         }
@@ -581,25 +607,25 @@ namespace Castaway.OpenGL
         /// <param name="name">Name of the uniform to add.</param>
         /// <param name="type">Type of the uniform to add. Defaults to
         /// <see cref="UniformType.Custom"/>.</param>
-        public void BindUniform(ShaderProgram p, string name, UniformType type = UniformType.Custom)
+        public override void BindUniform(ShaderProgram p, string name, UniformType type = UniformType.Custom)
         {
             p.UniformBindings[name] = type;
         }
         
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public void RemoveInput(ShaderProgram p, string name)
+        public override void RemoveInput(ShaderProgram p, string name)
         {
             p.Inputs.Remove(name);
         }
 
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public void RemoveOutput(ShaderProgram p, string name)
+        public override void RemoveOutput(ShaderProgram p, string name)
         {
             p.Outputs.Remove(name);
         }
 
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public void UnbindUniform(ShaderProgram p, string name)
+        public override void UnbindUniform(ShaderProgram p, string name)
         {
             p.UniformBindings.Remove(name);
         }
@@ -615,7 +641,7 @@ namespace Castaway.OpenGL
         /// Thrown if the program fails to link. A log will be printed above
         /// the stacktrace.
         /// </exception>
-        public void FinishProgram(ref ShaderProgram p)
+        public override void FinishProgram(ref ShaderProgram p)
         {
             foreach (var (name, color) in p.Outputs)
                 GL.BindFragDataLocation(p.Number, color, name);
@@ -641,88 +667,107 @@ namespace Castaway.OpenGL
         }
 
         /// <summary>
+        /// Gets the name of the uniform with the specified type.
+        /// </summary>
+        /// <param name="p">Shader program to search.</param>
+        /// <param name="type">Type to find.</param>
+        /// <returns>Name of the uniform <paramref name="type"/> references</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the specified type has multiple uniforms bound to it -or-
+        /// There are no <see cref="BindUniform">bound uniforms</see> in the program. -or-
+        /// There is no such uniform of <paramref name="type"/> -or-
+        /// <paramref name="type"/> is <see cref="UniformType.Custom"/>
+        /// </exception>
+        public override string UniformRef(ShaderProgram p, UniformType type)
+        {
+            if (type == UniformType.Custom)
+                throw new InvalidOperationException("Cannot reference custom uniform binding.");
+            return p.UniformBindings.Single(pair => pair.Value == type).Key;
+        }
+
+        /// <summary>
         /// Sets a value in a uniform. The program must already be bound for
         /// this to work properly.
         /// </summary>
-        public void SetUniform(ShaderProgram p, string name, float f)
+        public override void SetUniform(ShaderProgram p, string name, float f)
         {
             GL.SetUniform(p.UniformLocations[name], 1, new[] {f});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, float x, float y)
+        public override void SetUniform(ShaderProgram p, string name, float x, float y)
         {
             GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, float x, float y, float z)
+        public override void SetUniform(ShaderProgram p, string name, float x, float y, float z)
         {
             GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, float x, float y, float z, float w)
+        public override void SetUniform(ShaderProgram p, string name, float x, float y, float z, float w)
         {
             GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, int i)
+        public override void SetUniform(ShaderProgram p, string name, int i)
         {
             GL.SetUniform(p.UniformLocations[name], 1, new[] {i});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, int x, int y)
+        public override void SetUniform(ShaderProgram p, string name, int x, int y)
         {
             GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, int x, int y, int z)
+        public override void SetUniform(ShaderProgram p, string name, int x, int y, int z)
         {
             GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, int x, int y, int z, int w)
+        public override void SetUniform(ShaderProgram p, string name, int x, int y, int z, int w)
         {
             GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Vector2 v)
+        public override void SetUniform(ShaderProgram p, string name, Vector2 v)
         {
             SetUniform(p, name, v.X, v.Y);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Vector3 v)
+        public override void SetUniform(ShaderProgram p, string name, Vector3 v)
         {
             SetUniform(p, name, v.X, v.Y, v.Z);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Vector4 v)
+        public override void SetUniform(ShaderProgram p, string name, Vector4 v)
         {
             SetUniform(p, name, v.X, v.Y, v.Z, v.W);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Matrix2 m)
+        public override void SetUniform(ShaderProgram p, string name, Matrix2 m)
         {
             GL.SetUniformMatrix2(p.UniformLocations[name], 1, false, m.Array);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Matrix3 m)
+        public override void SetUniform(ShaderProgram p, string name, Matrix3 m)
         {
             GL.SetUniformMatrix3(p.UniformLocations[name], 1, false, m.Array);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
-        public void SetUniform(ShaderProgram p, string name, Matrix4 m)
+        public override void SetUniform(ShaderProgram p, string name, Matrix4 m)
         {
             GL.SetUniformMatrix4(p.UniformLocations[name], 1, false, m.Array);
         }
@@ -731,7 +776,7 @@ namespace Castaway.OpenGL
         /// Clears the color, depth, and stencil buffers in the current render
         /// target.
         /// </summary>
-        public void Clear()
+        public override void Clear()
         {
             GL.Clear();
         }
@@ -742,7 +787,7 @@ namespace Castaway.OpenGL
         /// <param name="r">Red</param>
         /// <param name="g">Green</param>
         /// <param name="b">Blue</param>
-        public void SetClearColor(float r, float g, float b)
+        public override void SetClearColor(float r, float g, float b)
         {
             GL.ClearColor(r, g, b, 1);
         }
@@ -753,7 +798,7 @@ namespace Castaway.OpenGL
         /// <param name="window">Window to set the size of.</param>
         /// <param name="width">The new width of the window.</param>
         /// <param name="height">The new height of the window.</param>
-        public void SetWindowSize(Window window, int width, int height)
+        public override void SetWindowSize(Window window, int width, int height)
         {
             Glfw.SetWindowSize(window.GlfwWindow, width, height);
         }
@@ -763,7 +808,7 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="window">Window to set the title of.</param>
         /// <param name="title">The new title of the window.</param>
-        public void SetWindowTitle(Window window, string title)
+        public override void SetWindowTitle(Window window, string title)
         {
             Glfw.SetWindowTitle(window.GlfwWindow, title);
         }
@@ -773,7 +818,7 @@ namespace Castaway.OpenGL
         /// </summary>
         /// <param name="window">Window to get the size from.</param>
         /// <returns>Size of the specified window.</returns>
-        public (int Width, int Height) GetWindowSize(Window window)
+        public override (int Width, int Height) GetWindowSize(Window window)
         {
             Glfw.GetWindowSize(window.GlfwWindow, out var w, out var h);
             return (w, h);
@@ -785,7 +830,7 @@ namespace Castaway.OpenGL
         /// <param name="window">Window to check.</param>
         /// <returns><c>true</c> if should still be open, <c>false</c>
         /// otherwise</returns>
-        public bool WindowShouldBeOpen(Window window)
+        public override bool WindowShouldBeOpen(Window window)
         {
             return !Glfw.WindowShouldClose(window.GlfwWindow);
         }
@@ -794,7 +839,7 @@ namespace Castaway.OpenGL
         /// Sets the window to visible.
         /// </summary>
         /// <param name="window">Window to visibleize.</param>
-        public void ShowWindow(Window window)
+        public override void ShowWindow(Window window)
         {
             Glfw.ShowWindow(window.GlfwWindow);
         }
@@ -803,7 +848,7 @@ namespace Castaway.OpenGL
         /// Sets the window to invisible.
         /// </summary>
         /// <param name="window">Window to invisibleize.</param>
-        public void HideWindow(Window window)
+        public override void HideWindow(Window window)
         {
             Glfw.HideWindow(window.GlfwWindow);
         }
@@ -817,7 +862,7 @@ namespace Castaway.OpenGL
         /// <param name="things">The things to destroy.</param>
         /// <exception cref="InvalidOperationException">Thrown if an
         /// invalid thing was passed.</exception>
-        public void Destroy(params object[] things)
+        public override void Destroy(params object[] things)
         {
             foreach (var thing in things)
             {
@@ -858,7 +903,7 @@ namespace Castaway.OpenGL
         /// Thrown if an invalid thing was passes or if multiple of a single
         /// type was found.
         /// </exception>
-        public void Bind(params object[] things)
+        public override void Bind(params object[] things)
         {
             var bw = false;
             var bp = false;

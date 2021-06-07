@@ -16,7 +16,7 @@ namespace Castaway.Assets
                 d.LoadXml(To<string>(a));
                 return (T) (dynamic) d;
             } 
-            throw new InvalidOperationException($"Cannot convert TextAssetType to {typeof(T).FullName}");
+            throw new InvalidOperationException($"Cannot convert XMLAssetType to {typeof(T).FullName}");
         }
     }
 }

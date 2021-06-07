@@ -49,6 +49,7 @@ namespace Castaway.Assets
                 "jpg" => new ImageAssetType(),
                 "jpeg" => new ImageAssetType(),
                 "xml" => new XMLAssetType(),
+                "obj" => new WavefrontOBJAssetType(),
                 _ => new TextAssetType()
             };
         }
