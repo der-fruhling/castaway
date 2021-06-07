@@ -4,6 +4,12 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.0.3-pg</PackageVersion>
+        <Title>Castaway Levels</Title>
+        <Copyright>[c] LiamCoalStudio 2021</Copyright>
+        <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
+        <RepositoryType>GitHub</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
