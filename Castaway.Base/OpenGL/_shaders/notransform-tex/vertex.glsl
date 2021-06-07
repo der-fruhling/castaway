@@ -3,7 +3,7 @@
  * Vertex Shader
  */
 
-// USES FRAGMENT FROM `default`!
+// USES FRAGMENT FROM `default-tex`!
 
 #version 150 core
 // GLSL 1.50 (OpenGL 3.2)

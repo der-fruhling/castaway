@@ -36,14 +36,17 @@ namespace Castaway.OpenGL
             #endregion
 
             var g = OpenGL.Get();
-
-            Shader vs, fs;
-            ShaderProgram p;
+            
+            // Shader creation
+            var defaultV = g.CreateShader(ShaderStage.Vertex, taskList["default/vertex.glsl"].Result);
+            var defaultF = g.CreateShader(ShaderStage.Fragment, taskList["default/fragment.glsl"].Result);
+            var defaultTexV = g.CreateShader(ShaderStage.Vertex, taskList["default_tex/vertex.glsl"].Result);
+            var defaultTexF = g.CreateShader(ShaderStage.Fragment, taskList["default_tex/fragment.glsl"].Result);
+            var noTransformV = g.CreateShader(ShaderStage.Vertex, taskList["notransform/vertex.glsl"].Result);
+            var noTransformTexV = g.CreateShader(ShaderStage.Vertex, taskList["notransform_tex/vertex.glsl"].Result);
             
             // `default`
-            vs = g.CreateShader(ShaderStage.Vertex, taskList["default/vertex.glsl"].Result);
-            fs = g.CreateShader(ShaderStage.Fragment, taskList["default/fragment.glsl"].Result);
-            p = g.CreateProgram(vs, fs);
+            var p = g.CreateProgram(defaultV, defaultF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateOutput(p, 0, "oColor");
@@ -57,9 +60,7 @@ namespace Castaway.OpenGL
             Default = p;
             
             // `default-tex`
-            vs = g.CreateShader(ShaderStage.Vertex, taskList["default_tex/vertex.glsl"].Result);
-            fs = g.CreateShader(ShaderStage.Fragment, taskList["default_tex/fragment.glsl"].Result);
-            p = g.CreateProgram(vs, fs);
+            p = g.CreateProgram(defaultTexV, defaultTexF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateInput(p, VertexInputType.TextureST, "vTextureCoords");
@@ -75,9 +76,7 @@ namespace Castaway.OpenGL
             DefaultTextured = p;
             
             // `notransform`
-            vs = g.CreateShader(ShaderStage.Vertex, taskList["notransform/vertex.glsl"].Result);
-            fs = g.CreateShader(ShaderStage.Fragment, taskList["default/fragment.glsl"].Result);
-            p = g.CreateProgram(vs, fs);
+            p = g.CreateProgram(noTransformV, defaultF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateOutput(p, 0, "oColor");
@@ -85,9 +84,7 @@ namespace Castaway.OpenGL
             NoTransform = p;
             
             // `notransform-tex`
-            vs = g.CreateShader(ShaderStage.Vertex, taskList["notransform_tex/vertex.glsl"].Result);
-            fs = g.CreateShader(ShaderStage.Fragment, taskList["default_tex/fragment.glsl"].Result);
-            p = g.CreateProgram(vs, fs);
+            p = g.CreateProgram(noTransformTexV, defaultTexF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateInput(p, VertexInputType.TextureST, "vTextureCoords");
