@@ -55,7 +55,7 @@ namespace Test
             
             // Inputs
             g.CreateInput(program, VertexInputType.PositionXY, "inPos");
-            g.CreateInput(program, VertexInputType.TextureUV, "inTex");
+            g.CreateInput(program, VertexInputType.TextureST, "inTex");
             
             // Outputs
             g.CreateOutput(program, 0, "outCol");
