@@ -11,12 +11,9 @@ on:
         description: Allow Publishing
         required: true
         default: 'false'
-    # version:
-    #   description: Version to Publish
-    #   required: false
-    #   default: '0.0.X-pg'
 jobs:
   build:
+    name: Ubuntu Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -34,12 +31,41 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkgs
-        path: |
-          Castaway.*/bin/Release/Castaway.*.*.nupkg
+        path: Castaway.*/bin/Release/Castaway.*.*.nupkg
+  build-mac:
+    name: macOS Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build -c Release --no-restore
+      - name: Test
+        run: dotnet test -c Release --no-build --verbosity normal
+  build-windows:
+    name: Windows Build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build -c Release --no-restore
+      - name: Test
+        run: dotnet test -c Release --no-build --verbosity normal
   publish:
+    name: Publish (${{ github.event.inputs.allow-publish }})
     runs-on: ubuntu-latest
-    if: github.event.inputs.allow-publish == 'true'
-    needs: build
+    needs: [build,build-windows,build-mac]
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -49,8 +75,12 @@ jobs:
         uses: actions/download-artifact@v2
         with: 
           name: nupkgs
+      - name: List
+        run: ls -R
       - name: Publish
+        if: github.event.inputs.allow-publish == 'true'
         run: |
-          ls -R
-        # dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
-        # dotnet nuget push Castaway.Base/bin/Release/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
+          dotnet nuget push Castaway.Base/bin/Release/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Level/bin/Release/Castaway.Level.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Native/bin/Release/Castaway.Native.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
