@@ -20,7 +20,7 @@ namespace Castaway.Level
             var doc = asset.Type.To<XmlDocument>(asset);
             var root = doc.DocumentElement;
 
-            var api = root!.Name;
+            const string api = "OpenGL"; // TODO
 
             var node = root.FirstChild;
             do
@@ -39,7 +39,7 @@ namespace Castaway.Level
             while ((node = node!.NextSibling) != null);
         }
 
-        private LevelObject ParseObject(XmlElement e, string api, LevelObject? parent = null)
+        private LevelObject ParseObject(XmlElement e, string? api, LevelObject? parent = null)
         {
             LevelObject o = new();
             var subs = e.GetElementsByTagName("Object");
@@ -57,13 +57,13 @@ namespace Castaway.Level
             return o;
         }
 
-        private EmptyController ParseController(XmlElement e, string api)
+        private EmptyController ParseController(XmlElement e, string? api)
         {
             var t = ((((Type.GetType(e.Name) 
                         ?? Type.GetType($"Castaway.Level.{e.Name}Controller"))
                        ?? Type.GetType($"Castaway.Level.{e.Name}"))
-                      ?? Type.GetType($"Castaway.{api}.Level.{e.Name}Controller")) 
-                     ?? Type.GetType($"Castaway.{api}.Level.{e.Name}"))
+                      ?? Type.GetType($"Castaway.{api ?? "<ERROR>"}.Level.{e.Name}Controller")) 
+                     ?? Type.GetType($"Castaway.{api ?? "<ERROR>"}.Level.{e.Name}"))
                     ?? throw new InvalidOperationException($"Couldn't find controller {e.Name}.");
             var inst = t!.GetConstructor(Array.Empty<Type>())!.Invoke(null);
 

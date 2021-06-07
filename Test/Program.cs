@@ -6,7 +6,6 @@ using Castaway.Level;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using static Castaway.Assets.AssetLoader;
-using Graphics = Castaway.Rendering.Graphics;
 
 namespace Test
 {
@@ -77,7 +76,7 @@ namespace Test
             CastawayEngine.Init();
 
             // Graphics setup.
-            using var g = Graphics.Setup<OpenGL>();
+            using var g = OpenGL.Setup();
             
             // Window setup
             var window = g.CreateWindowWindowed("name", 800, 600, false);
