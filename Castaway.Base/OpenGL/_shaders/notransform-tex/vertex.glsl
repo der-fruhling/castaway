@@ -1,5 +1,5 @@
 /*
- * Castaway Built-In Shader `notransform`
+ * Castaway Built-In Shader `notransform-tex`
  * Vertex Shader
  */
 
