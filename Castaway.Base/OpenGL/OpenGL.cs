@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Castaway.Assets;
 using Castaway.Math;
+using Castaway.Native;
 using Castaway.Rendering;
 using GLFW;
 using static Castaway.OpenGL.GLC;

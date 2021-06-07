@@ -2,7 +2,7 @@ using System;
 using Castaway.Math;
 using NUnit.Framework;
 
-namespace Castaway.Tests.Math.Vectors
+namespace Castaway.Base.Tests.Math.Vectors
 {
     [TestFixture]
     [TestOf(typeof(Vector2))]

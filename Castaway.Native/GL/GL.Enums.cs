@@ -1,4 +1,4 @@
-namespace Castaway.OpenGL
+namespace Castaway.Native
 {
     public static partial class GL
     {
