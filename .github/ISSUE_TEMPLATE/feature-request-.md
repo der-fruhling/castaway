@@ -1,7 +1,7 @@
 ---
 name: Feature request.
 about: Use for requesting a new feature.
-title: "[Feature]: "
+title: ''
 labels: enhancement
 assignees: LiamCoal
 

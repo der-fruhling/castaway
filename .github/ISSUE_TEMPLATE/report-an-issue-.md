@@ -1,7 +1,7 @@
 ---
 name: Report an issue.
 about: Use for reporting any type of issue.
-title: "[Issue]: "
+title: ''
 labels: bug
 assignees: LiamCoal
 
