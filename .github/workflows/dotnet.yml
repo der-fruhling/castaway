@@ -53,6 +53,6 @@ jobs:
           name: nupkgs
       - name: Publish
         run: |
-          ls -R
+          ls Castaway.*/bin/Release/Castaway.*.${{ github.event.inputs.version }}.nupkg
         # dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
         # dotnet nuget push Castaway.Base/bin/Release/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
