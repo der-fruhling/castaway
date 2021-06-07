@@ -67,11 +67,13 @@ jobs:
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
+        # .NET isn't used if not actually publishing.
+        if: github.event.inputs.allow-publish == 'true'
         with:
           dotnet-version: 5.0.x
       - name: Download
         uses: actions/download-artifact@v2
-        with: 
+        with:
           name: nupkgs
       - name: List
         run: ls -R
