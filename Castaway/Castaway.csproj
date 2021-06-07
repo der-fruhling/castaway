@@ -3,13 +3,25 @@
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.1.0-pg</PackageVersion>
+        <PackageVersion>0.0.2-pg</PackageVersion>
         <Title>Castaway Game Engine</Title>
         <Authors>Liam Cole</Authors>
         <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
-        <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+        <PackageReleaseNotes>
+            PG Release 2:
+            - Added basic level support.
+            - Fixed XMLAssetType's error message.
+            - Turned IGraphics&lt;...&gt; into an abstract class, Graphics&lt;...&gt;
+            - Vectors can now be passed to Matrix3 &amp; 4's Scale and Transform methods.
+            - CastawayEngine now enumerates config correctly.
+            - Added a Wavefront OBJ IAssetLoader implementation, that can be turned into Mesh.
+            - CastawayEngine is now a static class.
+        </PackageReleaseNotes>
         <Nullable>enable</Nullable>
+        <Copyright>[c] LiamCoalStudio 2021</Copyright>
+        <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,5 +36,17 @@
 
     <ItemGroup>
       <Folder Include="OpenGL\Level" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="bin\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="bin\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="bin\**" />
     </ItemGroup>
 </Project>
