@@ -1,7 +1,7 @@
 using Castaway.Math;
 using NUnit.Framework;
 
-namespace Castaway.Tests.Math.Matrices
+namespace Castaway.Base.Tests.Math.Matrices
 {
     [TestFixture]
     [TestOf(typeof(Matrix3))]

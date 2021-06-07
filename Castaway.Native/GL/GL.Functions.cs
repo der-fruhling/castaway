@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Castaway.OpenGL;
 using GLFW;
 
-namespace Castaway.OpenGL
+namespace Castaway.Native
 {
     public static unsafe partial class GL
     {

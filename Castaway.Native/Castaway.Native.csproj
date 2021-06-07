@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>enable</Nullable>
+        <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.0.3-pg</PackageVersion>
+        <Title>Castaway Natives</Title>
+        <Copyright>[c] LiamCoalStudio 2021</Copyright>
+        <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
+        <RepositoryType>GitHub</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="glfw-net" Version="3.3.1" />
+    </ItemGroup>
+
+</Project>

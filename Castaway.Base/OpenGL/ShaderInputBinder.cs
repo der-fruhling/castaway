@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Castaway.Native;
 using Castaway.Rendering;
 
 namespace Castaway.OpenGL
