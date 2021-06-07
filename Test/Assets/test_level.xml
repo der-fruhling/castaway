@@ -4,18 +4,17 @@
     <Object>
         <Name>Object 1</Name>
         
-        <Position>0,0,0</Position>
-
-        <Object>
-            <Name>Object 3</Name>
-            <RelPosition>0,0,0</RelPosition>
-        </Object>
+        <Position>0,0,-5</Position>
+        <Scale>1.5,1.5,1.5</Scale>
         
         <Controllers>
             <Test>
                 <Test1>1</Test1>
                 <Test2>5</Test2>
             </Test>
+            <Mesh>
+                <AssetPath>/cube.obj</AssetPath>
+            </Mesh>
         </Controllers>
     </Object>
     
