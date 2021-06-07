@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Castaway.Math;
@@ -40,5 +41,8 @@ namespace Castaway.Level
         public void Add(LevelObject obj) => Subobjects.Add(obj);
         public LevelObject Get(string name) => Subobjects.Single(o => o.Name == name);
         public LevelObject this[string i] => Get(i);
+        public T? Get<T>() where T : EmptyController => Controllers.SingleOrDefault(c => c is T) as T;
+        public T[] GetAll<T>() where T : EmptyController => Controllers.Where(c => c is T).Cast<T>().ToArray();
+        public void Add(EmptyController controller) => Controllers.Add(controller);
     }
 }
