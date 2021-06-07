@@ -11,16 +11,13 @@ not supported at all.
 
 At the moment, almost everything in Castaway has to be created through an
 instance of the `IGraphics<...>` interface, which also happens to be an
-absolute mess of type parameters. The OpenGL api is implemented in
+absolute mess of type parameters. The OpenGL API is implemented in
 `Castaway.OpenGL.OpenGL`, with various `struct`s as it's object types.
 
-To use an implementation, you first have to tell the
-`Castaway.Rendering.Graphics` class which one you want to use, with it's
-`Setup<T>` static method. Once this is called (passing `OpenGL` as the
-type parameter), save it's return value to a variable called `g`.
+First set up OpenGL, and save it's result to a variable:
 
 ```c#
-var g = Graphics.Setup<OpenGL>();
+var g = OpenGL.Setup();
 ```
 
 Once this is done, create a window by calling the `CreateWindowWindowed`
@@ -57,7 +54,7 @@ class Example
 {
     static void Main()
     {
-        var g = Graphics.Setup<OpenGL>();
+        var g = OpenGL.Setup();
         var window = g.CreateWindowWindowed("Test", 800, 600);
         g.Bind(window);
 
