@@ -107,6 +107,9 @@ namespace Castaway.Math
             a.W.W = w;
             return a;
         }
+        
+        public static Matrix4 Scale(Vector3 v) => Scale(v.X, v.Y, v.Z);
+        public static Matrix4 Scale(Vector4 v) => Scale(v.X, v.Y, v.Z, v.W);
 
         public static Matrix4 Translate(float x, float y, float z)
         {
@@ -116,6 +119,8 @@ namespace Castaway.Math
             a.Z.W = z;
             return a;
         }
+
+        public static Matrix4 Translate(Vector3 v) => Translate(v.X, v.Y, v.Z);
 
         public bool Equals(Matrix4 other)
         {
