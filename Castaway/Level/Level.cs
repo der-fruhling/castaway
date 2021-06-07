@@ -11,7 +11,7 @@ namespace Castaway.Level
 {
     public class Level
     {
-        private List<LevelObject> _objects = new();
+        private readonly List<LevelObject> _objects = new();
         
         public Level() {}
 
@@ -22,7 +22,7 @@ namespace Castaway.Level
 
             const string api = "OpenGL"; // TODO
 
-            var node = root.FirstChild;
+            var node = root!.FirstChild;
             do
             {
                 if(node == null) break;
@@ -119,7 +119,8 @@ namespace Castaway.Level
                     float.Parse(p[2]),
                     float.Parse(p[3]));
             }
-
+            if (t == typeof(Asset)) return AssetLoader.Loader!.GetAssetByName(v);
+            
             throw new InvalidOperationException($"Cannot load {t.FullName} from levels.");
         }
 
