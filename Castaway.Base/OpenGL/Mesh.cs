@@ -15,12 +15,12 @@ namespace Castaway.OpenGL
             public Vector3 Normal;
             public Vector3 Texture;
             
-            public Vertex(Vector3 position, Vector4 color, Vector3 normal, Vector3 texture)
+            public Vertex(Vector3 position, Vector4? color = null, Vector3? texture = null, Vector3? normal = null)
             {
                 Position = position;
-                Color = color;
-                Normal = normal;
-                Texture = texture;
+                Color = color ?? new Vector4(1, 1, 1, 1);
+                Normal = normal ?? new Vector3(0, 0, 0);
+                Texture = texture ?? new Vector3(0, 0, 0);
             }
 
             public bool Equals(Vertex other)
