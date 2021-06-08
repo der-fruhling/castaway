@@ -41,7 +41,7 @@ namespace Castaway.Level
 
         private LevelObject ParseObject(XmlElement e, string? api, LevelObject? parent = null)
         {
-            LevelObject o = new();
+            var o = new LevelObject(this);
             var subs = e.GetElementsByTagName("Object");
             var conts = e["Controllers"]?.ChildNodes;
             for (var i = 0; i < (conts?.Count ?? 0); i++)

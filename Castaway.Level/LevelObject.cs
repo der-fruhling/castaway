@@ -13,6 +13,12 @@ namespace Castaway.Level
         public List<EmptyController> Controllers = new();
         public List<LevelObject> Subobjects = new();
         public LevelObject? Parent;
+        public Level Level;
+
+        internal LevelObject(Level level)
+        {
+            Level = level;
+        }
 
         public void OnInit()
         {
