@@ -440,6 +440,7 @@ namespace Castaway.OpenGL
         /// Binds a texture.
         /// </summary>
         /// <param name="texture">Texture to bind.</param>
+        [Obsolete("Use numbered overload.")]
         public override void Bind(Texture texture)
         {
             GL.BindTexture(GL_TEXTURE_2D, texture.Number);
@@ -470,6 +471,7 @@ namespace Castaway.OpenGL
                 _ => throw new ArgumentOutOfRangeException(nameof(number), number, "Need number < 32, but >= 0")
             });
             GL.BindTexture(GL_TEXTURE_2D, texture);
+            texture.BindingPoint = (uint)number;
         }
 
         /// <summary>
@@ -780,6 +782,19 @@ namespace Castaway.OpenGL
         public override void SetUniform(ShaderProgram p, string name, Matrix4 m)
         {
             GL.SetUniformMatrix4(p.UniformLocations[name], 1, false, m.Array);
+        }
+
+        /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
+        /// <seealso cref="Bind(Castaway.OpenGL.Texture, int)"/>
+        public override void SetUniform(ShaderProgram p, string name, Texture t)
+        {
+            SetUniform(p, name, (int)t.BindingPoint);
+        }
+
+        /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
+        public override void SetUniform(ShaderProgram p, string name, Framebuffer t)
+        {
+            SetUniform(p, name, t.Texture);
         }
 
         /// <summary>

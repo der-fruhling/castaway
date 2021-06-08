@@ -8,6 +8,8 @@ namespace Castaway.OpenGL
         public IGraphicsObject.ObjectType Type => IGraphicsObject.ObjectType.Texture;
         public bool Destroyed { get; set; }
         public uint Number { get; set; }
+        
+        public uint BindingPoint { get; internal set; }
 
         public static implicit operator uint(Texture t)
         {
