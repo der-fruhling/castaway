@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Castaway.Math;
@@ -13,17 +12,26 @@ namespace Castaway.Level
         public List<EmptyController> Controllers = new();
         public List<LevelObject> Subobjects = new();
         public LevelObject? Parent;
+        public Level Level;
+
+        internal LevelObject(Level level)
+        {
+            Level = level;
+        }
 
         public void OnInit()
         {
             foreach(var c in Controllers) c.OnInit(this);
         }
 
-        public void OnRender()
+        public void OnRender(LevelObject cam)
         {
-            foreach(var c in Controllers) c.PreRender(this);
-            foreach(var c in Controllers) c.OnRender(this);
-            foreach(var c in Controllers) c.PostRender(this);
+            if(!Controllers.Any()) return;
+            var conts = Controllers.Except(GetAll<CameraController>()).ToArray();
+            if(!conts.Any()) return;
+            foreach(var c in conts) c.PreRender(cam, this);
+            foreach(var c in conts) c.OnRender(cam, this);
+            foreach(var c in conts) c.PostRender(cam, this);
         }
 
         public void OnUpdate()

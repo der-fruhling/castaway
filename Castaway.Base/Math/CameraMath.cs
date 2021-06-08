@@ -16,11 +16,11 @@ namespace Castaway.Math
             };
         }
 
-        public static Matrix4 Ortho(OpenGL.OpenGL g, Window window, float farCutoff, float nearCutoff)
+        public static Matrix4 Ortho(OpenGL.OpenGL g, Window window, float farCutoff, float nearCutoff, float scale = 1)
         {
             var (w, h) = g.GetWindowSize(window);
-            var a = (float) w / h;
-            return Ortho(1, -1, a, -a, farCutoff, nearCutoff);
+            var a = (float) w / h * scale;
+            return Ortho(scale, -scale, a, -a, farCutoff, nearCutoff);
         }
 
         private static Matrix4 Persp(float t, float b, float r, float l, float f, float n)
@@ -34,9 +34,9 @@ namespace Castaway.Math
             };
         }
 
-        private static Matrix4 Persp(float fov, float aspect, float f, float n)
+        private static Matrix4 Persp(float fov, float aspect, float f, float n, float scale)
         {
-            var t = MathF.Tan(fov / 2) * n;
+            var t = MathF.Tan(fov / 2) * n * scale;
             var b = -t;
             var r = t * aspect;
             var l = -t * aspect;
@@ -44,11 +44,11 @@ namespace Castaway.Math
         }
 
         public static Matrix4 Persp(OpenGL.OpenGL g, Window window, float farCutoff, float nearCutoff,
-            float verticalFov)
+            float verticalFov, float scale = 1)
         {
             var (w, h) = g.GetWindowSize(window);
             var a = (float) w / h;
-            return Persp(verticalFov, a, farCutoff, nearCutoff);
+            return Persp(verticalFov, a, farCutoff, nearCutoff, scale);
         }
     }
 }
