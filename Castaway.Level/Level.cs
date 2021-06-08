@@ -12,6 +12,8 @@ namespace Castaway.Level
     public class Level
     {
         private readonly List<LevelObject> _objects = new();
+
+        public uint ActiveCamera = 0;
         
         public Level() {}
 
@@ -41,7 +43,7 @@ namespace Castaway.Level
 
         private LevelObject ParseObject(XmlElement e, string? api, LevelObject? parent = null)
         {
-            LevelObject o = new();
+            var o = new LevelObject(this);
             var subs = e.GetElementsByTagName("Object");
             var conts = e["Controllers"]?.ChildNodes;
             for (var i = 0; i < (conts?.Count ?? 0); i++)
@@ -120,27 +122,42 @@ namespace Castaway.Level
                     float.Parse(p[3]));
             }
             if (t == typeof(Asset)) return AssetLoader.Loader!.GetAssetByName(v);
+            if (t.IsSubclassOf(typeof(Enum))) return Enum.Parse(t, v);
             
             throw new InvalidOperationException($"Cannot load {t.FullName} from levels.");
         }
 
         public void Start()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnInit();
         }
 
         public void Render()
         {
-            foreach(var o in _objects) o.OnRender();
+            if(!_objects.Any()) return;
+            foreach (var obj in _objects)
+            {
+                var cams = obj.GetAll<CameraController>();
+                if(!cams.Any()) continue;
+                foreach (var cam in cams)
+                {
+                    cam.PreRenderFrame(obj);
+                    foreach(var o in _objects) o.OnRender(obj);
+                    cam.PostRenderFrame(obj);
+                }
+            }
         }
 
         public void Update()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnUpdate();
         }
 
         public void End()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnDestroy();
         }
 
