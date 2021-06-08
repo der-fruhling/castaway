@@ -55,6 +55,8 @@ namespace Castaway.Math
             return new(a.X / b, a.Y / b, a.Z / b);
         }
 
+        public static Vector3 operator -(Vector3 v) => new(-v.X, -v.Y, -v.Z);
+
         public static implicit operator ReadOnlySpan<float>(Vector3 v)
         {
             return new[] {v.X, v.Y, v.Z};
