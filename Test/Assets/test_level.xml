@@ -3,28 +3,46 @@
 <Level For="OpenGL">
     <Object>
         <Name>Object 1</Name>
-        
-        <Position>0,0,-5</Position>
-        <Scale>1.5,1.5,1.5</Scale>
-        
+
+        <Position>-2,-1,-5</Position>
+        <Scale>1,1,1</Scale>
+
         <Controllers>
-            <Test>
-                <Test1>1</Test1>
-                <Test2>5</Test2>
-            </Test>
-            <Mesh>
-                <AssetPath>/cube.obj</AssetPath>
-            </Mesh>
+            <PyramidMesh>
+                <Size>1,1,1</Size>
+                <Color>1,0,0,1</Color>
+            </PyramidMesh>
+            <MeshRenderer/>
         </Controllers>
     </Object>
     
     <Object>
         <Name>Object 2</Name>
-        
-        <Position>1,2,3</Position>
-        
-        <Material>
-            <Color>0,1,0,1</Color>
-        </Material>
+
+        <Position>0,-1,-5</Position>
+        <Scale>1,1,1</Scale>
+
+        <Controllers>
+            <CubeMesh>
+                <Size>1,1,1</Size>
+                <Color>0,1,0,1</Color>
+            </CubeMesh>
+            <MeshRenderer/>
+        </Controllers>
+    </Object>
+
+    <Object>
+        <Name>Object 3</Name>
+
+        <Position>2,-1,-5</Position>
+        <Scale>1,1,1</Scale>
+
+        <Controllers>
+            <PlaneMesh>
+                <Size>1,1</Size>
+                <Color>0,0,1,1</Color>
+            </PlaneMesh>
+            <MeshRenderer/>
+        </Controllers>
     </Object>
 </Level>
