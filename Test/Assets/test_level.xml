@@ -2,12 +2,25 @@
 
 <Level For="OpenGL">
     <Object>
+        <Name>Camera</Name>
+        <Controllers>
+            <PerspectiveCamera>
+                <ID>0</ID>
+                <VerticalFOV>90</VerticalFOV>
+            </PerspectiveCamera>
+        </Controllers>
+    </Object>
+    
+    <Object>
         <Name>Object 1</Name>
 
         <Position>-2,-1,-5</Position>
         <Scale>1,1,1</Scale>
 
         <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
             <PyramidMesh>
                 <Size>1,1,1</Size>
                 <Color>1,0,0,1</Color>
@@ -23,6 +36,9 @@
         <Scale>1,1,1</Scale>
 
         <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
             <CubeMesh>
                 <Size>1,1,1</Size>
                 <Color>0,1,0,1</Color>
@@ -38,6 +54,9 @@
         <Scale>1,1,1</Scale>
 
         <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
             <PlaneMesh>
                 <Size>1,1</Size>
                 <Color>0,0,1,1</Color>

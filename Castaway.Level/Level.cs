@@ -12,6 +12,8 @@ namespace Castaway.Level
     public class Level
     {
         private readonly List<LevelObject> _objects = new();
+
+        public uint ActiveCamera = 0;
         
         public Level() {}
 
@@ -133,7 +135,18 @@ namespace Castaway.Level
 
         public void Render()
         {
-            foreach(var o in _objects) o.OnRender();
+            if(!_objects.Any()) return;
+            foreach (var obj in _objects)
+            {
+                var cams = obj.GetAll<CameraController>();
+                if(!cams.Any()) continue;
+                foreach (var cam in cams)
+                {
+                    cam.PreRenderFrame(obj);
+                    foreach(var o in _objects) o.OnRender(obj);
+                    cam.PostRenderFrame(obj);
+                }
+            }
         }
 
         public void Update()
