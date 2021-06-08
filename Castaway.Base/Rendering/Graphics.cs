@@ -37,6 +37,7 @@ namespace Castaway.Rendering
         public abstract void Bind(TBuffer buffer);
         public abstract void Bind(TProgram program);
         public abstract void Bind(TTexture texture);
+        [Obsolete("Use numbered overload.")]
         public abstract void Bind(TTexture texture, int number);
         public abstract void Bind(TFramebuffer framebuffer);
         public abstract void UnbindFramebuffer();
@@ -73,6 +74,8 @@ namespace Castaway.Rendering
         public abstract void SetUniform(TProgram p, string name, Matrix2 m);
         public abstract void SetUniform(TProgram p, string name, Matrix3 m);
         public abstract void SetUniform(TProgram p, string name, Matrix4 m);
+        public abstract void SetUniform(TProgram p, string name, TTexture t);
+        public abstract void SetUniform(TProgram p, string name, TFramebuffer t);
 
         public virtual void SetUniform(TProgram p, UniformType name, float f) => SetUniform(p, UniformRef(p, name), f);
         public virtual void SetUniform(TProgram p, UniformType name, float x, float y) => SetUniform(p, UniformRef(p, name), x, y);
@@ -88,6 +91,8 @@ namespace Castaway.Rendering
         public virtual void SetUniform(TProgram p, UniformType name, Matrix2 m) => SetUniform(p, UniformRef(p, name), m);
         public virtual void SetUniform(TProgram p, UniformType name, Matrix3 m) => SetUniform(p, UniformRef(p, name), m);
         public virtual void SetUniform(TProgram p, UniformType name, Matrix4 m) => SetUniform(p, UniformRef(p, name), m);
+        public virtual void SetUniform(TProgram p, UniformType name, TTexture t) => SetUniform(p, UniformRef(p, name), t);
+        public virtual void SetUniform(TProgram p, UniformType name, TFramebuffer t) => SetUniform(p, UniformRef(p, name), t);
 
         public abstract void Clear();
         public abstract void SetClearColor(float r, float g, float b);
