@@ -120,6 +120,7 @@ namespace Castaway.Level
                     float.Parse(p[3]));
             }
             if (t == typeof(Asset)) return AssetLoader.Loader!.GetAssetByName(v);
+            if (t.IsSubclassOf(typeof(Enum))) return Enum.Parse(t, v);
             
             throw new InvalidOperationException($"Cannot load {t.FullName} from levels.");
         }
