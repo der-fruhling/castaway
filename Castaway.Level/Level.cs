@@ -62,8 +62,8 @@ namespace Castaway.Level
             var t = ((((Type.GetType(e.Name) 
                         ?? Type.GetType($"Castaway.Level.{e.Name}Controller"))
                        ?? Type.GetType($"Castaway.Level.{e.Name}"))
-                      ?? Type.GetType($"Castaway.{api ?? "<ERROR>"}.Level.{e.Name}Controller")) 
-                     ?? Type.GetType($"Castaway.{api ?? "<ERROR>"}.Level.{e.Name}"))
+                      ?? Type.GetType($"Castaway.Level.{api ?? "<ERROR>"}.{e.Name}Controller")) 
+                     ?? Type.GetType($"Castaway.Level.{api ?? "<ERROR>"}.{e.Name}"))
                     ?? throw new InvalidOperationException($"Couldn't find controller {e.Name}.");
             var inst = t!.GetConstructor(Array.Empty<Type>())!.Invoke(null);
 
