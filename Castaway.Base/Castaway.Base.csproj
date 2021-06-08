@@ -1,10 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <!-- Unique -->
+        <Title>Castaway Base</Title>
+        <AssemblyName>Castaway.Base</AssemblyName>
+        <PackageId>Castaway.Base</PackageId>
+        <RootNamespace>Castaway</RootNamespace>
+
+        <!-- Common -->
+        <PackageVersion>0.0.20210608-pg.1</PackageVersion>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.0.3-pg</PackageVersion>
-        <Title>Castaway Base</Title>
         <Authors>Liam Cole</Authors>
         <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
         <RepositoryType>GitHub</RepositoryType>
@@ -12,9 +18,6 @@
         <Copyright>[c] LiamCoalStudio 2021</Copyright>
         <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <AssemblyName>Castaway.Base</AssemblyName>
-        <PackageId>Castaway.Base</PackageId>
-        <RootNamespace>Castaway</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

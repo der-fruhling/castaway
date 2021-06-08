@@ -1,16 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <!-- Unique -->
+        <Title>Castaway Natives</Title>
+
+        <!-- Common -->
+        <PackageVersion>0.0.20210608-pg.1</PackageVersion>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Nullable>enable</Nullable>
-        <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.0.3-pg</PackageVersion>
-        <Title>Castaway Natives</Title>
+        <Authors>Liam Cole</Authors>
+        <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <Nullable>enable</Nullable>
         <Copyright>[c] LiamCoalStudio 2021</Copyright>
         <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
-        <RepositoryType>GitHub</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
