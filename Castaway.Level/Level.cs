@@ -127,6 +127,7 @@ namespace Castaway.Level
 
         public void Start()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnInit();
         }
 
@@ -137,11 +138,13 @@ namespace Castaway.Level
 
         public void Update()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnUpdate();
         }
 
         public void End()
         {
+            if(!_objects.Any()) return;
             foreach(var o in _objects) o.OnDestroy();
         }
 
