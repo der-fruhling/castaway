@@ -146,6 +146,9 @@ namespace Castaway.OpenGL.Input
                 p.Y >= ay && p.Y <= by;
         }
 
+        public bool IsOver(Vector2 a, Vector2 b) =>
+            IsOver(a.X, a.Y, b.X, b.Y);
+
         private void MouseButtonCallback(IntPtr window, MouseButton button, InputState state, ModifierKeys modifiers)
         {
             if(state == InputState.Repeat) return;
