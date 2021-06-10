@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Castaway.Assets;
 using Castaway.Math;
 using Castaway.Native;
+using Castaway.OpenGL.Input;
 using Castaway.Rendering;
 using GLFW;
 using static Castaway.OpenGL.GLC;
@@ -88,6 +89,7 @@ namespace Castaway.OpenGL
             Glfw.WindowHint(Hint.Visible, visible);
             w.GlfwWindow = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             Bind(w);
+            InputSystem.Init();
             BuiltinShaders.Init();
             return w;
         }
@@ -117,6 +119,7 @@ namespace Castaway.OpenGL
             var v = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
             w.GlfwWindow = Glfw.CreateWindow(v.Width, v.Height, title, Glfw.PrimaryMonitor, GLFW.Window.None);
             Bind(w);
+            InputSystem.Init();
             BuiltinShaders.Init();
             return w;
         }
@@ -506,7 +509,9 @@ namespace Castaway.OpenGL
         public override void FinishFrame(Window window)
         {
             Glfw.SwapBuffers(window.GlfwWindow);
+            InputSystem.Clear();
             Glfw.PollEvents();
+            InputSystem.Gamepad.Read();
         }
 
         /// <summary>
