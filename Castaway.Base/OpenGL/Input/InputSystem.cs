@@ -71,9 +71,9 @@ namespace Castaway.OpenGL.Input
                         _keys[key] = ButtonState.Up | ButtonState.JustReleased;
                     else
                     {
-                        _keys[key] |= ButtonState.Down;
-                        _keys[key] &= ~ButtonState.Up;
-                        _keys[key] |= ButtonState.JustPressed;
+                        _keys[key] |= ButtonState.Up;
+                        _keys[key] &= ~ButtonState.Down;
+                        _keys[key] |= ButtonState.JustReleased;
                         _keys[key] &= ~ButtonState.NeverPressed;
                     }
                     Console.WriteLine($"- {key} = {_keys[key].GetString()}");
@@ -166,9 +166,9 @@ namespace Castaway.OpenGL.Input
                         _buttons[button] = ButtonState.Up | ButtonState.JustReleased;
                     else
                     {
-                        _buttons[button] |= ButtonState.Down;
-                        _buttons[button] &= ~ButtonState.Up;
-                        _buttons[button] |= ButtonState.JustPressed;
+                        _buttons[button] |= ButtonState.Up;
+                        _buttons[button] &= ~ButtonState.Down;
+                        _buttons[button] |= ButtonState.JustReleased;
                         _buttons[button] &= ~ButtonState.NeverPressed;
                     }
                     Console.WriteLine($"- {button} = {_buttons[button].GetString()}");
