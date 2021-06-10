@@ -93,6 +93,8 @@ namespace Castaway.OpenGL.Input
 
         private readonly Dictionary<MouseButton, ButtonState> _buttons = new();
 
+        public float PositionScale = 1.0f;
+
         public MouseInputSystem()
         {
             _mouseButtonCallback = MouseButtonCallback;
@@ -121,7 +123,7 @@ namespace Castaway.OpenGL.Input
             {
                 var window = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
                 Glfw.GetCursorPosition(window, out var x, out var y);
-                return new Vector2((float) x, (float) y);
+                return new Vector2((float) x, (float) y) / PositionScale;
             }
         }
 
