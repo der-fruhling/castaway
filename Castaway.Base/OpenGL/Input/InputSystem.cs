@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Castaway.Math;
 using GLFW;
 
 namespace Castaway.OpenGL.Input
 {
     [Flags]
-    public enum KeyState
+    public enum ButtonState
     {
         Down = 1 << 0,
         Up = 1 << 1,
@@ -17,7 +18,7 @@ namespace Castaway.OpenGL.Input
     public class KeyboardInputSystem
     {
         private readonly KeyCallback _callback;
-        private readonly Dictionary<Keys, KeyState> _keys = new();
+        private readonly Dictionary<Keys, ButtonState> _keys = new();
 
         internal KeyboardInputSystem()
         {
@@ -34,19 +35,19 @@ namespace Castaway.OpenGL.Input
         {
             foreach (var key in _keys.Keys)
             {
-                if (_keys[key].HasFlag(KeyState.JustPressed)) _keys[key] &= ~KeyState.JustPressed;
-                if (_keys[key].HasFlag(KeyState.JustReleased)) _keys[key] &= ~KeyState.JustReleased;
+                if (_keys[key].HasFlag(ButtonState.JustPressed)) _keys[key] &= ~ButtonState.JustPressed;
+                if (_keys[key].HasFlag(ButtonState.JustReleased)) _keys[key] &= ~ButtonState.JustReleased;
             }
         }
 
-        private KeyState this[Keys key] => _keys.GetValueOrDefault(key, KeyState.Up | KeyState.NeverPressed);
-        private bool this[Keys key, KeyState state] => this[key].HasFlag(state);
-        public bool IsDown(Keys key) => this[key, KeyState.Down];
-        public bool IsUp(Keys key) => this[key, KeyState.Up];
-        public bool WasJustPressed(Keys key) => this[key, KeyState.JustPressed];
-        public bool WasJustReleased(Keys key) => this[key, KeyState.JustReleased];
-        public bool WasNeverPressed(Keys key) => this[key, KeyState.NeverPressed];
-        public void SetNeverPressed(Keys key) => _keys[key] |= KeyState.NeverPressed;
+        private ButtonState this[Keys key] => _keys.GetValueOrDefault(key, ButtonState.Up | ButtonState.NeverPressed);
+        private bool this[Keys key, ButtonState state] => this[key].HasFlag(state);
+        public bool IsDown(Keys key) => this[key, ButtonState.Down];
+        public bool IsUp(Keys key) => this[key, ButtonState.Up];
+        public bool WasJustPressed(Keys key) => this[key, ButtonState.JustPressed];
+        public bool WasJustReleased(Keys key) => this[key, ButtonState.JustReleased];
+        public bool WasNeverPressed(Keys key) => this[key, ButtonState.NeverPressed];
+        public void SetNeverPressed(Keys key) => _keys[key] |= ButtonState.NeverPressed;
 
         private void ReactKeyCallback(IntPtr ptr, Keys key, int code, InputState state, ModifierKeys mods)
         {
@@ -56,25 +57,25 @@ namespace Castaway.OpenGL.Input
                 case InputState.Press:
                     Console.WriteLine($"+ {key}");
                     if (!_keys.ContainsKey(key))
-                        _keys[key] = KeyState.Down | KeyState.JustPressed;
+                        _keys[key] = ButtonState.Down | ButtonState.JustPressed;
                     else
                     {
-                        _keys[key] |= KeyState.Down;
-                        _keys[key] &= ~KeyState.Up;
-                        _keys[key] |= KeyState.JustPressed;
-                        _keys[key] &= ~KeyState.NeverPressed;
+                        _keys[key] |= ButtonState.Down;
+                        _keys[key] &= ~ButtonState.Up;
+                        _keys[key] |= ButtonState.JustPressed;
+                        _keys[key] &= ~ButtonState.NeverPressed;
                     }
                     break;
                 case InputState.Release:
                     Console.WriteLine($"- {key}");
                     if (!_keys.ContainsKey(key))
-                        _keys[key] = KeyState.Up | KeyState.JustReleased;
+                        _keys[key] = ButtonState.Up | ButtonState.JustReleased;
                     else
                     {
-                        _keys[key] |= KeyState.Down;
-                        _keys[key] &= ~KeyState.Up;
-                        _keys[key] |= KeyState.JustPressed;
-                        _keys[key] &= ~KeyState.NeverPressed;
+                        _keys[key] |= ButtonState.Down;
+                        _keys[key] &= ~ButtonState.Up;
+                        _keys[key] |= ButtonState.JustPressed;
+                        _keys[key] &= ~ButtonState.NeverPressed;
                     }
                     break;
                 case InputState.Repeat:
@@ -85,13 +86,106 @@ namespace Castaway.OpenGL.Input
         }
     }
 
+    public class MouseInputSystem
+    {
+        private readonly MouseButtonCallback _mouseButtonCallback;
+        private readonly MouseEnterCallback _mouseEnterCallback;
+
+        private readonly Dictionary<MouseButton, ButtonState> _buttons = new();
+
+        public MouseInputSystem()
+        {
+            _mouseButtonCallback = MouseButtonCallback;
+            _mouseEnterCallback = MouseEnterCallback;
+        }
+
+        public void Init()
+        {
+            var w = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
+            Glfw.SetMouseButtonCallback(w, _mouseButtonCallback);
+            Glfw.SetCursorEnterCallback(w, _mouseEnterCallback);
+        }
+
+        public Vector2 CursorPosition
+        {
+            get
+            {
+                var window = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
+                Glfw.GetCursorPosition(window, out var x, out var y);
+                return new Vector2((float) x, (float) y);
+            }
+        }
+
+        public bool IsOverWindow { get; private set; }
+
+        private ButtonState this[MouseButton button] => _buttons.GetValueOrDefault(button, ButtonState.Up | ButtonState.NeverPressed);
+        private bool this[MouseButton button, ButtonState state] => this[button].HasFlag(state);
+        public bool IsDown(MouseButton button) => this[button, ButtonState.Down];
+        public bool IsUp(MouseButton button) => this[button, ButtonState.Up];
+        public bool WasJustPressed(MouseButton button) => this[button, ButtonState.JustPressed];
+        public bool WasJustReleased(MouseButton button) => this[button, ButtonState.JustReleased];
+        public bool WasNeverPressed(MouseButton button) => this[button, ButtonState.NeverPressed];
+        public void SetNeverPressed(MouseButton button) => _buttons[button] |= ButtonState.NeverPressed;
+
+        public bool IsOver(float ax, float ay, float bx, float by)
+        {
+            var p = CursorPosition;
+            return 
+                p.X >= ax && p.X <= bx &&
+                p.Y >= ay && p.Y <= by;
+        }
+
+        private void MouseButtonCallback(IntPtr window, MouseButton button, InputState state, ModifierKeys modifiers)
+        {
+            if(state == InputState.Repeat) return;
+            switch (state)
+            {
+                case InputState.Press:
+                    Console.WriteLine($"+ {button}");
+                    if (!_buttons.ContainsKey(button))
+                        _buttons[button] = ButtonState.Down | ButtonState.JustPressed;
+                    else
+                    {
+                        _buttons[button] |= ButtonState.Down;
+                        _buttons[button] &= ~ButtonState.Up;
+                        _buttons[button] |= ButtonState.JustPressed;
+                        _buttons[button] &= ~ButtonState.NeverPressed;
+                    }
+                    break;
+                case InputState.Release:
+                    Console.WriteLine($"- {button}");
+                    if (!_buttons.ContainsKey(button))
+                        _buttons[button] = ButtonState.Up | ButtonState.JustReleased;
+                    else
+                    {
+                        _buttons[button] |= ButtonState.Down;
+                        _buttons[button] &= ~ButtonState.Up;
+                        _buttons[button] |= ButtonState.JustPressed;
+                        _buttons[button] &= ~ButtonState.NeverPressed;
+                    }
+                    break;
+                case InputState.Repeat:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
+        }
+
+        private void MouseEnterCallback(IntPtr window, bool entering)
+        {
+            IsOverWindow = entering;
+        }
+    }
+
     public static class InputSystem
     {
         public static readonly KeyboardInputSystem Keyboard = new();
+        public static readonly MouseInputSystem Mouse = new();
 
         public static void Init()
         {
             Keyboard.Init();
+            Mouse.Init();
         }
     }
 }
