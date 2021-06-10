@@ -55,7 +55,6 @@ namespace Castaway.OpenGL.Input
             switch (state)
             {
                 case InputState.Press:
-                    Console.WriteLine($"+ {key}");
                     if (!_keys.ContainsKey(key))
                         _keys[key] = ButtonState.Down | ButtonState.JustPressed;
                     else
@@ -65,9 +64,9 @@ namespace Castaway.OpenGL.Input
                         _keys[key] |= ButtonState.JustPressed;
                         _keys[key] &= ~ButtonState.NeverPressed;
                     }
+                    Console.WriteLine($"+ {key} = {_keys[key].GetString()}");
                     break;
                 case InputState.Release:
-                    Console.WriteLine($"- {key}");
                     if (!_keys.ContainsKey(key))
                         _keys[key] = ButtonState.Up | ButtonState.JustReleased;
                     else
@@ -77,6 +76,7 @@ namespace Castaway.OpenGL.Input
                         _keys[key] |= ButtonState.JustPressed;
                         _keys[key] &= ~ButtonState.NeverPressed;
                     }
+                    Console.WriteLine($"- {key} = {_keys[key].GetString()}");
                     break;
                 case InputState.Repeat:
                     break;
@@ -104,6 +104,15 @@ namespace Castaway.OpenGL.Input
             var w = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
             Glfw.SetMouseButtonCallback(w, _mouseButtonCallback);
             Glfw.SetCursorEnterCallback(w, _mouseEnterCallback);
+        }
+
+        public void Clear()
+        {
+            foreach (var button in _buttons.Keys)
+            {
+                if (_buttons[button].HasFlag(ButtonState.JustPressed)) _buttons[button] &= ~ButtonState.JustPressed;
+                if (_buttons[button].HasFlag(ButtonState.JustReleased)) _buttons[button] &= ~ButtonState.JustReleased;
+            }
         }
 
         public Vector2 CursorPosition
@@ -141,7 +150,6 @@ namespace Castaway.OpenGL.Input
             switch (state)
             {
                 case InputState.Press:
-                    Console.WriteLine($"+ {button}");
                     if (!_buttons.ContainsKey(button))
                         _buttons[button] = ButtonState.Down | ButtonState.JustPressed;
                     else
@@ -151,9 +159,9 @@ namespace Castaway.OpenGL.Input
                         _buttons[button] |= ButtonState.JustPressed;
                         _buttons[button] &= ~ButtonState.NeverPressed;
                     }
+                    Console.WriteLine($"+ {button} = {_buttons[button].GetString()}");
                     break;
                 case InputState.Release:
-                    Console.WriteLine($"- {button}");
                     if (!_buttons.ContainsKey(button))
                         _buttons[button] = ButtonState.Up | ButtonState.JustReleased;
                     else
@@ -163,6 +171,7 @@ namespace Castaway.OpenGL.Input
                         _buttons[button] |= ButtonState.JustPressed;
                         _buttons[button] &= ~ButtonState.NeverPressed;
                     }
+                    Console.WriteLine($"- {button} = {_buttons[button].GetString()}");
                     break;
                 case InputState.Repeat:
                     break;
@@ -186,6 +195,26 @@ namespace Castaway.OpenGL.Input
         {
             Keyboard.Init();
             Mouse.Init();
+        }
+
+        public static void Clear()
+        {
+            Keyboard.Clear();
+            Mouse.Clear();
+        }
+
+        public static string GetString(this ButtonState state)
+        {
+            var value = new List<string>();
+            const char delimiter = ',';
+
+            if(state.HasFlag(ButtonState.Down)) value.Add(nameof(ButtonState.Down));
+            if(state.HasFlag(ButtonState.Up)) value.Add(nameof(ButtonState.Up));
+            if(state.HasFlag(ButtonState.JustPressed)) value.Add(nameof(ButtonState.JustPressed));
+            if(state.HasFlag(ButtonState.JustReleased)) value.Add(nameof(ButtonState.JustReleased));
+            if(state.HasFlag(ButtonState.NeverPressed)) value.Add(nameof(ButtonState.NeverPressed));
+            
+            return string.Join(delimiter, value);
         }
     }
 }

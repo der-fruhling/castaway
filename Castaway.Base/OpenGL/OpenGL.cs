@@ -509,6 +509,7 @@ namespace Castaway.OpenGL
         public override void FinishFrame(Window window)
         {
             Glfw.SwapBuffers(window.GlfwWindow);
+            InputSystem.Clear();
             Glfw.PollEvents();
         }
 
