@@ -18,8 +18,8 @@ namespace Castaway.Level.OpenGL
             {
                 new(new Vector3(-right, -up, -forward), Color),
                 new(new Vector3(right, -up, -forward), Color),
-                new(new Vector3(right, -up, forward), Color),
                 new(new Vector3(-right, -up, forward), Color),
+                new(new Vector3(right, -up, forward), Color),
                 new(new Vector3(0, up, 0), Color)
             }, new uint[]
             {
