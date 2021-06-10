@@ -251,7 +251,7 @@ namespace Castaway.OpenGL
 
             GL.GenTextures(1, out var a);
             Texture t = new() {Number = a[0]};
-            Bind(t);
+            Bind(t, 0);
             GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int) GL_CLAMP_TO_EDGE);
             GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int) GL_CLAMP_TO_EDGE);
             GL.TexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int) GL_LINEAR);
@@ -952,11 +952,6 @@ namespace Castaway.OpenGL
                         if (bp) throw new InvalidOperationException("Cannot bind multiple programs.");
                         Bind(program);
                         bp = true;
-                        break;
-                    case Texture texture:
-                        if (bt) throw new InvalidOperationException("Cannot bind multiple textures.");
-                        Bind(texture);
-                        bt = true;
                         break;
                     case Framebuffer framebuffer:
                         if (bf) throw new InvalidOperationException("Cannot bind multiple framebuffers.");

@@ -36,8 +36,8 @@ namespace Castaway.Rendering
         public abstract void Bind(TWindow window);
         public abstract void Bind(TBuffer buffer);
         public abstract void Bind(TProgram program);
-        public abstract void Bind(TTexture texture);
         [Obsolete("Use numbered overload.")]
+        public abstract void Bind(TTexture texture);
         public abstract void Bind(TTexture texture, int number);
         public abstract void Bind(TFramebuffer framebuffer);
         public abstract void UnbindFramebuffer();
