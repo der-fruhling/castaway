@@ -6,11 +6,13 @@ namespace Castaway.OpenGL.Input
     {
         public static readonly KeyboardInputSystem Keyboard = new();
         public static readonly MouseInputSystem Mouse = new();
+        public static readonly GamepadInputSystem Gamepad = new();
 
         public static void Init()
         {
             Keyboard.Init();
             Mouse.Init();
+            Gamepad.Init();
         }
 
         public static void Clear()

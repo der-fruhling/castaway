@@ -511,6 +511,7 @@ namespace Castaway.OpenGL
             Glfw.SwapBuffers(window.GlfwWindow);
             InputSystem.Clear();
             Glfw.PollEvents();
+            InputSystem.Gamepad.Read();
         }
 
         /// <summary>
