@@ -10,5 +10,7 @@ namespace Castaway.Level
         public virtual void OnUpdate(LevelObject parent) {}
         public virtual void PostUpdate(LevelObject parent) {}
         public virtual void OnDestroy(LevelObject parent) {}
+        public virtual void PreRenderFrame(LevelObject camera, LevelObject? parent) {}
+        public virtual void PostRenderFrame(LevelObject camera, LevelObject? parent) {}
     }
 }

@@ -41,6 +41,7 @@ namespace Castaway.Level.OpenGL
             g.Bind(Shader);
             g.SetUniform(Shader, UniformType.TransformPerspective, camera.Get<CameraController>()!.PerspectiveTransform);
             g.SetUniform(Shader, UniformType.TransformView, camera.Get<CameraController>()!.ViewTransform);
+            LightResolver.Push();
         }
 
         public override void PostRender(LevelObject camera, LevelObject parent)

@@ -43,16 +43,24 @@ namespace Castaway.OpenGL
             var defaultTexV = g.CreateShader(ShaderStage.Vertex, taskList["default_tex/vertex.glsl"].Result);
             var defaultTexF = g.CreateShader(ShaderStage.Fragment, taskList["default_tex/fragment.glsl"].Result);
             var noTransformV = g.CreateShader(ShaderStage.Vertex, taskList["notransform/vertex.glsl"].Result);
+            var noTransformF = g.CreateShader(ShaderStage.Fragment, taskList["notransform/fragment.glsl"].Result);
             var noTransformTexV = g.CreateShader(ShaderStage.Vertex, taskList["notransform_tex/vertex.glsl"].Result);
+            var noTransformTexF = g.CreateShader(ShaderStage.Fragment, taskList["notransform_tex/fragment.glsl"].Result);
             
             // `default`
             var p = g.CreateProgram(defaultV, defaultF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
+            g.CreateInput(p, VertexInputType.NormalXYZ, "vNormal");
             g.CreateOutput(p, 0, "oColor");
             g.BindUniform(p, "tPersp", UniformType.TransformPerspective);
             g.BindUniform(p, "tView", UniformType.TransformView);
             g.BindUniform(p, "tModel", UniformType.TransformModel);
+            g.BindUniform(p, "uAmbient", UniformType.AmbientLight);
+            g.BindUniform(p, "uAmbientLightColor", UniformType.AmbientLightColor);
+            g.BindUniform(p, "uPointLightCount", UniformType.PointLightCount);
+            g.BindUniform(p, "uPointLights[$INDEX].Position", UniformType.PointLightPositionIndexed);
+            g.BindUniform(p, "uPointLights[$INDEX].Color", UniformType.PointLightColorIndexed);
             g.FinishProgram(ref p);
             g.SetUniform(p, UniformType.TransformPerspective, Matrix4.Ident);
             g.SetUniform(p, UniformType.TransformView, Matrix4.Ident);
@@ -63,11 +71,17 @@ namespace Castaway.OpenGL
             p = g.CreateProgram(defaultTexV, defaultTexF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
+            g.CreateInput(p, VertexInputType.NormalXYZ, "vNormal");
             g.CreateInput(p, VertexInputType.TextureST, "vTextureCoords");
             g.CreateOutput(p, 0, "oColor");
             g.BindUniform(p, "tPersp", UniformType.TransformPerspective);
             g.BindUniform(p, "tView", UniformType.TransformView);
             g.BindUniform(p, "tModel", UniformType.TransformModel);
+            g.BindUniform(p, "uAmbient", UniformType.AmbientLight);
+            g.BindUniform(p, "uAmbientLightColor", UniformType.AmbientLightColor);
+            g.BindUniform(p, "uPointLightCount", UniformType.PointLightCount);
+            g.BindUniform(p, "uPointLights[$INDEX].Position", UniformType.PointLightPositionIndexed);
+            g.BindUniform(p, "uPointLights[$INDEX].Color", UniformType.PointLightColorIndexed);
             g.BindUniform(p, "uTexture");
             g.FinishProgram(ref p);
             g.SetUniform(p, UniformType.TransformPerspective, Matrix4.Ident);
@@ -76,7 +90,7 @@ namespace Castaway.OpenGL
             DefaultTextured = p;
             
             // `notransform`
-            p = g.CreateProgram(noTransformV, defaultF);
+            p = g.CreateProgram(noTransformV, noTransformF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateOutput(p, 0, "oColor");
@@ -84,7 +98,7 @@ namespace Castaway.OpenGL
             NoTransform = p;
             
             // `notransform-tex`
-            p = g.CreateProgram(noTransformTexV, defaultTexF);
+            p = g.CreateProgram(noTransformTexV, noTransformTexF);
             g.CreateInput(p, VertexInputType.PositionXYZ, "vPosition");
             g.CreateInput(p, VertexInputType.ColorRGB, "vColor");
             g.CreateInput(p, VertexInputType.TextureST, "vTextureCoords");

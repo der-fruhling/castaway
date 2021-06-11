@@ -33,19 +33,19 @@ namespace Castaway.Level.OpenGL
             g.Destroy(Framebuffer);
         }
 
-        public override void PreRenderFrame(LevelObject parent)
+        public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
         {
             var g = Castaway.OpenGL.OpenGL.Get();
             g.Bind(Framebuffer);
             g.Clear();
         }
 
-        public override void PostRenderFrame(LevelObject parent)
+        public override void PostRenderFrame(LevelObject camera, LevelObject? parent)
         {
             var g = Castaway.OpenGL.OpenGL.Get();
             g.UnbindFramebuffer();
 
-            if (parent.Level.ActiveCamera != CameraID) return;
+            if (camera.Level.ActiveCamera != CameraID) return;
             var bp = g.BoundProgram;
             if (bp != BuiltinShaders.NoTransformTextured)
                 g.Bind(BuiltinShaders.NoTransformTextured);

@@ -27,11 +27,9 @@ namespace Castaway.Level
         public void OnRender(LevelObject cam)
         {
             if(!Controllers.Any()) return;
-            var conts = Controllers.Except(GetAll<CameraController>()).ToArray();
-            if(!conts.Any()) return;
-            foreach(var c in conts) c.PreRender(cam, this);
-            foreach(var c in conts) c.OnRender(cam, this);
-            foreach(var c in conts) c.PostRender(cam, this);
+            foreach(var c in Controllers) c.PreRender(cam, this);
+            foreach(var c in Controllers) c.OnRender(cam, this);
+            foreach(var c in Controllers) c.PostRender(cam, this);
         }
 
         public void OnUpdate()
@@ -52,5 +50,21 @@ namespace Castaway.Level
         public T? Get<T>() where T : EmptyController => Controllers.SingleOrDefault(c => c is T) as T;
         public T[] GetAll<T>() where T : EmptyController => Controllers.Where(c => c is T).Cast<T>().ToArray();
         public void Add(EmptyController controller) => Controllers.Add(controller);
+
+        public void OnPreRender(LevelObject cam)
+        {
+            if(!Controllers.Any()) return;
+            var conts = Controllers.Except(GetAll<CameraController>()).ToArray();
+            if(!conts.Any()) return;
+            foreach(var c in conts) c.PreRenderFrame(cam, this);
+        }
+        
+        public void OnPostRender(LevelObject cam)
+        {
+            if(!Controllers.Any()) return;
+            var conts = Controllers.Except(GetAll<CameraController>()).ToArray();
+            if(!conts.Any()) return;
+            foreach(var c in conts) c.PostRenderFrame(cam, this);
+        }
     }
 }

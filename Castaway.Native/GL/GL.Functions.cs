@@ -531,5 +531,11 @@ namespace Castaway.Native
             var f = (delegate*<GLC, int, GLC, void*, void>) Load(GLF.glDrawElements);
             f(mode, count, type, (void*) indices);
         }
+
+        public static void Enable(GLC cap)
+        {
+            var f = (delegate*<GLC, void>) Load(GLF.glEnable);
+            f(cap);
+        }
     }
 }

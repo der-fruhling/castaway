@@ -50,7 +50,8 @@ namespace Castaway.Rendering
 
         public abstract void CreateInput(TProgram p, VertexInputType inputType, string name);
         public abstract void CreateOutput(TProgram p, uint color, string name);
-        public abstract void BindUniform(TProgram p, string name, UniformType type);
+        public abstract void BindUniform(TProgram p, string name, UniformType type = UniformType.Custom);
+
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         public abstract void RemoveInput(TProgram p, string name);
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
@@ -59,6 +60,9 @@ namespace Castaway.Rendering
         public abstract void UnbindUniform(TProgram p, string name);
         public abstract void FinishProgram(ref TProgram p);
         public abstract string UniformRef(TProgram p, UniformType type);
+
+        public virtual string UniformRef(TProgram p, UniformType type, int index) =>
+            UniformRef(p, type).Replace("$INDEX", index.ToString());
 
         public abstract void SetUniform(TProgram p, string name, float f);
         public abstract void SetUniform(TProgram p, string name, float x, float y);
@@ -93,6 +97,23 @@ namespace Castaway.Rendering
         public virtual void SetUniform(TProgram p, UniformType name, Matrix4 m) => SetUniform(p, UniformRef(p, name), m);
         public virtual void SetUniform(TProgram p, UniformType name, TTexture t) => SetUniform(p, UniformRef(p, name), t);
         public virtual void SetUniform(TProgram p, UniformType name, TFramebuffer t) => SetUniform(p, UniformRef(p, name), t);
+
+        public virtual void SetUniform(TProgram p, int i, UniformType name, float f) => SetUniform(p, UniformRef(p, name, i), f);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, float x, float y) => SetUniform(p, UniformRef(p, name, i), x, y);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, float x, float y, float z) => SetUniform(p, UniformRef(p, name, i), x, y, z);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, float x, float y, float z, float w) => SetUniform(p, UniformRef(p, name, i), x, y, z, w);
+        public virtual void SetUniform(TProgram p, int j, UniformType name, int i) => SetUniform(p, UniformRef(p, name, j), i);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, int x, int y) => SetUniform(p, UniformRef(p, name, i), x, y);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, int x, int y, int z) => SetUniform(p, UniformRef(p, name, i), x, y, z);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, int x, int y, int z, int w) => SetUniform(p, UniformRef(p, name, i), x, y, z, w);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Vector2 v) => SetUniform(p, UniformRef(p, name, i), v);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Vector3 v) => SetUniform(p, UniformRef(p, name, i), v);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Vector4 v) => SetUniform(p, UniformRef(p, name, i), v);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Matrix2 m) => SetUniform(p, UniformRef(p, name, i), m);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Matrix3 m) => SetUniform(p, UniformRef(p, name, i), m);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, Matrix4 m) => SetUniform(p, UniformRef(p, name, i), m);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, TTexture t) => SetUniform(p, UniformRef(p, name, i), t);
+        public virtual void SetUniform(TProgram p, int i, UniformType name, TFramebuffer t) => SetUniform(p, UniformRef(p, name, i), t);
 
         public abstract void Clear();
         public abstract void SetClearColor(float r, float g, float b);

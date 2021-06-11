@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Xml;
 using Castaway.Assets;
 using Castaway.Math;
+using Castaway.OpenGL;
 
 namespace Castaway.Level
 {
@@ -142,9 +143,14 @@ namespace Castaway.Level
                 if(!cams.Any()) continue;
                 foreach (var cam in cams)
                 {
-                    cam.PreRenderFrame(obj);
-                    foreach(var o in _objects) o.OnRender(obj);
-                    cam.PostRenderFrame(obj);
+                    LightResolver.Ambient(cam.AmbientLight, cam.AmbientLightColor);
+                    cam.PreRenderFrame(obj, null);
+                    foreach (var o in _objects) o.OnPreRender(obj);
+                    LightResolver.Push();
+                    foreach (var o in _objects) o.OnRender(obj);
+                    foreach (var o in _objects) o.OnPostRender(obj);
+                    cam.PostRenderFrame(obj, null);
+                    LightResolver.Clear();
                 }
             }
         }
