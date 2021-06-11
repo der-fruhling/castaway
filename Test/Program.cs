@@ -1,5 +1,4 @@
-﻿using System;
-using Castaway;
+﻿using Castaway;
 using Castaway.Level;
 using Castaway.Math;
 using Castaway.OpenGL;
@@ -39,10 +38,7 @@ namespace Test
                 level.Render();
                 g.FinishFrame(window);
                 level.Update();
-                if(InputSystem.Gamepad.Valid)
-                    Console.WriteLine(InputSystem.Gamepad);
-                else
-                    Console.WriteLine("(No valid Gamepad)");
+                
                 var obj = level.Get("Camera");
                 const float speed = 0.125f;
                 var move = new Vector3(0, 0, 0);

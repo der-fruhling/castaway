@@ -83,7 +83,6 @@ namespace Castaway.OpenGL.Input
                         _buttons[button] |= ButtonState.JustPressed;
                         _buttons[button] &= ~ButtonState.NeverPressed;
                     }
-                    Console.WriteLine($"+ {button} = {_buttons[button].GetString()}");
                     break;
                 case InputState.Release:
                     if (!_buttons.ContainsKey(button))
@@ -95,7 +94,6 @@ namespace Castaway.OpenGL.Input
                         _buttons[button] |= ButtonState.JustReleased;
                         _buttons[button] &= ~ButtonState.NeverPressed;
                     }
-                    Console.WriteLine($"- {button} = {_buttons[button].GetString()}");
                     break;
                 case InputState.Repeat:
                     break;
