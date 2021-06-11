@@ -5,7 +5,7 @@
         <Title>Castaway Natives</Title>
 
         <!-- Common -->
-        <PackageVersion>0.0.20210608-pg.1</PackageVersion>
+        <PackageVersion>0.0.20210610-pg.1</PackageVersion>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
