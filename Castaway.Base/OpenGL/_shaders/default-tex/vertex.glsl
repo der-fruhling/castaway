@@ -24,6 +24,6 @@ void main() {
     gl_Position = tPersp * tView * tModel * vec4(vPosition, 1);
     fColor = vColor;
     fTextureCoords = vTextureCoords;
-    fNormal = vNormal;
+    fNormal = mat3(transpose(inverse(tModel))) * vNormal;
     fFragmentPosition = vec3(tModel * vec4(vPosition, 1));
 }
