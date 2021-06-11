@@ -23,6 +23,8 @@ uniform float uAmbient = 0.1;
 uniform vec3 uAmbientLightColor = vec3(1, 1, 1);
 uniform int uPointLightCount = 0;
 uniform PointLight uPointLights[32];
+uniform vec3 uViewPosition;
+uniform float uSpecularStrength = 0.5;
 
 void main() {
     vec3 norm = normalize(fNormal);
@@ -35,6 +37,11 @@ void main() {
 
         float diff = max(dot(norm, lightDirection), 0);
         lighting += diff * light.Color;
+
+        vec3 viewDirection = normalize(uViewPosition - fFragmentPosition);
+        vec3 reflectDirection = reflect(-lightDirection, norm);
+        float spec = pow(max(dot(viewDirection, reflectDirection), 0), 32);
+        lighting += uSpecularStrength * spec * light.Color;
     }
 
     vec3 result = lighting * fColor;

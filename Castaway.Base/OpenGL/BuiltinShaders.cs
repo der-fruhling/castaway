@@ -61,6 +61,7 @@ namespace Castaway.OpenGL
             g.BindUniform(p, "uPointLightCount", UniformType.PointLightCount);
             g.BindUniform(p, "uPointLights[$INDEX].Position", UniformType.PointLightPositionIndexed);
             g.BindUniform(p, "uPointLights[$INDEX].Color", UniformType.PointLightColorIndexed);
+            g.BindUniform(p, "uViewPosition", UniformType.ViewPosition);
             g.FinishProgram(ref p);
             g.SetUniform(p, UniformType.TransformPerspective, Matrix4.Ident);
             g.SetUniform(p, UniformType.TransformView, Matrix4.Ident);
@@ -83,6 +84,7 @@ namespace Castaway.OpenGL
             g.BindUniform(p, "uPointLights[$INDEX].Position", UniformType.PointLightPositionIndexed);
             g.BindUniform(p, "uPointLights[$INDEX].Color", UniformType.PointLightColorIndexed);
             g.BindUniform(p, "uTexture");
+            g.BindUniform(p, "uViewPosition", UniformType.ViewPosition);
             g.FinishProgram(ref p);
             g.SetUniform(p, UniformType.TransformPerspective, Matrix4.Ident);
             g.SetUniform(p, UniformType.TransformView, Matrix4.Ident);
