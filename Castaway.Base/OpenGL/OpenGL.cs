@@ -91,6 +91,7 @@ namespace Castaway.OpenGL
             Bind(w);
             InputSystem.Init();
             BuiltinShaders.Init();
+            GL.Enable(GL_DEPTH_TEST);
             return w;
         }
 
@@ -121,6 +122,7 @@ namespace Castaway.OpenGL
             Bind(w);
             InputSystem.Init();
             BuiltinShaders.Init();
+            GL.Enable(GL_DEPTH_TEST);
             return w;
         }
 
@@ -227,8 +229,7 @@ namespace Castaway.OpenGL
                 Number = GL.CreateProgram(),
                 Inputs = new Dictionary<string, VertexInputType>(),
                 Outputs = new Dictionary<string, uint>(),
-                UniformBindings = new Dictionary<string, UniformType>(),
-                UniformLocations = new Dictionary<string, int>()
+                UniformBindings = new Dictionary<string, UniformType>()
             };
             foreach (var s in shaders) GL.AttachShader(p.Number, s.Number);
             GL.GenerateVertexArrays(1, out var a);
@@ -628,7 +629,7 @@ namespace Castaway.OpenGL
         {
             p.UniformBindings[name] = type;
         }
-        
+
         [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
         public override void RemoveInput(ShaderProgram p, string name)
         {
@@ -679,8 +680,6 @@ namespace Castaway.OpenGL
             p.InputBinder = new ShaderInputBinder(p);
 
             Bind(p);
-            foreach (var (name, _) in p.UniformBindings)
-                p.UniformLocations[name] = GL.GetUniformLocation(p.Number, name);
         }
 
         /// <summary>
@@ -710,49 +709,49 @@ namespace Castaway.OpenGL
         /// </summary>
         public override void SetUniform(ShaderProgram p, string name, float f)
         {
-            if(name.Any()) GL.SetUniform(p.UniformLocations[name], 1, new[] {f});
+            if(name.Any()) GL.SetUniform(GL.GetUniformLocation(p.Number, name), 1, new[] {f});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, float x, float y)
         {
-            if(name.Any()) GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
+            if(name.Any()) GL.SetUniformVector2(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, float x, float y, float z)
         {
-            if(name.Any()) GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
+            if(name.Any()) GL.SetUniformVector3(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y, z});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, float x, float y, float z, float w)
         {
-            if(name.Any()) GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
+            if(name.Any()) GL.SetUniformVector4(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y, z, w});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, int i)
         {
-            if(name.Any()) GL.SetUniform(p.UniformLocations[name], 1, new[] {i});
+            if(name.Any()) GL.SetUniform(GL.GetUniformLocation(p.Number, name), 1, new[] {i});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, int x, int y)
         {
-            if(name.Any()) GL.SetUniformVector2(p.UniformLocations[name], 1, new[] {x, y});
+            if(name.Any()) GL.SetUniformVector2(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, int x, int y, int z)
         {
-            if(name.Any()) GL.SetUniformVector3(p.UniformLocations[name], 1, new[] {x, y, z});
+            if(name.Any()) GL.SetUniformVector3(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y, z});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, int x, int y, int z, int w)
         {
-            if(name.Any()) GL.SetUniformVector4(p.UniformLocations[name], 1, new[] {x, y, z, w});
+            if(name.Any()) GL.SetUniformVector4(GL.GetUniformLocation(p.Number, name), 1, new[] {x, y, z, w});
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
@@ -776,19 +775,19 @@ namespace Castaway.OpenGL
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, Matrix2 m)
         {
-            if(name.Any()) GL.SetUniformMatrix2(p.UniformLocations[name], 1, false, m.Array);
+            if(name.Any()) GL.SetUniformMatrix2(GL.GetUniformLocation(p.Number, name), 1, false, m.Array);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, Matrix3 m)
         {
-            if(name.Any()) GL.SetUniformMatrix3(p.UniformLocations[name], 1, false, m.Array);
+            if(name.Any()) GL.SetUniformMatrix3(GL.GetUniformLocation(p.Number, name), 1, false, m.Array);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>
         public override void SetUniform(ShaderProgram p, string name, Matrix4 m)
         {
-            if(name.Any()) GL.SetUniformMatrix4(p.UniformLocations[name], 1, false, m.Array);
+            if(name.Any()) GL.SetUniformMatrix4(GL.GetUniformLocation(p.Number, name), 1, false, m.Array);
         }
 
         /// <inheritdoc cref="SetUniform(Castaway.OpenGL.ShaderProgram,string,float)"/>

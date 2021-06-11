@@ -23,7 +23,12 @@ namespace Castaway.Rendering
         Custom,
         TransformPerspective,
         TransformView,
-        TransformModel
+        TransformModel,
+        PointLightCount,
+        PointLightPositionIndexed,
+        PointLightColorIndexed,
+        AmbientLight,
+        AmbientLightColor
     }
 
     public enum ShaderStage

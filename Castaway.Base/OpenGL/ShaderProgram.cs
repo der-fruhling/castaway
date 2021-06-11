@@ -17,7 +17,6 @@ namespace Castaway.OpenGL
         public Dictionary<string, VertexInputType> Inputs;
         public Dictionary<string, uint> Outputs;
         public Dictionary<string, UniformType> UniformBindings;
-        public Dictionary<string, int> UniformLocations;
         public ShaderInputBinder InputBinder;
         public uint VAO;
 
@@ -33,7 +32,7 @@ namespace Castaway.OpenGL
         public bool Equals(ShaderProgram other)
         {
             return Equals(Shaders, other.Shaders) && Equals(Inputs, other.Inputs) && Equals(Outputs, other.Outputs) &&
-                   Equals(UniformBindings, other.UniformBindings) && Equals(UniformLocations, other.UniformLocations) &&
+                   Equals(UniformBindings, other.UniformBindings) &&
                    Equals(InputBinder, other.InputBinder) && VAO == other.VAO && Destroyed == other.Destroyed &&
                    Number == other.Number;
         }
@@ -50,7 +49,6 @@ namespace Castaway.OpenGL
             hashCode.Add(Inputs);
             hashCode.Add(Outputs);
             hashCode.Add(UniformBindings);
-            hashCode.Add(UniformLocations);
             hashCode.Add(InputBinder);
             hashCode.Add(VAO);
             hashCode.Add(Destroyed);

@@ -45,13 +45,16 @@ namespace Test
                     Console.WriteLine("(No valid Gamepad)");
                 var obj = level.Get("Camera");
                 const float speed = 0.125f;
+                var move = new Vector3(0, 0, 0);
                 
                 // Gamepad
-                var move = new Vector3(0, 0, 0);
-                var moveGamepad = InputSystem.Gamepad.LeftStick * speed;
-                move.X += moveGamepad.X;
-                move.Y -= moveGamepad.Y;
-                move.Z += (InputSystem.Gamepad.RightTrigger - InputSystem.Gamepad.LeftTrigger) * speed;
+                if (InputSystem.Gamepad.Valid)
+                {
+                    var moveGamepad = InputSystem.Gamepad.LeftStick * speed;
+                    move.X += moveGamepad.X;
+                    move.Y -= moveGamepad.Y;
+                    move.Z += (InputSystem.Gamepad.RightTrigger - InputSystem.Gamepad.LeftTrigger) * speed;
+                }
                 
                 // Keyboard
                 if (InputSystem.Keyboard.IsDown(Keys.A)) move.X -= speed;
