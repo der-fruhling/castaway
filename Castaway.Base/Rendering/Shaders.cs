@@ -28,7 +28,8 @@ namespace Castaway.Rendering
         PointLightPositionIndexed,
         PointLightColorIndexed,
         AmbientLight,
-        AmbientLightColor
+        AmbientLightColor,
+        ViewPosition
     }
 
     public enum ShaderStage
