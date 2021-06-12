@@ -8,6 +8,7 @@
                 <ID>0</ID>
                 <VerticalFOV>90</VerticalFOV>
             </PerspectiveCamera>
+            <GenericPlayer/>
         </Controllers>
     </Object>
     
@@ -27,6 +28,57 @@
         <Name>Object</Name>
 
         <Position>0,-1,-3</Position>
+        <Scale>1,1,1</Scale>
+
+        <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
+            <Mesh>
+                <AssetPath>/cube.obj</AssetPath>
+            </Mesh>
+            <MeshRenderer/>
+        </Controllers>
+    </Object>
+
+    <Object>
+        <Name>Object Also</Name>
+
+        <Position>0,-1,3</Position>
+        <Scale>1,1,1</Scale>
+
+        <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
+            <Mesh>
+                <AssetPath>/cube.obj</AssetPath>
+            </Mesh>
+            <MeshRenderer/>
+        </Controllers>
+    </Object>
+
+    <Object>
+        <Name>Object Also Also</Name>
+
+        <Position>3,-1,0</Position>
+        <Scale>1,1,1</Scale>
+
+        <Controllers>
+            <Shader>
+                <Name>Default</Name>
+            </Shader>
+            <Mesh>
+                <AssetPath>/cube.obj</AssetPath>
+            </Mesh>
+            <MeshRenderer/>
+        </Controllers>
+    </Object>
+
+    <Object>
+        <Name>Object Also Also Also</Name>
+
+        <Position>-3,-1,0</Position>
         <Scale>1,1,1</Scale>
 
         <Controllers>
