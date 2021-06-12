@@ -9,10 +9,10 @@ namespace Test
     {
         private static void Main()
         {
-            // Load assets from config.json
+            // Perform global initialization
             CastawayEngine.Init();
 
-            // Graphics setup.
+            // Graphics setup (using OpenGL)
             using var g = OpenGL.Setup();
             
             // Window setup
@@ -21,14 +21,10 @@ namespace Test
 
             // Level setup
             var level = new Level(Loader!.GetAssetByName("/test_level.xml"));
-
-            // Start level.
             level.Start();
             
-            // Show window.
-            g.ShowWindow(window);
-            
             // Rendering loop!
+            g.ShowWindow(window);
             while (g.WindowShouldBeOpen(window))
             {
                 g.StartFrame();
@@ -36,12 +32,13 @@ namespace Test
                 g.FinishFrame(window);
                 level.Update();
             }
+            g.HideWindow(window);
             
+            // Destroy everything that needs destroying
             level.End();
-
             g.Destroy(window); // Absolutely ensure that the window is
-                               // destroyed last. If it isn't all destroy
-                               // operations after it will fail.
+                               // destroyed last. If it isn't all non-window
+                               // destroy operations after it will fail.
         }
     }
 }
