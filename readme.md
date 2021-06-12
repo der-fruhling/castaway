@@ -1,5 +1,7 @@
 # Castaway Game Engine
 
+[![.NET](https://github.com/LiamCoalStudio/castaway/actions/workflows/dotnet.yml/badge.svg)](https://github.com/LiamCoalStudio/castaway/actions/workflows/dotnet.yml)
+
 ## What is Castaway?
 
 Castaway is a game engine using OpenGL. You can use it to make 3D graphics
