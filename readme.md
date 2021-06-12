@@ -5,67 +5,29 @@
 ## What is Castaway?
 
 Castaway is a game engine using OpenGL. You can use it to make 3D graphics
-applications with .NET Core (C#). Castaway is still _heavily_ a work in
-progress, so things might move around or be deleted, and most features are
-not supported at all.
+applications with .NET Core. It supports custom shaders, `Level`s,
+`Quaternion`s, and a whole bunch more. Castaway isn't ready though, there
+is still a lot of work to be done, and my programming is almost certainly
+not bug free.
+
+If you find an issue with Castaway, report it! Feel free to not use the
+issue templates if you don't want to, I don't really care as long as the
+report is descriptive. Include an image and/or stacktrace if applicable.
+_(This un-restrictiveness (is that even a word?) on issue templates is caused
+in part by me not using the issue templates myself. :])_
 
 ## Using Castaway
 
-At the moment, almost everything in Castaway has to be created through an
-instance of the `IGraphics<...>` interface, which also happens to be an
-absolute mess of type parameters. The OpenGL API is implemented in
-`Castaway.OpenGL.OpenGL`, with various `struct`s as it's object types.
+Castaway has a NuGet package on GitHub Packages. To use this, you will first
+have to set this up on your system.
 
-First set up OpenGL, and save it's result to a variable:
+[Instructions here! Click me!](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry)
 
-```c#
-var g = OpenGL.Setup();
+Then, just install the `Castaway.Base` package from the source you added.
+
+Something like:
+```bash
+dotnet add <ProjectFile> package -s <SourceName> Castaway.Base
 ```
 
-Once this is done, create a window by calling the `CreateWindowWindowed`
-method on `g`, and activate it with `Bind`.
-
-```c#
-var window = g.CreateWindowWindowed("Test", 800, 600);
-g.Bind(window);
-```
-
-Creating a render loop is also easy, `g` provides a `WindowShouldBeOpen`
-method, which returns `true` for as long as the user hasn't closed the
-window, though a window can still stay open after this has happened.
-
-At the start of your loop, you should call `StartFrame`, and at the end,
-call `FinishFrame`.
-
-```c#
-while(g.WindowShouldBeOpen(window))
-{
-    g.StartFrame();
-    // Rendering code would go here.
-    g.FinishFrame(window);
-}
-```
-
-Here's the full example:
-
-```c#
-using Castaway.OpenGL;
-using Castaway.Rendering;
-
-class Example
-{
-    static void Main()
-    {
-        var g = OpenGL.Setup();
-        var window = g.CreateWindowWindowed("Test", 800, 600);
-        g.Bind(window);
-
-        while (g.WindowShouldBeOpen(window))
-        {
-            g.StartFrame();
-            // Render code.
-            g.FinishFrame(window);
-        }
-    }
-}
-```
+This will give you a usable install of castaway.
