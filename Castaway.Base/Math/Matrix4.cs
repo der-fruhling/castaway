@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Castaway.Math
 {
@@ -77,25 +78,26 @@ namespace Castaway.Math
                 a.W.X * b.X + a.W.Y * b.Y + a.W.Z * b.Z + a.W.W * b.W);
         }
 
+        [SuppressMessage("ReSharper", "ArgumentsStyleOther")]
         public static Matrix4 operator *(Matrix4 a, Matrix4 b)
         {
             return new(
-                a.X.X * b.X.X + a.X.Y * b.X.Y + a.X.Z * b.X.Z + a.X.W * b.X.W,
-                a.X.X * b.Y.X + a.X.Y * b.Y.Y + a.X.Z * b.Y.Z + a.X.W * b.Y.W,
-                a.X.X * b.Z.X + a.X.Y * b.Z.Y + a.X.Z * b.Z.Z + a.X.W * b.Z.W,
-                a.X.X * b.W.X + a.X.Y * b.W.Y + a.X.Z * b.W.Z + a.X.W * b.W.W,
-                a.Y.X * b.X.X + a.Y.Y * b.X.Y + a.Y.Z * b.X.Z + a.Y.W * b.X.W,
-                a.Y.X * b.Y.X + a.Y.Y * b.Y.Y + a.Y.Z * b.Y.Z + a.Y.W * b.Y.W,
-                a.Y.X * b.Z.X + a.Y.Y * b.Z.Y + a.Y.Z * b.Z.Z + a.Y.W * b.Z.W,
-                a.Y.X * b.W.X + a.Y.Y * b.W.Y + a.Y.Z * b.W.Z + a.Y.W * b.W.W,
-                a.Z.X * b.X.X + a.Z.Y * b.X.Y + a.Z.Z * b.X.Z + a.Z.W * b.X.W,
-                a.Z.X * b.Y.X + a.Z.Y * b.Y.Y + a.Z.Z * b.Y.Z + a.Z.W * b.Y.W,
-                a.Z.X * b.Z.X + a.Z.Y * b.Z.Y + a.Z.Z * b.Z.Z + a.Z.W * b.Z.W,
-                a.Z.X * b.W.X + a.Z.Y * b.W.Y + a.Z.Z * b.W.Z + a.Z.W * b.W.W,
-                a.W.X * b.X.X + a.W.Y * b.X.Y + a.W.Z * b.X.Z + a.W.W * b.X.W,
-                a.W.X * b.Y.X + a.W.Y * b.Y.Y + a.W.Z * b.Y.Z + a.W.W * b.Y.W,
-                a.W.X * b.Z.X + a.W.Y * b.Z.Y + a.W.Z * b.Z.Z + a.W.W * b.Z.W,
-                a.W.X * b.W.X + a.W.Y * b.W.Y + a.W.Z * b.W.Z + a.W.W * b.W.W);
+                xx: a.X.X * b.X.X + a.X.Y * b.Y.X + a.X.Z * b.Z.X + a.X.W * b.W.X,
+                xy: a.X.X * b.X.Y + a.X.Y * b.Y.Y + a.X.Z * b.Z.Y + a.X.W * b.W.Y,
+                xz: a.X.X * b.X.Z + a.X.Y * b.Y.Z + a.X.Z * b.Z.Z + a.X.W * b.W.Z,
+                xw: a.X.X * b.X.W + a.X.Y * b.Y.W + a.X.Z * b.Z.W + a.X.W * b.W.W,
+                yx: a.Y.X * b.X.X + a.Y.Y * b.Y.X + a.Y.Z * b.Z.X + a.Y.W * b.W.X,
+                yy: a.Y.X * b.X.Y + a.Y.Y * b.Y.Y + a.Y.Z * b.Z.Y + a.Y.W * b.W.Y,
+                yz: a.Y.X * b.X.Z + a.Y.Y * b.Y.Z + a.Y.Z * b.Z.Z + a.Y.W * b.W.Z,
+                yw: a.Y.X * b.X.W + a.Y.Y * b.Y.W + a.Y.Z * b.Z.W + a.Y.W * b.W.W,
+                zx: a.Z.X * b.X.X + a.Z.Y * b.Y.X + a.Z.Z * b.Z.X + a.Z.W * b.W.X,
+                zy: a.Z.X * b.X.Y + a.Z.Y * b.Y.Y + a.Z.Z * b.Z.Y + a.Z.W * b.W.Y,
+                zz: a.Z.X * b.X.Z + a.Z.Y * b.Y.Z + a.Z.Z * b.Z.Z + a.Z.W * b.W.Z,
+                zw: a.Z.X * b.X.W + a.Z.Y * b.Y.W + a.Z.Z * b.Z.W + a.Z.W * b.W.W,
+                wx: a.W.X * b.X.X + a.W.Y * b.Y.X + a.W.Z * b.Z.X + a.W.W * b.W.X,
+                wy: a.W.X * b.X.Y + a.W.Y * b.Y.Y + a.W.Z * b.Z.Y + a.W.W * b.W.Y,
+                wz: a.W.X * b.X.Z + a.W.Y * b.Y.Z + a.W.Z * b.Z.Z + a.W.W * b.W.Z,
+                ww: a.W.X * b.X.W + a.W.Y * b.Y.W + a.W.Z * b.Z.W + a.W.W * b.W.W);
         }
 
         public static Matrix4 Scale(float x, float y, float z, float w = 1)
@@ -139,7 +141,7 @@ namespace Castaway.Math
 
         public override string ToString()
         {
-            return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}, {nameof(W)}: {W}";
+            return $"{nameof(X)}: ({X}), {nameof(Y)}: ({Y}), {nameof(Z)}: ({Z}), {nameof(W)}: ({W})";
         }
     }
 }
