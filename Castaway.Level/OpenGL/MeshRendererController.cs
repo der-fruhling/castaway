@@ -21,8 +21,8 @@ namespace Castaway.Level.OpenGL
             var d = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g, g.BoundProgram!.Value);
             g.SetUniform(g.BoundProgram!.Value, UniformType.TransformModel,
                 Matrix4.Translate(parent.RealPosition) *
-                Matrix4.Scale(parent.Scale) *
-                parent.Rotation.ToMatrix4());
+                parent.Rotation.ToMatrix4() *
+                Matrix4.Scale(parent.Scale));
             g.Draw(g.BoundProgram!.Value, d);
             g.Destroy(d.ElementArray!.Value, d.VertexArray!.Value);
         }

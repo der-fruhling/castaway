@@ -11,8 +11,8 @@ namespace Castaway.Level.OpenGL
             base.PreRenderFrame(camera, parent);
             var g = Castaway.OpenGL.OpenGL.Get();
             PerspectiveTransform = CameraMath.Persp(g, g.BoundWindow!.Value, FarCutoff, NearCutoff, MathEx.ToRadians(FOV), Size);
-            ViewTransform = Matrix4.Translate(-camera.RealPosition) * camera.Rotation
-                .Normalize().Conjugate().ToMatrix4();
+            ViewTransform = camera.Rotation.Normalize().Conjugate().ToMatrix4()
+                            * Matrix4.Translate(-camera.RealPosition);
         }
     }
 }
