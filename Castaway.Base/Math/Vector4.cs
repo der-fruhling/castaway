@@ -17,6 +17,9 @@ namespace Castaway.Math
             W = w;
         }
 
+        public Vector4(Vector3 v, float w) : this(v.X, v.Y, v.Z, w) {}
+        public Vector4(Vector2 v, float z, float w) : this(v.X, v.Y, z, w) {}
+
         public static Vector4 operator +(Vector4 a, Vector4 b)
         {
             return new(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);

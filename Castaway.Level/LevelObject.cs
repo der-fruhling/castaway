@@ -9,6 +9,7 @@ namespace Castaway.Level
         public string? Name;
         public Vector3 Position = new(0, 0, 0), Scale = new(1, 1, 1);
         public Vector3 RealPosition => Position + (Parent?.RealPosition ?? new Vector3(0, 0, 0));
+        public Quaternion Rotation = Quaternion.Rotation(0, 0, 0).Normalize();
         public List<EmptyController> Controllers = new();
         public List<LevelObject> Subobjects = new();
         public LevelObject? Parent;
