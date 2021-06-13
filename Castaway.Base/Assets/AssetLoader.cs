@@ -33,8 +33,9 @@ namespace Castaway.Assets
 
             foreach (var file in Directory.EnumerateFiles(fullAssetPath))
             {
-                var name = file.Remove(file.IndexOf(fullBasePath, StringComparison.Ordinal),
-                    fullBasePath.Length);
+                var name = file
+                    .Remove(file.IndexOf(fullBasePath, StringComparison.Ordinal), fullBasePath.Length)
+                    .Replace('\\', '/');
                 Assets[name] = (file, GetAssetType(file));
             }
 
