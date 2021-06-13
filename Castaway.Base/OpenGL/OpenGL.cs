@@ -869,6 +869,7 @@ namespace Castaway.OpenGL
         /// <param name="things">The things to destroy.</param>
         /// <exception cref="InvalidOperationException">Thrown if an
         /// invalid thing was passed.</exception>
+        [Obsolete("Use specific destroy methods.")]
         public override void Destroy(params object[] things)
         {
             foreach (var thing in things)
@@ -910,6 +911,7 @@ namespace Castaway.OpenGL
         /// Thrown if an invalid thing was passes or if multiple of a single
         /// type was found.
         /// </exception>
+        [Obsolete("Use specific bind methods.")]
         public override void Bind(params object[] things)
         {
             var bw = false;

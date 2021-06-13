@@ -117,8 +117,11 @@ namespace Castaway.Rendering
         public abstract void ShowWindow(TWindow window);
         public abstract void HideWindow(TWindow window);
 
+        [Obsolete("Use specific destroy methods.")]
         public abstract void Destroy(params object[] things);
+        [Obsolete("Use specific bind methods.")]
         public abstract void Bind(params object[] things);
+        
         public abstract void Dispose();
     }
 }

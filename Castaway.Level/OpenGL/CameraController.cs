@@ -50,7 +50,7 @@ namespace Castaway.Level.OpenGL
             if (bp != BuiltinShaders.NoTransformTextured)
                 g.Bind(BuiltinShaders.NoTransformTextured);
             g.Draw(BuiltinShaders.NoTransformTextured, _fullscreenDrawable);
-            if(bp != null && bp != BuiltinShaders.NoTransformTextured) g.Bind(bp);
+            if(bp != null && bp != BuiltinShaders.NoTransformTextured) g.Bind(bp!.Value);
         }
     }
 }
