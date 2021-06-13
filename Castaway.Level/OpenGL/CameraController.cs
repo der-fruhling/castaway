@@ -1,3 +1,4 @@
+using System;
 using Castaway.Math;
 using Castaway.OpenGL;
 
@@ -9,7 +10,7 @@ namespace Castaway.Level.OpenGL
         public Matrix4 PerspectiveTransform;
         public Matrix4 ViewTransform;
 
-        private IDrawable _fullscreenDrawable;
+        private IDrawable? _fullscreenDrawable;
 
         public override void OnInit(LevelObject parent)
         {
@@ -31,6 +32,9 @@ namespace Castaway.Level.OpenGL
             base.OnDestroy(parent);
             var g = Castaway.OpenGL.OpenGL.Get();
             g.Destroy(Framebuffer);
+            if(_fullscreenDrawable != null)
+                g.Destroy(_fullscreenDrawable.ElementArray!.Value, _fullscreenDrawable.VertexArray!.Value);
+            _fullscreenDrawable = null;
         }
 
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
@@ -49,7 +53,7 @@ namespace Castaway.Level.OpenGL
             var bp = g.BoundProgram;
             if (bp != BuiltinShaders.NoTransformTextured)
                 g.Bind(BuiltinShaders.NoTransformTextured);
-            g.Draw(BuiltinShaders.NoTransformTextured, _fullscreenDrawable);
+            g.Draw(BuiltinShaders.NoTransformTextured, _fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
             if(bp != null && bp != BuiltinShaders.NoTransformTextured) g.Bind(bp!.Value);
         }
     }
