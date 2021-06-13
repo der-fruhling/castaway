@@ -916,7 +916,6 @@ namespace Castaway.OpenGL
         {
             var bw = false;
             var bp = false;
-            var bt = false;
             var bf = false;
             foreach (var thing in things)
             {
