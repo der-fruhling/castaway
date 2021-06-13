@@ -1,6 +1,8 @@
 ﻿using Castaway;
 using Castaway.Level;
 using Castaway.OpenGL;
+using Castaway.OpenGL.Input;
+using GLFW;
 using static Castaway.Assets.AssetLoader;
 
 namespace Test
@@ -31,6 +33,7 @@ namespace Test
                 level.Render();
                 g.FinishFrame(window);
                 level.Update();
+                if (InputSystem.Gamepad.Valid && InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape)) break;
             }
             g.HideWindow(window);
             
