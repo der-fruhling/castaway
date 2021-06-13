@@ -537,5 +537,11 @@ namespace Castaway.Native
             var f = (delegate*<GLC, void>) Load(GLF.glEnable);
             f(cap);
         }
+
+        public static void Viewport(int x, int y, int w, int h)
+        {
+            var f = (delegate*<int, int, int, int, void>) Load(GLF.glViewport);
+            f(x, y, w, h);
+        }
     }
 }

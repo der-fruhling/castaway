@@ -87,11 +87,13 @@ namespace Castaway.OpenGL
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
             Glfw.WindowHint(Hint.Visible, visible);
+            Glfw.WindowHint(Hint.CocoaRetinaFrameBuffer, false);
             w.GlfwWindow = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             Bind(w);
             InputSystem.Init();
             BuiltinShaders.Init();
             GL.Enable(GL_DEPTH_TEST);
+            GL.Viewport(0, 0, width, height);
             return w;
         }
 
@@ -117,12 +119,14 @@ namespace Castaway.OpenGL
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
             Glfw.WindowHint(Hint.Visible, visible);
+            Glfw.WindowHint(Hint.CocoaRetinaFrameBuffer, false);
             var v = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
             w.GlfwWindow = Glfw.CreateWindow(v.Width, v.Height, title, Glfw.PrimaryMonitor, GLFW.Window.None);
             Bind(w);
             InputSystem.Init();
             BuiltinShaders.Init();
             GL.Enable(GL_DEPTH_TEST);
+            GL.Viewport(0, 0, v.Width, v.Height);
             return w;
         }
 

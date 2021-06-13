@@ -45,16 +45,9 @@ namespace Castaway.Native
             throw new ArgumentOutOfRangeException(nameof(e), e, $"No value of {typeof(T).Name} matches {e}");
         }
 
-        [Obsolete("Use CreateBuffer instead")]
-        public static uint GenBuffer()
-        {
-            GenBuffers(1, out var u);
-            return u[0];
-        }
-
         public static uint CreateBuffer()
         {
-            CreateBuffers(1, out var u);
+            GenBuffers(1, out var u);
             return u[0];
         }
     }
