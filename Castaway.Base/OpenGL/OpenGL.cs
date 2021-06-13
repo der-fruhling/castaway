@@ -445,16 +445,6 @@ namespace Castaway.OpenGL
         }
 
         /// <summary>
-        /// Binds a texture.
-        /// </summary>
-        /// <param name="texture">Texture to bind.</param>
-        [Obsolete("Use numbered overload.")]
-        public override void Bind(Texture texture)
-        {
-            GL.BindTexture(GL_TEXTURE_2D, texture.Number);
-        }
-
-        /// <summary>
         /// Binds a texture to a specific slot.
         /// </summary>
         /// <param name="texture">Texture to bind.</param>
@@ -632,24 +622,6 @@ namespace Castaway.OpenGL
         public override void BindUniform(ShaderProgram p, string name, UniformType type = UniformType.Custom)
         {
             p.UniformBindings[name] = type;
-        }
-
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public override void RemoveInput(ShaderProgram p, string name)
-        {
-            p.Inputs.Remove(name);
-        }
-
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public override void RemoveOutput(ShaderProgram p, string name)
-        {
-            p.Outputs.Remove(name);
-        }
-
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public override void UnbindUniform(ShaderProgram p, string name)
-        {
-            p.UniformBindings.Remove(name);
         }
 
         /// <summary>

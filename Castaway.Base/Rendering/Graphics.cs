@@ -36,8 +36,6 @@ namespace Castaway.Rendering
         public abstract void Bind(TWindow window);
         public abstract void Bind(TBuffer buffer);
         public abstract void Bind(TProgram program);
-        [Obsolete("Use numbered overload.")]
-        public abstract void Bind(TTexture texture);
         public abstract void Bind(TTexture texture, int number);
         public abstract void Bind(TFramebuffer framebuffer);
         public abstract void UnbindFramebuffer();
@@ -52,12 +50,6 @@ namespace Castaway.Rendering
         public abstract void CreateOutput(TProgram p, uint color, string name);
         public abstract void BindUniform(TProgram p, string name, UniformType type = UniformType.Custom);
 
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public abstract void RemoveInput(TProgram p, string name);
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public abstract void RemoveOutput(TProgram p, string name);
-        [Obsolete("Removing inputs, outputs, and uniforms will be removed in the future.")]
-        public abstract void UnbindUniform(TProgram p, string name);
         public abstract void FinishProgram(ref TProgram p);
         public abstract string UniformRef(TProgram p, UniformType type);
 
