@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shader>
+    <vertex>
+        <glsl order="Version">#version 150 core</glsl>
+        
+        <struct name="Vector2">
+            <member name="x" type="float"/>
+            <member name="y" type="float"/>
+        </struct>
+        
+        <input name="vPosition" from="PositionXYZ"/>
+        <input name="vColor" from="ColorRGBA"/>
+
+        <output name="fColor" type="vec4"/>
+
+        <transform name="tPersp" matrix="Perspective"/>
+        <transform name="tView" matrix="View"/>
+        <transform name="tModel" matrix="Model"/>
+        
+        <function name="main">
+            void main() {
+                gl_Position = tPersp * tView * tModel * vec4(vPosition, 1);
+                fColor = vColor;
+            }
+        </function>
+    </vertex>
+    
+    <fragment>
+        <glsl order="Version">#version 150 core</glsl>
+        
+        <input name="fColor" type="vec4"/>
+
+        <output name="oColor" to="0"/>
+        
+        <function name="main">
+            void main() {
+                oColor = fColor;
+            }
+        </function>
+    </fragment>
+</shader>

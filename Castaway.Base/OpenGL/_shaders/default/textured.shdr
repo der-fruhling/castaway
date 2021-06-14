@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Castaway Builtin Shader
+ - `default-tex`
+ -->
+<shader>
+    <vertex>
+        <glsl order="Version">#version 150 core</glsl>
+        
+        <input name="vPosition" from="PositionXYZ"/>
+        <input name="vColor" from="ColorRGB"/>
+        <input name="vNormal" from="NormalXYZ"/>
+        <input name="vTextureCoords" from="TextureST"/>
+        
+        <output name="fColor" type="vec3"/>
+        <output name="fNormal" type="vec3"/>
+        <output name="fFragmentPosition" type="vec3"/>
+        <output name="fTextureCoords" type="vec2"/>
+        
+        <transform name="tPersp" matrix="Perspective"/>
+        <transform name="tView" matrix="View"/>
+        <transform name="tModel" matrix="Model"/>
+        
+        <function name="main"><![CDATA[
+            void main() {
+                gl_Position = tPersp * tView * tModel * vec4(vPosition, 1);
+                fColor = vColor;
+                fNormal = mat3(transpose(inverse(tModel))) * vNormal;
+                fFragmentPosition = vec3(tModel * vec4(vPosition, 1));
+                fTextureCoords = vTextureCoords;
+            }
+        ]]></function>
+    </vertex>
+    
+    <fragment>
+        <glsl order="Version">#version 150 core</glsl>
+        
+        <struct name="PointLight">
+            <member name="Position" type="vec3"/>
+            <member name="Color" type="vec3"/>
+        </struct>
+        
+        <input name="fColor" type="vec3"/>
+        <input name="fNormal" type="vec3"/>
+        <input name="fFragmentPosition" type="vec3"/>
+        <input name="fTextureCoords" type="vec2"/>
+        
+        <output name="oColor" to="0"/>
+        
+        <uniform type="float" name="uAmbient" from="AmbientLight">0.1</uniform>
+        <uniform type="vec3" name="uAmbientLightColor" from="AmbientLightColor">vec3(1,1,1)</uniform>
+        <uniform type="int" name="uPointLightCount" from="PointLightCount">0</uniform>
+        <array qual="uniform" type="PointLight" name="uPointLights" size="32"/>
+        <uniform-from name="uPointLights[$INDEX].Position" from="PointLightPositionIndexed"/>
+        <uniform-from name="uPointLights[$INDEX].Color" from="PointLightColorIndexed"/>
+        <uniform type="vec3" name="uViewPosition" from="ViewPosition"/>
+        <uniform type="float" name="uSpecularStrength">0.5</uniform>
+        <uniform type="sampler2D" name="uTexture"/>
+        
+        <function name="CalculateAmbientLight">
+            vec3 CalculateAmbientLight(float intensity, vec3 color) {
+                return color * intensity;
+            }
+        </function>
+        
+        <function name="CalculateDiffuseLight">
+            float CalculateDiffuseLight(PointLight light, vec3 lightDir, vec3 normal) {
+                return max(dot(normal, lightDir), 0);
+            }
+        </function>
+
+        <function name="CalculateSpecularLight">
+            float CalculateSpecularLight(PointLight light, vec3 viewDir, vec3 reflectDir) {
+                return pow(max(dot(viewDir, reflectDir), 0), 32);
+            }
+        </function>
+        
+        <function name="ProcessLight">
+            vec3 ProcessLight(PointLight light, vec3 norm) {
+                vec3 lightDirection = normalize(light.Position - fFragmentPosition);
+                vec3 viewDirection = normalize(uViewPosition - fFragmentPosition);
+                vec3 reflectDirection = reflect(-lightDirection, norm);
+
+                float diff = CalculateDiffuseLight(light, lightDirection, norm);
+                float spec = CalculateSpecularLight(light, viewDirection, reflectDirection);
+                
+                return (diff * light.Color) + (uSpecularStrength * spec * light.Color);
+            }
+        </function>
+        
+        <function name="main"><![CDATA[
+            void main() {
+                vec3 norm = normalize(fNormal);
+                vec3 lighting = uAmbient * uAmbientLightColor;
+
+                for(int i = 0; i < uPointLightCount; i++) {
+                    lighting += ProcessLight(uPointLights[i], norm);
+                }
+
+                vec3 result = lighting * fColor;
+                oColor = vec4(result * vec3(texture(uTexture, fTextureCoords)), 1);
+            }
+        ]]></function>
+    </fragment>
+</shader>

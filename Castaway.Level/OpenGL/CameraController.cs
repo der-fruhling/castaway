@@ -24,7 +24,7 @@ namespace Castaway.Level.OpenGL
                 new(new Vector3(1, -1, 0),  texture: new Vector3(1, 0, 0)),
                 new(new Vector3(-1, 1, 0),  texture: new Vector3(0, 1, 0)),
                 new(new Vector3(1, 1, 0),   texture: new Vector3(1, 1, 0)),
-            }, new uint[] {0, 1, 2, 3, 1, 2}).ConstructFor(g, BuiltinShaders.NoTransformTextured);
+            }, new uint[] {0, 1, 2, 3, 1, 2}).ConstructFor(g, BuiltinShaders.DirectTextured);
         }
 
         public override void OnDestroy(LevelObject parent)
@@ -51,10 +51,10 @@ namespace Castaway.Level.OpenGL
 
             if (camera.Level.ActiveCamera != CameraID) return;
             var bp = g.BoundProgram;
-            if (bp != BuiltinShaders.NoTransformTextured)
-                g.Bind(BuiltinShaders.NoTransformTextured);
-            g.Draw(BuiltinShaders.NoTransformTextured, _fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
-            if(bp != null && bp != BuiltinShaders.NoTransformTextured) g.Bind(bp!.Value);
+            if (bp != BuiltinShaders.DirectTextured)
+                g.Bind(BuiltinShaders.DirectTextured);
+            g.Draw(BuiltinShaders.DirectTextured, _fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
+            if(bp != null && bp != BuiltinShaders.DirectTextured) g.Bind(bp!.Value);
         }
     }
 }

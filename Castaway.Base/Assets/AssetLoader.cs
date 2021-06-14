@@ -51,6 +51,7 @@ namespace Castaway.Assets
                 "jpeg" => new ImageAssetType(),
                 "xml" => new XMLAssetType(),
                 "obj" => new WavefrontOBJAssetType(),
+                "shdr" => new ShaderAssetType(),
                 _ => new TextAssetType()
             };
         }

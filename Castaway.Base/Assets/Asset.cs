@@ -37,5 +37,7 @@ namespace Castaway.Assets
         {
             return _bytes ?? throw new InvalidOperationException("Not loaded.");
         }
+
+        public T To<T>() => Type.To<T>(this);
     }
 }

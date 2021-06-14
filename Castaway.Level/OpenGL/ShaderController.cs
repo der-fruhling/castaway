@@ -27,8 +27,8 @@ namespace Castaway.Level.OpenGL
             {
                 BuiltinShader.Default => BuiltinShaders.Default,
                 BuiltinShader.TexturedDefault => BuiltinShaders.DefaultTextured,
-                BuiltinShader.NoTransform => BuiltinShaders.NoTransform,
-                BuiltinShader.TexturedNoTransform => BuiltinShaders.NoTransformTextured,
+                BuiltinShader.NoTransform => BuiltinShaders.Direct,
+                BuiltinShader.TexturedNoTransform => BuiltinShaders.DirectTextured,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

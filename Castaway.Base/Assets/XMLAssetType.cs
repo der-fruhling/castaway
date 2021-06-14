@@ -6,7 +6,7 @@ namespace Castaway.Assets
 {
     public class XMLAssetType : IAssetType
     {
-        public T To<T>(Asset a)
+        public virtual T To<T>(Asset a)
         {
             if (typeof(T) == typeof(string))
                 return (T) (dynamic) Encoding.UTF8.GetString(a.GetBytes());

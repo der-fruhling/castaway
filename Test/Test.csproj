@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Assets\*" CopyToOutputDirectory="PreserveNewest"/>
-        <None Update="config.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Assets\*" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="config.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

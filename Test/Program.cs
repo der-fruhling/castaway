@@ -24,7 +24,6 @@ namespace Test
             // Level setup
             var level = new Level(Loader!.GetAssetByName("/test_level.xml"));
             level.Start();
-            
             // Rendering loop!
             g.ShowWindow(window);
             while (g.WindowShouldBeOpen(window))

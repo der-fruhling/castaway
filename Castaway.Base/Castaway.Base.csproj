@@ -28,6 +28,10 @@
     <ItemGroup>
       <Compile Remove="bin\**" />
       <EmbeddedResource Remove="bin\**" />
+      <EmbeddedResource Include="OpenGL\_shaders\default\textured.shdr" />
+      <EmbeddedResource Include="OpenGL\_shaders\default\normal.shdr" />
+      <EmbeddedResource Include="OpenGL\_shaders\direct\textured.shdr" />
+      <EmbeddedResource Include="OpenGL\_shaders\direct\normal.shdr" />
       <None Remove="bin\**" />
     </ItemGroup>
 
@@ -38,5 +42,7 @@
     <ItemGroup>
         <EmbeddedResource Include="OpenGL\_shaders\*\*.glsl" />
         <Compile Remove="OpenGL\_shaders\*\*.glsl" />
+        <EmbeddedResource Include="OpenGL\_shaders\*.shdr" />
+        <Compile Remove="OpenGL\_shaders\*.shdr" />
     </ItemGroup>
 </Project>
