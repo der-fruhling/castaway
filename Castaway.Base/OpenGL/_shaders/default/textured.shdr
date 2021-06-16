@@ -91,7 +91,7 @@
         <function name="main"><![CDATA[
             void main() {
                 vec3 norm = normalize(fNormal);
-                vec3 lighting = uAmbient * uAmbientLightColor;
+                vec3 lighting = CalculateAmbientLight(uAmbient, uAmbientLightColor);
 
                 for(int i = 0; i < uPointLightCount; i++) {
                     lighting += ProcessLight(uPointLights[i], norm);
