@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Castaway.Math;
+using Castaway.Structures;
 
 namespace Castaway.OpenGL.MeshLoader
 {

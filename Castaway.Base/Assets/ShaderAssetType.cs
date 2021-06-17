@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 
 namespace Castaway.Assets
@@ -64,7 +65,9 @@ namespace Castaway.Assets
             [VertexInputType.ColorG] = "float",
             [VertexInputType.ColorRGB] = "vec3",
             [VertexInputType.ColorRGBA] = "vec4",
+            #pragma warning disable 618
             [VertexInputType.ColorBGRA] = "vec4",
+            #pragma warning restore 618
             [VertexInputType.NormalXY] = "vec2",
             [VertexInputType.NormalXYZ] = "vec3",
             [VertexInputType.TextureS] = "float",
@@ -74,20 +77,21 @@ namespace Castaway.Assets
         
         public override T To<T>(Asset a)
         {
-            if (typeof(T) == typeof(OpenGL.ShaderProgram))
-                return (T) (dynamic) LoadOpenGL(base.To<XmlDocument>(a));
+            if (typeof(T) == typeof(OpenGL.Shader))
+                return (T) (dynamic) LoadOpenGL(base.To<XmlDocument>(a), a.Index);
             return base.To<T>(a);
         }
 
-        public static OpenGL.ShaderProgram LoadOpenGL(string str)
+        public static ShaderObject LoadOpenGL(string str, string path)
         {
             var doc = new XmlDocument();
             doc.LoadXml(str);
-            return LoadOpenGL(doc);
+            return LoadOpenGL(doc, path);
         }
 
-        public static OpenGL.ShaderProgram LoadOpenGL(XmlDocument doc)
+        public static ShaderObject LoadOpenGL(XmlDocument doc, string path)
         {
+            var g = Graphics.Current;
             var root = doc.DocumentElement;
             if (root == null) throw new InvalidOperationException("Document needs root element.");
             if (root.GetElementsByTagName("vertex").Count < 1)
@@ -95,12 +99,11 @@ namespace Castaway.Assets
             if (root.GetElementsByTagName("fragment").Count < 1)
                 throw new InvalidOperationException("Need at least one fragment shader.");
 
-            var shaders = new List<OpenGL.Shader>();
+            var shaders = new List<OpenGL.ShaderPart>();
             var inputs = new Dictionary<string, VertexInputType>();
             var uniforms = new Dictionary<string, UniformType>();
             var transforms = new Dictionary<string, Transform>();
             var outputs = new Dictionary<string, uint>();
-            var g = OpenGL.OpenGL.Get();
 
             var enumerator = root.ChildNodes;
             for (int i = 0; i < enumerator.Count; i++)
@@ -280,12 +283,12 @@ namespace Castaway.Assets
                 
                 try
                 {
-                    shaders.Add(g.CreateShader(xml.Name switch
+                    shaders.Add(new ShaderPart(xml.Name switch
                     {
                         "vertex" => ShaderStage.Vertex,
                         "fragment" => ShaderStage.Fragment,
                         _ => throw new ArgumentOutOfRangeException(null, $"Invalid shader type {xml.Name}")
-                    }, data));
+                    }, data, path));
                 }
                 catch (GraphicsException)
                 {
@@ -309,11 +312,11 @@ namespace Castaway.Assets
                 };
             }
             
-            var program = g.CreateProgram(shaders.ToArray());
-            foreach(var (n, v) in inputs) g.CreateInput(program, v, n);
-            foreach(var (n, c) in outputs) g.CreateOutput(program, c, n);
-            foreach(var (n, u) in uniforms) g.BindUniform(program, n, u);
-            g.FinishProgram(ref program);
+            var program = new Shader(shaders.Cast<SeparatedShaderObject>().ToArray());
+            foreach(var (n, v) in inputs) program.RegisterInput(n, v);
+            foreach(var (n, c) in outputs) program.RegisterOutput(n, c);
+            foreach(var (n, u) in uniforms) program.RegisterUniform(n, u);
+            program.Link();
 
             return program;
         }

@@ -5,16 +5,17 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Castaway.Assets;
+using Castaway.Rendering;
 
 namespace Castaway.OpenGL
 {
     [SuppressMessage("ReSharper", "CA2211")]
     public static class BuiltinShaders
     {
-        public static ShaderProgram Default;
-        public static ShaderProgram DefaultTextured;
-        public static ShaderProgram Direct;
-        public static ShaderProgram DirectTextured;
+        public static ShaderObject? Default;
+        public static ShaderObject? DefaultTextured;
+        public static ShaderObject? Direct;
+        public static ShaderObject? DirectTextured;
 
         public static void Init()
         {
@@ -33,16 +34,15 @@ namespace Castaway.OpenGL
                     });
             #endregion
             
-            Default = ShaderAssetType.LoadOpenGL(taskList["default/normal"].Result);
-            DefaultTextured = ShaderAssetType.LoadOpenGL(taskList["default/textured"].Result);
-            Direct = ShaderAssetType.LoadOpenGL(taskList["direct/normal"].Result);
-            DirectTextured = ShaderAssetType.LoadOpenGL(taskList["direct/textured"].Result);
+            Default = ShaderAssetType.LoadOpenGL(taskList["default/normal"].Result, "b:default/normal");
+            DefaultTextured = ShaderAssetType.LoadOpenGL(taskList["default/textured"].Result, "b:default/textured");
+            Direct = ShaderAssetType.LoadOpenGL(taskList["direct/normal"].Result, "b:direct/normal");
+            DirectTextured = ShaderAssetType.LoadOpenGL(taskList["direct/textured"].Result, "b:direct/textured");
         }
 
         public static void Destroy()
         {
-            var g = OpenGL.Get();
-            g.Destroy(Default);
+            Default.Dispose();
         }
 
         private static async Task<string> ReadShader(string path)

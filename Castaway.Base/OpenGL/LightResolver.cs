@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Castaway.Math;
 using Castaway.Rendering;
 
@@ -28,6 +30,11 @@ namespace Castaway.OpenGL
         private static readonly List<PointLight> PointLights = new();
         private static float _ambientLight = .1f;
         private static Vector3 _ambientLightColor = new(1, 1, 1);
+
+        private static ShaderObject? _pushedShader;
+        private static ImmutableArray<PointLight> _pushedPointLights;
+        private static float _pushedAmbientLight;
+        private static Vector3 _pushedAmbientLightColor;
         
         public static void Add(PointLight light)
         {
@@ -42,8 +49,14 @@ namespace Castaway.OpenGL
 
         public static void Push()
         {
-            var g = OpenGL.Get();
-            var p = g.BoundProgram!.Value;
+            var g = Graphics.Current;
+            var p = g.BoundShader!;
+            
+            if (_pushedShader == p &&
+                PointLights.SequenceEqual(_pushedPointLights) &&
+                System.Math.Abs(_pushedAmbientLight - _ambientLight) < 0.00025f &&
+                _pushedAmbientLightColor == _ambientLightColor) return;
+            
             g.SetUniform(p, UniformType.AmbientLight, _ambientLight);
             g.SetUniform(p, UniformType.AmbientLightColor, _ambientLightColor);
             g.SetUniform(p, UniformType.PointLightCount, PointLights.Count);
@@ -53,6 +66,11 @@ namespace Castaway.OpenGL
                 g.SetUniform(p, i, UniformType.PointLightPositionIndexed, l.Position);
                 g.SetUniform(p, i, UniformType.PointLightColorIndexed, l.Color);
             }
+
+            _pushedShader = p;
+            _pushedPointLights = PointLights.ToImmutableArray();
+            _pushedAmbientLight = _ambientLight;
+            _pushedAmbientLightColor = _ambientLightColor;
         }
 
         public static void Clear()

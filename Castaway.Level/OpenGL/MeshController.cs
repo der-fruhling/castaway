@@ -1,5 +1,5 @@
 using Castaway.Assets;
-using Castaway.OpenGL;
+using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
@@ -12,7 +12,6 @@ namespace Castaway.Level.OpenGL
         public override void OnInit(LevelObject parent)
         {
             base.OnInit(parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
             Mesh = Asset!.Type.To<Mesh>(Asset);
         }
     }

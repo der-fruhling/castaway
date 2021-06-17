@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using Castaway.OpenGL;
 using GLFW;
 
-namespace Castaway.Native
+namespace Castaway.Native.GL
 {
     public static unsafe partial class GL
     {
@@ -224,7 +225,7 @@ namespace Castaway.Native
             f(r, g, b, a);
         }
 
-        public static void GenerateVertexArrays(int count, out uint[] arrays)
+        public static void GenVertexArrays(int count, out uint[] arrays)
         {
             arrays = new uint[count];
             var f = (delegate*<int, uint*, void>) Load(GLF.glGenVertexArrays);
@@ -542,6 +543,43 @@ namespace Castaway.Native
         {
             var f = (delegate*<int, int, int, int, void>) Load(GLF.glViewport);
             f(x, y, w, h);
+        }
+
+        public static string GetString(GLC e)
+        {
+            var f = (delegate*<GLC, byte*>) Load(GLF.glGetString);
+            var bytes = f(e);
+            if(bytes == (void*) 0) return string.Empty;
+            var str = "";
+            var i = 0;
+            while (bytes[i] != 0) str += Encoding.UTF8.GetString(new[] {bytes[i++]});
+            return str;
+        }
+
+        public static int GetInt(GLC e)
+        {
+            int v;
+            var f = (delegate*<GLC, int*, void>) Load(GLF.glGetIntegerv);
+            f(e, &v);
+            return v;
+        }
+
+        public static bool IsTexture(uint obj)
+        {
+            var f = (delegate*<uint, bool>) Load(GLF.glIsTexture);
+            return f(obj);
+        }
+
+        public static void GenerateMipmap(GLC e)
+        {
+            var f = (delegate*<GLC, void>) Load(GLF.glGenerateMipmap);
+            f(e);
+        }
+
+        public static void DeleteVertexArrays(params uint[] vaos)
+        {
+            var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteVertexArrays);
+            fixed (uint* p = vaos) f(vaos.Length, p);
         }
     }
 }

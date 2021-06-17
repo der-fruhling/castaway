@@ -1,22 +1,24 @@
 using System;
 using Castaway.Math;
 using Castaway.OpenGL;
+using Castaway.Rendering;
+using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
     public abstract class CameraController : Castaway.Level.CameraController
     {
-        public Framebuffer Framebuffer;
+        public FramebufferObject? Framebuffer;
         public Matrix4 PerspectiveTransform;
         public Matrix4 ViewTransform;
 
-        private IDrawable? _fullscreenDrawable;
+        private Drawable? _fullscreenDrawable;
 
         public override void OnInit(LevelObject parent)
         {
             base.OnInit(parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            Framebuffer = g.CreateFramebuffer(g.BoundWindow!.Value);
+            var g = Graphics.Current;
+            Framebuffer = g.NewFramebuffer();
 
             _fullscreenDrawable = new Mesh(new Mesh.Vertex[]
             {
@@ -24,37 +26,36 @@ namespace Castaway.Level.OpenGL
                 new(new Vector3(1, -1, 0),  texture: new Vector3(1, 0, 0)),
                 new(new Vector3(-1, 1, 0),  texture: new Vector3(0, 1, 0)),
                 new(new Vector3(1, 1, 0),   texture: new Vector3(1, 1, 0)),
-            }, new uint[] {0, 1, 2, 3, 1, 2}).ConstructFor(g, BuiltinShaders.DirectTextured);
+            }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructUnoptimisedFor(BuiltinShaders.DirectTextured!);
+            // TODO Work around unoptimised fullscreen buffer.
         }
 
         public override void OnDestroy(LevelObject parent)
         {
             base.OnDestroy(parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            g.Destroy(Framebuffer);
-            if(_fullscreenDrawable != null)
-                g.Destroy(_fullscreenDrawable.ElementArray!.Value, _fullscreenDrawable.VertexArray!.Value);
+            Framebuffer?.Dispose();
+            _fullscreenDrawable?.Dispose();
             _fullscreenDrawable = null;
         }
 
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
         {
-            var g = Castaway.OpenGL.OpenGL.Get();
-            g.Bind(Framebuffer);
+            var g = Graphics.Current;
+            Framebuffer?.Bind();
             g.Clear();
         }
 
         public override void PostRenderFrame(LevelObject camera, LevelObject? parent)
         {
-            var g = Castaway.OpenGL.OpenGL.Get();
+            var g = Graphics.Current;
             g.UnbindFramebuffer();
 
             if (camera.Level.ActiveCamera != CameraID) return;
-            var bp = g.BoundProgram;
+            var bp = g.BoundShader;
             if (bp != BuiltinShaders.DirectTextured)
-                g.Bind(BuiltinShaders.DirectTextured);
-            g.Draw(BuiltinShaders.DirectTextured, _fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
-            if(bp != null && bp != BuiltinShaders.DirectTextured) g.Bind(bp!.Value);
+                BuiltinShaders.DirectTextured!.Bind();
+            g.Draw(BuiltinShaders.DirectTextured!, _fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
+            if(bp != null && bp != BuiltinShaders.DirectTextured) bp!.Bind();
         }
     }
 }

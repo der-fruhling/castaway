@@ -1,4 +1,5 @@
 using Castaway.Math;
+using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
 {
@@ -7,8 +8,8 @@ namespace Castaway.Level.OpenGL
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
         {
             base.PreRenderFrame(camera, parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            PerspectiveTransform = CameraMath.Ortho(g, g.BoundWindow!.Value, FarCutoff, NearCutoff, Size);
+            var w = Graphics.Current.Window!;
+            PerspectiveTransform = CameraMath.Ortho(w, FarCutoff, NearCutoff, Size);
             ViewTransform = Matrix4.Translate(-camera.RealPosition);
         }
     }

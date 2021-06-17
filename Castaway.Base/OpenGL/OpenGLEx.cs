@@ -1,72 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castaway.Math;
 using Castaway.Rendering;
+using Castaway.Structures;
 
 namespace Castaway.OpenGL
 {
-    public struct Mesh
+    public static class OpenGLEx
     {
-        public struct Vertex
+        #region Mesh
+        
+        private static float[] ConstructVertexArray(this Mesh mesh, ShaderObject shader)
         {
-            public Vector3 Position;
-            public Vector4 Color;
-            public Vector3 Normal;
-            public Vector3 Texture;
-            
-            public Vertex(Vector3 position, Vector4? color = null, Vector3? texture = null, Vector3? normal = null)
-            {
-                Position = position;
-                Color = color ?? new Vector4(1, 1, 1, 1);
-                Normal = normal ?? new Vector3(0, 0, 0);
-                Texture = texture ?? new Vector3(0, 0, 0);
-            }
-
-            public bool Equals(Vertex other)
-            {
-                return Position.Equals(other.Position) && Color.Equals(other.Color) && Normal.Equals(other.Normal) && Texture.Equals(other.Texture);
-            }
-
-            public override bool Equals(object? obj)
-            {
-                return obj is Vertex other && Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Position, Color, Normal, Texture);
-            }
-
-            public static bool operator ==(Vertex left, Vertex right)
-            {
-                return left.Equals(right);
-            }
-
-            public static bool operator !=(Vertex left, Vertex right)
-            {
-                return !left.Equals(right);
-            }
-        }
-
-        public Vertex[] Vertices;
-        public uint[] Elements;
-
-        public Mesh(Vertex[] vertices, uint[] elements)
-        {
-            Vertices = vertices;
-            Elements = elements;
-        }
-
-        private float[] ConstructVertexArray(ShaderProgram program)
-        {
-            var size = VertexSize(program.Inputs.Values);
-            var value = new float[size * Vertices.Length];
+            var size = VertexSize(shader.GetInputs().Select(shader.GetInput).ToList());
+            var value = new float[size * mesh.Vertices.Length];
             
             var j = 0;
-            foreach (var v in Vertices)
+            foreach (var v in mesh.Vertices)
             {
-                foreach (var input in program.Inputs.Values)
+                foreach (var input in shader.GetInputs().Select(shader.GetInput))
                 {
                     switch (input)
                     {
@@ -93,12 +45,14 @@ namespace Castaway.OpenGL
                             value[j++] = v.Color.Z;
                             value[j++] = v.Color.W;
                             break;
+                        #pragma warning disable 618
                         case VertexInputType.ColorBGRA:
                             value[j++] = v.Color.Z;
                             value[j++] = v.Color.Y;
                             value[j++] = v.Color.X;
                             value[j++] = v.Color.W;
                             break;
+                        #pragma warning restore 618
                         case VertexInputType.NormalXY:
                             value[j++] = v.Normal.X;
                             value[j++] = v.Normal.Y;
@@ -121,15 +75,15 @@ namespace Castaway.OpenGL
                             value[j++] = v.Texture.Z;
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(program), input, "Invalid input type.");
+                            throw new ArgumentOutOfRangeException(nameof(shader), input, "Invalid input type.");
                     }
                 }
             }
-
+ 
             return value;
         }
-
-        private int VertexSize(ICollection<VertexInputType> values)
+        
+        private static int VertexSize(ICollection<VertexInputType> values)
         {
             return values.Sum(v => v switch
             {
@@ -138,7 +92,9 @@ namespace Castaway.OpenGL
                 VertexInputType.ColorG => 1,
                 VertexInputType.ColorRGB => 3,
                 VertexInputType.ColorRGBA => 4,
+                #pragma warning disable 618
                 VertexInputType.ColorBGRA => 4,
+                #pragma warning restore 618
                 VertexInputType.NormalXY => 2,
                 VertexInputType.NormalXYZ => 3,
                 VertexInputType.TextureS => 1,
@@ -147,16 +103,27 @@ namespace Castaway.OpenGL
                 _ => throw new ArgumentOutOfRangeException(nameof(values), v, null)
             });
         }
-
-        public ElementDrawable ConstructFor(OpenGL g, ShaderProgram program)
+ 
+        public static Drawable ConstructFor(this Mesh mesh, ShaderObject shader)
         {
-            var vertexBuffer = g.CreateBuffer(BufferTarget.VertexArray);
-            g.Upload(vertexBuffer, ConstructVertexArray(program));
+            var vertexBuffer = new Buffer(BufferTarget.VertexArray, mesh.ConstructVertexArray(shader));
+            var elementBuffer = new Buffer(BufferTarget.ElementArray, mesh.Elements);
 
-            var elementBuffer = g.CreateBuffer(BufferTarget.ElementArray);
-            g.Upload(elementBuffer, Elements);
-
-            return new ElementDrawable(vertexBuffer, elementBuffer, Elements.Length);
+            return Graphics.Current switch
+            {
+                OpenGL32 => new VertexArrayDrawable(mesh.Elements.Length, vertexBuffer, elementBuffer),
+                _ => new Drawable(mesh.Elements.Length, vertexBuffer, elementBuffer)
+            };
         }
+        
+        public static Drawable ConstructUnoptimisedFor(this Mesh mesh, ShaderObject shader)
+        {
+            var vertexBuffer = new Buffer(BufferTarget.VertexArray, mesh.ConstructVertexArray(shader));
+            var elementBuffer = new Buffer(BufferTarget.ElementArray, mesh.Elements);
+
+            return new Drawable(mesh.Elements.Length, vertexBuffer, elementBuffer);
+        }
+        
+        #endregion
     }
 }

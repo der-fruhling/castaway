@@ -4,7 +4,7 @@ using System.Reflection;
 
 // ReSharper disable InconsistentNaming
 
-namespace Castaway.Native
+namespace Castaway.Native.GL
 {
     public static unsafe partial class GL
     {

@@ -1,5 +1,5 @@
 using System;
-using Castaway.OpenGL;
+using Castaway.Rendering;
 
 namespace Castaway.Math
 {
@@ -16,9 +16,9 @@ namespace Castaway.Math
             };
         }
 
-        public static Matrix4 Ortho(OpenGL.OpenGL g, Window window, float farCutoff, float nearCutoff, float scale = 1)
+        public static Matrix4 Ortho(Window window, float farCutoff, float nearCutoff, float scale = 1)
         {
-            var (w, h) = g.GetWindowSize(window);
+            window.GetSize(out var w, out var h);
             var a = (float) w / h * scale;
             return Ortho(scale, -scale, a, -a, farCutoff, nearCutoff);
         }
@@ -43,10 +43,10 @@ namespace Castaway.Math
             return Persp(t, b, r, l, f, n);
         }
 
-        public static Matrix4 Persp(OpenGL.OpenGL g, Window window, float farCutoff, float nearCutoff,
+        public static Matrix4 Persp(Window window, float farCutoff, float nearCutoff,
             float verticalFov, float scale = 1)
         {
-            var (w, h) = g.GetWindowSize(window);
+            window.GetSize(out var w, out var h);
             var a = (float) w / h;
             return Persp(verticalFov, a, farCutoff, nearCutoff, scale);
         }

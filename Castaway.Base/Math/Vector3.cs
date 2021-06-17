@@ -2,7 +2,7 @@ using System;
 
 namespace Castaway.Math
 {
-    public struct Vector3
+    public struct Vector3 : IEquatable<Vector3>
     {
         public float X;
         public float Y;
@@ -88,5 +88,30 @@ namespace Castaway.Math
 
         public static float Dot(Vector3 a, Vector3 b) =>
             a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+
+        public bool Equals(Vector3 other)
+        {
+            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Vector3 other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y, Z);
+        }
+
+        public static bool operator ==(Vector3 left, Vector3 right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Vector3 left, Vector3 right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

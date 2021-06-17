@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Castaway.Rendering
@@ -10,6 +11,7 @@ namespace Castaway.Rendering
         ColorG,
         ColorRGB,
         ColorRGBA,
+        [Obsolete("Use " + nameof(ColorRGBA) + " instead")]
         ColorBGRA,
         NormalXY,
         NormalXYZ,

@@ -1,46 +1,34 @@
-﻿using Castaway;
+﻿using System.Threading.Tasks;
+using Castaway;
+using Castaway.Assets;
 using Castaway.Level;
-using Castaway.OpenGL;
-using Castaway.OpenGL.Input;
-using GLFW;
-using static Castaway.Assets.AssetLoader;
+using Castaway.Rendering;
 
 namespace Test
 {
     internal static class Program
     {
-        private static void Main()
+        private static async Task Main()
         {
             // Perform global initialization
             CastawayEngine.Init();
 
-            // Graphics setup (using OpenGL)
-            using var g = OpenGL.Setup();
-            
-            // Window setup
-            var window = g.CreateWindowWindowed("name", 800, 600, false);
-            g.Bind(window);
+            await using var window = new Window(800, 600, "name");
+            window.Bind();
 
-            // Level setup
-            var level = new Level(Loader!.GetAssetByName("/test_level.xml"));
+            var g = window.GL;
+            g.ExpectedFrameTime = 1f / 144f;
+
+            var level = new Level(AssetLoader.Loader!.GetAssetByName("/test_level.xml"));
+            
             level.Start();
-            // Rendering loop!
-            g.ShowWindow(window);
-            while (g.WindowShouldBeOpen(window))
+            while (!window.ShouldClose)
             {
                 g.StartFrame();
+                level.Update();
                 level.Render();
                 g.FinishFrame(window);
-                level.Update();
-                if (InputSystem.Gamepad.Valid && InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape)) break;
             }
-            g.HideWindow(window);
-            
-            // Destroy everything that needs destroying
-            level.End();
-            g.Destroy(window); // Absolutely ensure that the window is
-                               // destroyed last. If it isn't all non-window
-                               // destroy operations after it will fail.
         }
     }
 }

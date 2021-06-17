@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Castaway.Rendering;
 using GLFW;
 
 namespace Castaway.OpenGL.Input
@@ -16,7 +17,7 @@ namespace Castaway.OpenGL.Input
 
         public void Init()
         {
-            var window = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
+            var window = Graphics.Current.Window!.Native;
             Glfw.SetKeyCallback(window, _callback);
         }
 

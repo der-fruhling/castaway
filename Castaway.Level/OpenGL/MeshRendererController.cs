@@ -1,5 +1,6 @@
 using System;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
@@ -17,14 +18,13 @@ namespace Castaway.Level.OpenGL
         public override void OnRender(LevelObject camera, LevelObject parent)
         {
             base.OnRender(camera, parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            var d = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g, g.BoundProgram!.Value);
-            g.SetUniform(g.BoundProgram!.Value, UniformType.TransformModel,
+            var g = Graphics.Current;
+            using var d = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g.BoundShader!);
+            g.SetUniform(g.BoundShader!, UniformType.TransformModel,
                 Matrix4.Translate(parent.RealPosition) *
                 parent.Rotation.ToMatrix4() *
                 Matrix4.Scale(parent.Scale));
-            g.Draw(g.BoundProgram!.Value, d);
-            g.Destroy(d.ElementArray!.Value, d.VertexArray!.Value);
+            g.Draw(g.BoundShader!, d);
         }
     }
 }

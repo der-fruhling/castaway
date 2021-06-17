@@ -146,7 +146,6 @@ namespace Castaway.Level
                     LightResolver.Ambient(cam.AmbientLight, cam.AmbientLightColor);
                     cam.PreRenderFrame(obj, null);
                     foreach (var o in _objects) o.OnPreRender(obj);
-                    LightResolver.Push();
                     foreach (var o in _objects) o.OnRender(obj);
                     foreach (var o in _objects) o.OnPostRender(obj);
                     cam.PostRenderFrame(obj, null);

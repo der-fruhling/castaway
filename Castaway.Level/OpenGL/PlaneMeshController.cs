@@ -1,5 +1,5 @@
 using Castaway.Math;
-using Castaway.OpenGL;
+using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {

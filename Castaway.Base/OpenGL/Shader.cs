@@ -1,27 +1,71 @@
-using Castaway.Native;
+using System;
+using System.Linq;
+using Castaway.Native.GL;
 using Castaway.Rendering;
-using static Castaway.Rendering.IGraphicsObject;
 
 namespace Castaway.OpenGL
 {
-    public struct Shader : IOpenGLObject
+    public sealed class Shader : ShaderObject
     {
-        public ObjectType Type => ObjectType.Shader;
         public bool Destroyed { get; set; }
         public uint Number { get; set; }
+        public override string Name => $"{Number}({Valid})";
+        public override bool Valid => GL.IsProgram(Number) && !Destroyed;
+        public ShaderInputBinder? Binder;
+        
+        public override void Bind()
+        {
+            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            gl.BindShader(Number);
+            Graphics.Current.BoundShader = this;
+        }
 
-        public ShaderStage Stage;
-        public string SourceCode { get; internal set; }
-        public string[] SourceLines => SourceCode.Split('\n');
-        public bool CompileSuccess => GL.GetShader(Number, GL.ShaderQuery.CompileStatus) == 1;
+        public override void Unbind()
+        {
+            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            gl.UnbindShader();
+            Graphics.Current.BoundShader = null;
+        }
 
-        public string CompileLog
+        public bool LinkSuccess => GL.GetProgram(Number, GL.ProgramQuery.LinkStatus) == 1;
+
+        public string LinkLog
         {
             get
             {
-                GL.GetShaderInfoLog(Number, out _, out var ret);
+                GL.GetProgramInfoLog(Number, out _, out var ret);
                 return ret;
             }
+        }
+
+        public Shader(params SeparatedShaderObject[] shaders) : base(shaders)
+        {
+            Number = GL.CreateProgram();
+            foreach (var separatedShaderObject in shaders)
+            {
+                if (separatedShaderObject is not ShaderPart s) continue;
+                GL.AttachShader(Number, s.Number);
+                s.Dispose();
+            }
+        }
+
+        public override void Dispose()
+        {
+            GL.DeleteProgram(Number);
+        }
+
+        public override void Link()
+        {
+            foreach (var o in GetOutputs())
+            {
+                var c = GetOutput(o);
+                GL.BindFragDataLocation(Number, c, o);
+            }
+            GL.LinkProgram(Number);
+            var log = LinkLog;
+            if(log.Any()) Console.Error.WriteLine(log);
+            if (!LinkSuccess) throw new GraphicsException("Failed to link program.");
+            Binder = new ShaderInputBinder(this);
         }
     }
 }

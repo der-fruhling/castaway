@@ -1,7 +1,7 @@
 using System;
 using System.Text;
-using Castaway.OpenGL;
 using Castaway.OpenGL.MeshLoader;
+using Castaway.Structures;
 
 namespace Castaway.Assets
 {

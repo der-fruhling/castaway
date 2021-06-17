@@ -16,9 +16,9 @@ namespace Castaway.Level.OpenGL
     {
         [LevelSerialized("Name")] public BuiltinShader BuiltinShaderName;
 
-        public ShaderProgram Shader;
+        public ShaderObject? Shader;
 
-        private ShaderProgram? _previous;
+        private ShaderObject? _previous;
 
         public override void OnInit(LevelObject parent)
         {
@@ -36,9 +36,10 @@ namespace Castaway.Level.OpenGL
         public override void PreRender(LevelObject camera, LevelObject parent)
         {
             base.PreRender(camera, parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            _previous = g.BoundProgram;
-            g.Bind(Shader);
+            var g = Graphics.Current;
+            _previous = g.BoundShader!;
+            if (Shader == null) throw new InvalidOperationException($"Unloaded shader {BuiltinShaderName}");
+            Shader.Bind();
             g.SetUniform(Shader, UniformType.TransformPerspective, camera.Get<CameraController>()!.PerspectiveTransform);
             g.SetUniform(Shader, UniformType.TransformView, camera.Get<CameraController>()!.ViewTransform);
             g.SetUniform(Shader, UniformType.ViewPosition, camera.Position);
@@ -48,8 +49,7 @@ namespace Castaway.Level.OpenGL
         public override void PostRender(LevelObject camera, LevelObject parent)
         {
             base.PostRender(camera, parent);
-            var g = Castaway.OpenGL.OpenGL.Get();
-            if(_previous != null) g.Bind(_previous.Value);
+            _previous?.Bind();
         }
     }
 }

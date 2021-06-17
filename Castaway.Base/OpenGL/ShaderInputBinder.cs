@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Castaway.Native;
+using System.Linq;
+using Castaway.Native.GL;
 using Castaway.Rendering;
 
 namespace Castaway.OpenGL
@@ -11,12 +12,12 @@ namespace Castaway.OpenGL
         private int _stride;
         private uint _number;
 
-        public ShaderInputBinder(ShaderProgram program)
+        public ShaderInputBinder(Shader program)
         {
             var bindings = new List<(int, int, int, VertexInputType)>();
 
             var i = 0;
-            foreach (var (name, from) in program.Inputs)
+            foreach (var (name, from) in program.GetInputs().Select(n => (n, program.GetInput(n))))
             {
                 var loc = GL.GetAttribLocation(program.Number, name);
                 var size = from switch
@@ -26,7 +27,9 @@ namespace Castaway.OpenGL
                     VertexInputType.ColorG => 1,
                     VertexInputType.ColorRGB => 3,
                     VertexInputType.ColorRGBA => 4,
+                    #pragma warning disable 618
                     VertexInputType.ColorBGRA => 4,
+                    #pragma warning restore 618
                     VertexInputType.NormalXY => 2,
                     VertexInputType.NormalXYZ => 3,
                     VertexInputType.TextureS => 1,

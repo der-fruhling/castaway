@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Castaway.Math;
+using Castaway.Rendering;
 using GLFW;
 
 namespace Castaway.OpenGL.Input
@@ -22,7 +23,7 @@ namespace Castaway.OpenGL.Input
 
         public void Init()
         {
-            var w = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
+            var w = Graphics.Current.Window!.Native;
             Glfw.SetMouseButtonCallback(w, _mouseButtonCallback);
             Glfw.SetCursorEnterCallback(w, _mouseEnterCallback);
         }
@@ -40,7 +41,7 @@ namespace Castaway.OpenGL.Input
         {
             get
             {
-                var window = OpenGL.Get().BoundWindow!.Value.GlfwWindow;
+                var window = Graphics.Current.Window!.Native;
                 Glfw.GetCursorPosition(window, out var x, out var y);
                 return new Vector2((float) x, (float) y) / PositionScale;
             }
