@@ -14,7 +14,7 @@ namespace Castaway.Rendering
         public Window? Window;
 
         public List<float> FrameTimes = new();
-        public float FrameTime => FrameTimes.Sum() / FrameTimes.Count;
+        public float FrameTime => FrameTimes.Any() ? FrameTimes.Sum() / FrameTimes.Count : 0;
         public float FrameChange => FrameTime / ExpectedFrameTime;
         public float ExpectedFrameTime = 1f / 60f;
 
