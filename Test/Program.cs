@@ -15,7 +15,7 @@ namespace Test
             // Perform global initialization
             CastawayEngine.Init();
 
-            await using var window = new Window(800, 600, "name");
+            await using var window = new Window("name", false);
             window.Bind();
 
             var g = window.GL;
@@ -24,6 +24,8 @@ namespace Test
             var level = new Level(AssetLoader.Loader!.GetAssetByName("/test_level.xml"));
 
             level.Start();
+            window.Visible = true;
+            
             while (!window.ShouldClose)
             {
                 g.StartFrame();
@@ -33,6 +35,9 @@ namespace Test
                 if (InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
                     window.ShouldClose = true;
             }
+
+            window.Visible = false;
+            level.End();
         }
     }
 }
