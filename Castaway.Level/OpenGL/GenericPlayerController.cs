@@ -62,6 +62,8 @@ namespace Castaway.Level.OpenGL
                 if (InputSystem.Keyboard.IsDown(Keys.Right)) _rx -= rotateSpeed * g.FrameChange;
             }
 
+            _ry = MathEx.Clamp(_ry, MathF.PI / -2, MathF.PI / 2);
+
             var rotate = new Quaternion(1, 0, 0, 0);
             rotate *= Quaternion.Rotation(Vector3.Up, _rx);
             rotate *= Quaternion.Rotation(Vector3.Right, _ry);
