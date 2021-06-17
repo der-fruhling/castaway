@@ -2,7 +2,9 @@
 using Castaway;
 using Castaway.Assets;
 using Castaway.Level;
-using Castaway.Rendering;
+using Castaway.OpenGL.Input;
+using GLFW;
+using Window = Castaway.Rendering.Window;
 
 namespace Test
 {
@@ -20,7 +22,7 @@ namespace Test
             g.ExpectedFrameTime = 1f / 144f;
 
             var level = new Level(AssetLoader.Loader!.GetAssetByName("/test_level.xml"));
-            
+
             level.Start();
             while (!window.ShouldClose)
             {
@@ -28,6 +30,8 @@ namespace Test
                 level.Update();
                 level.Render();
                 g.FinishFrame(window);
+                if (InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
+                    window.ShouldClose = true;
             }
         }
     }
