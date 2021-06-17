@@ -5,7 +5,7 @@ using Castaway.Rendering;
 
 namespace Castaway.OpenGL
 {
-    public sealed class Shader : ShaderObject
+    internal sealed class Shader : ShaderObject
     {
         public bool Destroyed { get; set; }
         public uint Number { get; set; }

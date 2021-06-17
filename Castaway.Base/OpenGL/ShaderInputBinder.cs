@@ -12,7 +12,7 @@ namespace Castaway.OpenGL
         private int _stride;
         private uint _number;
 
-        public ShaderInputBinder(Shader program)
+        internal ShaderInputBinder(Shader program)
         {
             var bindings = new List<(int, int, int, VertexInputType)>();
 

@@ -77,7 +77,7 @@ namespace Castaway.Assets
         
         public override T To<T>(Asset a)
         {
-            if (typeof(T) == typeof(OpenGL.Shader))
+            if (typeof(T) == typeof(ShaderObject))
                 return (T) (dynamic) LoadOpenGL(base.To<XmlDocument>(a), a.Index);
             return base.To<T>(a);
         }
