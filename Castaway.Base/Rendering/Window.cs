@@ -45,6 +45,11 @@ namespace Castaway.Rendering
         {
         }
 
+        public Window(string title, bool visible = true)
+            : this(0, 0, title, true, visible)
+        {
+        }
+
         public GLFW.Window Native { get; }
 
         public async ValueTask DisposeAsync()
@@ -86,6 +91,15 @@ namespace Castaway.Rendering
         {
             get => Glfw.WindowShouldClose(Native);
             set => Glfw.SetWindowShouldClose(Native, value);
+        }
+
+        public bool Visible
+        {
+            set
+            {
+                if (value) Glfw.ShowWindow(Native);
+                else Glfw.HideWindow(Native);
+            }
         }
 
         public void SwapBuffers()
