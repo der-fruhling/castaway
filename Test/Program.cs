@@ -10,12 +10,12 @@ namespace Test
 {
     internal static class Program
     {
-        private static async Task Main()
+        private static void Main()
         {
             // Perform global initialization
             CastawayEngine.Init();
-
-            await using var window = new Window("name", false);
+            
+            using var window = new Window("name", false);
             window.Bind();
 
             var g = window.GL;
@@ -32,7 +32,7 @@ namespace Test
                 level.Update();
                 level.Render();
                 g.FinishFrame(window);
-                if (InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
+                if (InputSystem.Gamepad.Valid && InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
                     window.ShouldClose = true;
             }
 
