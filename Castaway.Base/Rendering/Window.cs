@@ -22,6 +22,7 @@ namespace Castaway.Rendering
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.CocoaRetinaFrameBuffer, false);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.Visible, visible);
             if (fullscreen)
             {
