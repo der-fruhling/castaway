@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Castaway.Assets;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 
@@ -17,6 +19,7 @@ namespace Castaway.Level.OpenGL
     {
         [LevelSerialized("Builtin")] public BuiltinShader BuiltinShaderName;
 
+        [LevelSerialized("Asset")] public string AssetName = string.Empty;
         public ShaderObject? Shader;
 
         private ShaderObject? _previous;
@@ -24,14 +27,21 @@ namespace Castaway.Level.OpenGL
         public override void OnInit(LevelObject parent)
         {
             base.OnInit(parent);
-            Shader = BuiltinShaderName switch
+            if (AssetName.Any())
             {
-                BuiltinShader.Default => BuiltinShaders.Default,
-                BuiltinShader.TexturedDefault => BuiltinShaders.DefaultTextured,
-                BuiltinShader.NoTransform => BuiltinShaders.Direct,
-                BuiltinShader.TexturedNoTransform => BuiltinShaders.DirectTextured,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+                Shader = AssetLoader.Loader.GetAssetByName(AssetName).To<ShaderObject>();
+            }
+            else
+            {
+                Shader = BuiltinShaderName switch
+                {
+                    BuiltinShader.Default => BuiltinShaders.Default,
+                    BuiltinShader.TexturedDefault => BuiltinShaders.DefaultTextured,
+                    BuiltinShader.NoTransform => BuiltinShaders.Direct,
+                    BuiltinShader.TexturedNoTransform => BuiltinShaders.DirectTextured,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
         }
 
         public override void PreRender(LevelObject camera, LevelObject parent)
