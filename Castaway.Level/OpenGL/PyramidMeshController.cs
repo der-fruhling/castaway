@@ -3,6 +3,7 @@ using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("PyramidMesh")]
     public class PyramidMeshController : MeshController
     {
         [LevelSerialized("Size")] public Vector3 Size;

@@ -2,6 +2,7 @@ using Castaway.Math;
 
 namespace Castaway.Level
 {
+    [ControllerBase]
     public abstract class CameraController : EmptyController
     {
         [LevelSerialized("ID")] public uint CameraID;

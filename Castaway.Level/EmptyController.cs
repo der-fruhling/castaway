@@ -1,5 +1,6 @@
 namespace Castaway.Level
 {
+    [ControllerBase]
     public class EmptyController
     {
         public virtual void OnInit(LevelObject parent) {}

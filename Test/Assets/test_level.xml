@@ -4,10 +4,10 @@
     <Object>
         <Name>Camera</Name>
         <Controllers>
-            <PerspectiveCamera>
+            <PerspCamera>
                 <ID>0</ID>
                 <VerticalFOV>90</VerticalFOV>
-            </PerspectiveCamera>
+            </PerspCamera>
             <GenericPlayer/>
         </Controllers>
     </Object>
@@ -32,11 +32,11 @@
 
         <Controllers>
             <Shader>
-                <Name>Default</Name>
+                <Builtin>Default</Builtin>
             </Shader>
-            <Mesh>
+            <LoadedMesh>
                 <AssetPath>/cube.obj</AssetPath>
-            </Mesh>
+            </LoadedMesh>
             <MeshRenderer/>
         </Controllers>
     </Object>
@@ -49,11 +49,11 @@
 
         <Controllers>
             <Shader>
-                <Name>Default</Name>
+                <Builtin>Default</Builtin>
             </Shader>
-            <Mesh>
+            <LoadedMesh>
                 <AssetPath>/cube.obj</AssetPath>
-            </Mesh>
+            </LoadedMesh>
             <MeshRenderer/>
         </Controllers>
     </Object>
@@ -66,11 +66,11 @@
 
         <Controllers>
             <Shader>
-                <Name>Default</Name>
+                <Builtin>Default</Builtin>
             </Shader>
-            <Mesh>
+            <LoadedMesh>
                 <AssetPath>/cube.obj</AssetPath>
-            </Mesh>
+            </LoadedMesh>
             <MeshRenderer/>
         </Controllers>
     </Object>
@@ -83,11 +83,11 @@
 
         <Controllers>
             <Shader>
-                <Name>Default</Name>
+                <Builtin>Default</Builtin>
             </Shader>
-            <Mesh>
+            <LoadedMesh>
                 <AssetPath>/cube.obj</AssetPath>
-            </Mesh>
+            </LoadedMesh>
             <MeshRenderer/>
         </Controllers>
     </Object>

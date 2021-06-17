@@ -6,6 +6,7 @@ using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerBase]
     public abstract class CameraController : Castaway.Level.CameraController
     {
         public FramebufferObject? Framebuffer;

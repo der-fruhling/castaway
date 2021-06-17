@@ -62,24 +62,26 @@ namespace Castaway.Level
 
         private EmptyController ParseController(XmlElement e, string? api)
         {
-            var t = ((((Type.GetType(e.Name) 
-                        ?? Type.GetType($"Castaway.Level.{e.Name}Controller"))
-                       ?? Type.GetType($"Castaway.Level.{e.Name}"))
-                      ?? Type.GetType($"Castaway.Level.{api ?? "<ERROR>"}.{e.Name}Controller")) 
-                     ?? Type.GetType($"Castaway.Level.{api ?? "<ERROR>"}.{e.Name}"))
-                    ?? throw new InvalidOperationException($"Couldn't find controller {e.Name}.");
-            var inst = t!.GetConstructor(Array.Empty<Type>())!.Invoke(null);
+            var t = ControllerFinder.Get(e.Name);
+            var inst = Activator.CreateInstance(t);
 
             foreach (var on in e.ChildNodes)
             {
                 var n = on as XmlNode;
-                var f = t.GetFields().Single(field =>
+                try
                 {
-                    var a = field.GetCustomAttribute<LevelSerializedAttribute>();
-                    if (a == null) return false;
-                    return a.Name == n!.Name;
-                });
-                f.SetValue(inst, Load(f.FieldType, n!.InnerText));
+                    var f = t.GetFields().Single(field =>
+                    {
+                        var a = field.GetCustomAttribute<LevelSerializedAttribute>();
+                        if (a == null) return false;
+                        return a.Name == n!.Name;
+                    });
+                    f.SetValue(inst, Load(f.FieldType, n!.InnerText));
+                }
+                catch (InvalidOperationException exc)
+                {
+                    throw new InvalidOperationException($"Cannot find option {n!.Name} for controller {e.Name}", exc);
+                }
             }
             
             return (inst as EmptyController)!;

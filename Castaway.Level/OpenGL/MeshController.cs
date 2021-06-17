@@ -3,6 +3,7 @@ using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("LoadedMesh")]
     public class MeshController : EmptyController
     {
         [LevelSerialized("AssetPath")] public Asset? Asset;

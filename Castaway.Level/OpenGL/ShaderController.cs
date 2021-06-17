@@ -12,9 +12,10 @@ namespace Castaway.Level.OpenGL
         TexturedNoTransform
     }
 
+    [ControllerName("Shader")]
     public class ShaderController : EmptyController
     {
-        [LevelSerialized("Name")] public BuiltinShader BuiltinShaderName;
+        [LevelSerialized("Builtin")] public BuiltinShader BuiltinShaderName;
 
         public ShaderObject? Shader;
 

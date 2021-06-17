@@ -5,6 +5,7 @@ using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("MeshRenderer")]
     public class MeshRendererController : EmptyController
     {
         public override void OnInit(LevelObject parent)

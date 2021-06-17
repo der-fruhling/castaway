@@ -3,6 +3,7 @@ using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("PerspCamera")]
     public class PerspectiveCameraController : CameraController
     {
         [LevelSerialized("VerticalFOV")] public float FOV;

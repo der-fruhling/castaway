@@ -4,6 +4,7 @@ using Castaway.OpenGL;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("Light")]
     public class LightController : EmptyController
     {
         [LevelSerialized("Type")] public LightType Type;

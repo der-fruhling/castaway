@@ -3,6 +3,7 @@ using Castaway.Structures;
 
 namespace Castaway.Level.OpenGL
 {
+    [ControllerName("CubeMesh")]
     public class CubeMeshController : MeshController
     {
         [LevelSerialized("Size")] public Vector3 Size = new(.5f, .5f, .5f);

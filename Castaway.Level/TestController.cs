@@ -3,9 +3,8 @@ using System.Diagnostics;
 
 namespace Castaway.Level
 {
-    [DebuggerDisplay(
-        "Test1={" + nameof(Test1) + "}, " +
-        "Test2={" + nameof(Test2) + "}")]
+    [DebuggerDisplay("Test1={" + nameof(Test1) + "}, Test2={" + nameof(Test2) + "}")]
+    [ControllerName("Test")]
     public class TestController : EmptyController
     {
         [LevelSerialized("Test1")]
