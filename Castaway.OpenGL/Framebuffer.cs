@@ -33,7 +33,7 @@ namespace Castaway.OpenGL
         public Framebuffer()
         {
             var window = Graphics.Current.Window;
-            window!.GetSize(out var w, out var h);
+            window!.GetFramebufferSize(out var w, out var h);
             GL.GenFramebuffers(1, out var a);
             Number = a[0];
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, Number);

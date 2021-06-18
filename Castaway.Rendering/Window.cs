@@ -82,6 +82,7 @@ namespace Castaway.Rendering
         public void Bind() => Graphics.BindWindow(this);
         public void GetSize(out int x, out int y) => Glfw.GetWindowSize(Native, out x, out y);
         public void SetSize(int x, int y) => Glfw.SetWindowSize(Native, x, y);
+        public void GetFramebufferSize(out int x, out int y) => Glfw.GetFramebufferSize(Native, out x, out y);
 
         public string Title
         {
