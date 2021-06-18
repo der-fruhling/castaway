@@ -20,9 +20,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj" />
       <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
+      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
+      <ProjectReference Include="..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj" />
     </ItemGroup>
 
     <ItemGroup>

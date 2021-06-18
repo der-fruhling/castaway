@@ -16,5 +16,6 @@
     <ItemGroup>
         <None Update="Assets\*" CopyToOutputDirectory="PreserveNewest" />
         <None Update="config.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Remove="readme.md" />
     </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway\Castaway.Rendering\Castaway.Rendering.csproj" />
+      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
     </ItemGroup>
 
 </Project>

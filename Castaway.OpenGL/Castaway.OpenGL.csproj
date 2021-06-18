@@ -24,11 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj" />
-      <ProjectReference Include="..\Castaway\Castaway.Assets\Castaway.Assets.csproj" />
-      <ProjectReference Include="..\Castaway\Castaway.Rendering\Castaway.Rendering.csproj" />
+      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
     </ItemGroup>
 
     <ItemGroup>
