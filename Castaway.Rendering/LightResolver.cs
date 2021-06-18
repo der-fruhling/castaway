@@ -62,8 +62,8 @@ namespace Castaway.Rendering
             for (var i = 0; i < PointLights.Count; i++)
             {
                 var l = PointLights[i];
-                g.SetUniform(p, i, UniformType.PointLightPositionIndexed, l.Position);
-                g.SetUniform(p, i, UniformType.PointLightColorIndexed, l.Color);
+                g.SetFloatUniform(p, p.GetUniform(UniformType.PointLightPositionIndexed, i) ?? "", l.Position);
+                g.SetFloatUniform(p, p.GetUniform(UniformType.PointLightColorIndexed, i) ?? "", l.Color);
             }
 
             _pushedShader = p;

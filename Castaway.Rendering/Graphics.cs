@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using Castaway.Math;
 
 namespace Castaway.Rendering
 {
+    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     public abstract class Graphics : IDisposable
     {
         protected static ThreadLocal<Window?> CurrentlyBound = new(() => null);
@@ -104,68 +106,84 @@ namespace Castaway.Rendering
         public virtual void SetUIntUniform(ShaderObject p, string name, Matrix2 m) => throw new NotSupportedException();
         public virtual void SetUIntUniform(ShaderObject p, string name, Matrix3 m) => throw new NotSupportedException();
         public virtual void SetUIntUniform(ShaderObject p, string name, Matrix4 m) => throw new NotSupportedException();
-        public virtual void SetTextureUniform(ShaderObject p, string name, TextureObject t) => throw new NotSupportedException();
-        public virtual void SetTextureUniform(ShaderObject p, string name, FramebufferObject t) => throw new NotSupportedException();
+        public virtual void SetSamplerUniform(ShaderObject p, string name, TextureObject t) => throw new NotSupportedException();
+        public virtual void SetSamplerUniform(ShaderObject p, string name, FramebufferObject t) => throw new NotSupportedException();
 
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float f) => SetFloatUniform(p, p.GetUniform(name)!, f);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y) => SetFloatUniform(p, p.GetUniform(name)!, x, y);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y, float z) => SetFloatUniform(p, p.GetUniform(name)!, x, y, z);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y, float z, float w) => SetFloatUniform(p, p.GetUniform(name)!, x, y, z, w);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, int i) => SetIntUniform(p, p.GetUniform(name)!, i);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y) => SetIntUniform(p, p.GetUniform(name)!, x, y);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y, int z) => SetIntUniform(p, p.GetUniform(name)!, x, y, z);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y, int z, int w) => SetIntUniform(p, p.GetUniform(name)!, x, y, z, w);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint i) => SetUIntUniform(p, p.GetUniform(name)!, i);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y) => SetUIntUniform(p, p.GetUniform(name)!, x, y);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y, uint z) => SetUIntUniform(p, p.GetUniform(name)!, x, y, z);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y, uint z, uint w) => SetUIntUniform(p, p.GetUniform(name)!, x, y, z, w);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, double i) => SetDoubleUniform(p, p.GetUniform(name)!, i);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y) => SetDoubleUniform(p, p.GetUniform(name)!, x, y);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y, double z) => SetDoubleUniform(p, p.GetUniform(name)!, x, y, z);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y, double z, double w) => SetDoubleUniform(p, p.GetUniform(name)!, x, y, z, w);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector2 v) => SetFloatUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector3 v) => SetFloatUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector4 v) => SetFloatUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix2 m) => SetFloatUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix3 m) => SetFloatUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix4 m) => SetFloatUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector2 v) => SetDoubleUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector3 v) => SetDoubleUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector4 v) => SetDoubleUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix2 m) => SetDoubleUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix3 m) => SetDoubleUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix4 m) => SetDoubleUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector2 v) => SetIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector3 v) => SetIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector4 v) => SetIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix2 m) => SetIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix3 m) => SetIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix4 m) => SetIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector2 v) => SetUIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector3 v) => SetUIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector4 v) => SetUIntUniform(p, p.GetUniform(name)!, v);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix2 m) => SetUIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix3 m) => SetUIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix4 m) => SetUIntUniform(p, p.GetUniform(name)!, m);
-        public virtual void SetTextureUniform(ShaderObject p, UniformType name, TextureObject t) => SetTextureUniform(p, p.GetUniform(name)!, t);
-        public virtual void SetTextureUniform(ShaderObject p, UniformType name, FramebufferObject t) => SetTextureUniform(p, p.GetUniform(name)!, t);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float f) => SetFloatUniform(p, p.GetUniform(name) ?? "", f);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y) => SetFloatUniform(p, p.GetUniform(name) ?? "", x, y);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y, float z) => SetFloatUniform(p, p.GetUniform(name) ?? "", x, y, z);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, float x, float y, float z, float w) => SetFloatUniform(p, p.GetUniform(name) ?? "", x, y, z, w);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, int i) => SetIntUniform(p, p.GetUniform(name) ?? "", i);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y) => SetIntUniform(p, p.GetUniform(name) ?? "", x, y);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y, int z) => SetIntUniform(p, p.GetUniform(name) ?? "", x, y, z);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, int x, int y, int z, int w) => SetIntUniform(p, p.GetUniform(name) ?? "", x, y, z, w);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint i) => SetUIntUniform(p, p.GetUniform(name) ?? "", i);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y) => SetUIntUniform(p, p.GetUniform(name) ?? "", x, y);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y, uint z) => SetUIntUniform(p, p.GetUniform(name) ?? "", x, y, z);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, uint x, uint y, uint z, uint w) => SetUIntUniform(p, p.GetUniform(name) ?? "", x, y, z, w);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, double i) => SetDoubleUniform(p, p.GetUniform(name) ?? "", i);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y) => SetDoubleUniform(p, p.GetUniform(name) ?? "", x, y);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y, double z) => SetDoubleUniform(p, p.GetUniform(name) ?? "", x, y, z);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, double x, double y, double z, double w) => SetDoubleUniform(p, p.GetUniform(name) ?? "", x, y, z, w);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector2 v) => SetFloatUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector3 v) => SetFloatUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Vector4 v) => SetFloatUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix2 m) => SetFloatUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix3 m) => SetFloatUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetFloatUniform(ShaderObject p, UniformType name, Matrix4 m) => SetFloatUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector2 v) => SetDoubleUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector3 v) => SetDoubleUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Vector4 v) => SetDoubleUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix2 m) => SetDoubleUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix3 m) => SetDoubleUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetDoubleUniform(ShaderObject p, UniformType name, Matrix4 m) => SetDoubleUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector2 v) => SetIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector3 v) => SetIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Vector4 v) => SetIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix2 m) => SetIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix3 m) => SetIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetIntUniform(ShaderObject p, UniformType name, Matrix4 m) => SetIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector2 v) => SetUIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector3 v) => SetUIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Vector4 v) => SetUIntUniform(p, p.GetUniform(name) ?? "", v);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix2 m) => SetUIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix3 m) => SetUIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetUIntUniform(ShaderObject p, UniformType name, Matrix4 m) => SetUIntUniform(p, p.GetUniform(name) ?? "", m);
+        public virtual void SetSamplerUniform(ShaderObject p, UniformType name, TextureObject t) => SetSamplerUniform(p, p.GetUniform(name) ?? "", t);
+        public virtual void SetSamplerUniform(ShaderObject p, UniformType name, FramebufferObject t) => SetSamplerUniform(p, p.GetUniform(name) ?? "", t);
 
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, float f) => SetFloatUniform(p, p.GetUniform(name, i)!, f);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, float x, float y) => SetFloatUniform(p, p.GetUniform(name, i)!, x, y);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, float x, float y, float z) => SetFloatUniform(p, p.GetUniform(name, i)!, x, y, z);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, float x, float y, float z, float w) => SetFloatUniform(p, p.GetUniform(name, i)!, x, y, z, w);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int j, UniformType name, int i) => SetIntUniform(p, p.GetUniform(name, j)!, i);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, int x, int y) => SetIntUniform(p, p.GetUniform(name, i)!, x, y);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, int x, int y, int z) => SetIntUniform(p, p.GetUniform(name, i)!, x, y, z);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, int x, int y, int z, int w) => SetIntUniform(p, p.GetUniform(name, i)!, x, y, z, w);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Vector2 v) => SetFloatUniform(p, p.GetUniform(name, i)!, v);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Vector3 v) => SetFloatUniform(p, p.GetUniform(name, i)!, v);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Vector4 v) => SetFloatUniform(p, p.GetUniform(name, i)!, v);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Matrix2 m) => SetFloatUniform(p, p.GetUniform(name, i)!, m);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Matrix3 m) => SetFloatUniform(p, p.GetUniform(name, i)!, m);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
         public virtual void SetUniform(ShaderObject p, int i, UniformType name, Matrix4 m) => SetFloatUniform(p, p.GetUniform(name, i)!, m);
-        public virtual void SetUniform(ShaderObject p, int i, UniformType name, TextureObject t) => SetTextureUniform(p, p.GetUniform(name, i)!, t);
-        public virtual void SetUniform(ShaderObject p, int i, UniformType name, FramebufferObject t) => SetTextureUniform(p, p.GetUniform(name, i)!, t);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
+        public virtual void SetUniform(ShaderObject p, int i, UniformType name, TextureObject t) => SetSamplerUniform(p, p.GetUniform(name, i)!, t);
+        [Obsolete("Indexed uniform methods will soon be removed.")]
+        public virtual void SetUniform(ShaderObject p, int i, UniformType name, FramebufferObject t) => SetSamplerUniform(p, p.GetUniform(name, i)!, t);
 
         public virtual void Clear() => throw new NotSupportedException();
         public virtual void SetClearColor(float r, float g, float b) => throw new NotSupportedException();
