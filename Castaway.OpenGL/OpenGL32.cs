@@ -173,42 +173,42 @@ namespace Castaway.OpenGL
             }
         }
 
-        public override void SetUniform(ShaderObject p, string name, float f)
+        public override void SetFloatUniform(ShaderObject p, string name, float f)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{f});
         }
 
-        public override void SetUniform(ShaderObject p, string name, float x, float y)
+        public override void SetFloatUniform(ShaderObject p, string name, float x, float y)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
         }
 
-        public override void SetUniform(ShaderObject p, string name, float x, float y, float z)
+        public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
         }
 
-        public override void SetUniform(ShaderObject p, string name, float x, float y, float z, float w)
+        public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z, float w)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
         }
 
-        public override void SetUniform(ShaderObject p, string name, int i)
+        public override void SetIntUniform(ShaderObject p, string name, int i)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
         }
 
-        public override void SetUniform(ShaderObject p, string name, int x, int y)
+        public override void SetIntUniform(ShaderObject p, string name, int x, int y)
         {
             
             if (p is not Shader s)
@@ -216,66 +216,94 @@ namespace Castaway.OpenGL
             GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
         }
 
-        public override void SetUniform(ShaderObject p, string name, int x, int y, int z)
+        public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
         }
 
-        public override void SetUniform(ShaderObject p, string name, int x, int y, int z, int w)
+        public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z, int w)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
         }
 
-        public override void SetUniform(ShaderObject p, string name, Vector2 v)
-        {
-            SetUniform(p, name, v.X, v.Y);
-        }
-
-        public override void SetUniform(ShaderObject p, string name, Vector3 v)
-        {
-           SetUniform(p, name, v.X, v.Y, v.Z);
-        }
-
-        public override void SetUniform(ShaderObject p, string name, Vector4 v)
-        {
-            SetUniform(p, name, v.X, v.Y, v.Z, v.W);
-        }
-
-        public override void SetUniform(ShaderObject p, string name, Matrix2 m)
+        public override void SetUIntUniform(ShaderObject p, string name, uint i)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
         }
 
-        public override void SetUniform(ShaderObject p, string name, Matrix3 m)
+        public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
         }
 
-        public override void SetUniform(ShaderObject p, string name, Matrix4 m)
+        public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z)
         {
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
         }
 
-        public override void SetUniform(ShaderObject p, string name, TextureObject t)
+        public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z, uint w)
+        {
+            if (p is not Shader s)
+                throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
+            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Vector2 v)
+        {
+            SetFloatUniform(p, name, (float) v.X, (float) v.Y);
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Vector3 v)
+        {
+           SetFloatUniform(p, name, (float) v.X, (float) v.Y, (float) v.Z);
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Vector4 v)
+        {
+            SetFloatUniform(p, name, (float) v.X, (float) v.Y, (float) v.Z, (float) v.W);
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Matrix2 m)
+        {
+            if (p is not Shader s)
+                throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
+            GL.SetUniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Matrix3 m)
+        {
+            if (p is not Shader s)
+                throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
+            GL.SetUniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+        }
+
+        public override void SetFloatUniform(ShaderObject p, string name, Matrix4 m)
+        {
+            if (p is not Shader s)
+                throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
+            GL.SetUniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+        }
+
+        public override void SetTextureUniform(ShaderObject p, string name, TextureObject t)
         {
             if (t is not Texture tex) throw new InvalidOperationException("Need to use OpenGL objects only");
-            SetUniform(p, name, tex.Number);
+            SetUIntUniform(p, name, tex.BindingPoint);
         }
 
-        public override void SetUniform(ShaderObject p, string name, FramebufferObject t)
+        public override void SetTextureUniform(ShaderObject p, string name, FramebufferObject t)
         {
             if (t.Color is not Texture tex) throw new InvalidOperationException("Need to use OpenGL objects only");
-            SetUniform(p, name, tex.Number);
+            SetUIntUniform(p, name, tex.BindingPoint);
         }
 
         /// <summary>

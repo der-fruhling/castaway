@@ -21,7 +21,7 @@ namespace Castaway.OpenGL.Controllers
             base.OnRender(camera, parent);
             var g = Graphics.Current;
             using var d = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g.BoundShader!);
-            g.SetUniform(g.BoundShader!, UniformType.TransformModel,
+            g.SetFloatUniform(g.BoundShader!, UniformType.TransformModel,
                 Matrix4.Translate(parent.RealPosition) *
                 parent.Rotation.ToMatrix4() *
                 Matrix4.Scale(parent.Scale));

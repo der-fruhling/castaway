@@ -42,8 +42,8 @@ namespace Castaway.OpenGL.Controllers
                 if (!RotationLocked)
                 {
                     var rotateGamepad = -InputSystem.Gamepad.RightStick * rotateSpeed * g.FrameChange;
-                    _rx += rotateGamepad.X;
-                    _ry += rotateGamepad.Y;
+                    _rx += (float) rotateGamepad.X;
+                    _ry += (float) rotateGamepad.Y;
                 }
             }
 

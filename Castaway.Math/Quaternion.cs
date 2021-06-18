@@ -6,11 +6,11 @@ namespace Castaway.Math
     [SuppressMessage("ReSharper", "ArgumentsStyleOther")]
     public readonly struct Quaternion
     {
-        public readonly float W, X, Y, Z;
+        public readonly double W, X, Y, Z;
 
         public Vector3 XYZ => new(X, Y, Z);
 
-        public Quaternion(float w, float x, float y, float z)
+        public Quaternion(double w, double x, double y, double z)
         {
             W = w;
             X = x;
@@ -18,7 +18,7 @@ namespace Castaway.Math
             Z = z;
         }
 
-        public Quaternion(float w, Vector3 v) : this(w, v.X, v.Y, v.Z) {}
+        public Quaternion(double w, Vector3 v) : this(w, v.X, v.Y, v.Z) {}
 
         public static Quaternion operator +(Quaternion a, Quaternion b) => new(
             a.W + b.W, a.X + b.X, a.Y + b.Y, a.Z + b.Z);
@@ -29,11 +29,11 @@ namespace Castaway.Math
             y: a.W * b.Y + a.Y * b.W + a.Z * b.X - a.X * b.Z,
             z: a.W * b.Z + a.Z * b.W + a.X * b.Y - a.Y * b.X);
 
-        public static float Inner(Quaternion a, Quaternion b) =>
+        public static double Inner(Quaternion a, Quaternion b) =>
             a.W * b.W + a.X * b.X + a.Y * b.Y + a.Z * b.Z;
 
         public Quaternion Conjugate() => new(W, -X, -Y, -Z);
-        public float Norm() => MathF.Sqrt(W*W + X*X + Y*Y + Z*Z);
+        public double Norm() => System.Math.Sqrt(W*W + X*X + Y*Y + Z*Z);
 
         public Quaternion Normalize()
         {
@@ -65,14 +65,14 @@ namespace Castaway.Math
                 new Vector4(0, 0, 0, 1));
         }
 
-        public static Quaternion Rotation(float x, float y, float z)
+        public static Quaternion Rotation(double x, double y, double z)
         {
-            var cosYaw = MathF.Cos(z * .5f);
-            var sinYaw = MathF.Sin(z * .5f);
-            var cosPitch = MathF.Cos(y * .5f);
-            var sinPitch = MathF.Sin(y * .5f);
-            var cosRoll = MathF.Cos(x * .5f);
-            var sinRoll = MathF.Sin(x * .5f);
+            var cosYaw = System.Math.Cos(z * .5);
+            var sinYaw = System.Math.Sin(z * .5);
+            var cosPitch = System.Math.Cos(y * .5);
+            var sinPitch = System.Math.Sin(y * .5);
+            var cosRoll = System.Math.Cos(x * .5);
+            var sinRoll = System.Math.Sin(x * .5);
             return new Quaternion(
                 w: cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw,
                 x: sinRoll * cosPitch * cosYaw + cosRoll * sinPitch * sinYaw,
@@ -94,16 +94,16 @@ namespace Castaway.Math
 
             var xa = 2 * (W * X + Y * Z);
             var xb = 1 - 2 * (X * X + Y * Y);
-            vector.X = MathF.Atan2(xa, xb);
+            vector.X = System.Math.Atan2(xa, xb);
 
             var ya = 2 * (W * Y - Z * X);
-            vector.Y = MathF.Abs(ya) >= 1 
-                ? MathF.CopySign(MathF.PI / 2, ya) 
-                : MathF.Asin(ya);
+            vector.Y = System.Math.Abs(ya) >= 1 
+                ? System.Math.CopySign(MathF.PI / 2, ya) 
+                : System.Math.Asin(ya);
 
             var za = 2 * (W * Z + X * Y);
             var zb = 1 - 2 * (Y * Y + Z * Z);
-            vector.Z = MathF.Atan2(za, zb);
+            vector.Z = System.Math.Atan2(za, zb);
 
             return vector;
         }

@@ -13,7 +13,7 @@ namespace Castaway.OpenGL
         private static float[] ConstructVertexArray(this Mesh mesh, ShaderObject shader)
         {
             var size = VertexSize(shader.GetInputs().Select(shader.GetInput).ToList());
-            var value = new float[size * mesh.Vertices.Length];
+            var value = new double[size * mesh.Vertices.Length];
             
             var j = 0;
             foreach (var v in mesh.Vertices)
@@ -80,7 +80,7 @@ namespace Castaway.OpenGL
                 }
             }
  
-            return value;
+            return value.Select(n => (float) n).ToArray();
         }
         
         private static int VertexSize(ICollection<VertexInputType> values)

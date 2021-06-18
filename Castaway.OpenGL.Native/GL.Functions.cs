@@ -348,9 +348,45 @@ namespace Castaway.OpenGL.Native
             }
         }
 
+        public static void SetUniformVector4(int location, int count, uint[] values)
+        {
+            var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform4uiv);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
+        }
+
+        public static void SetUniformVector3(int location, int count, uint[] values)
+        {
+            var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform3uiv);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
+        }
+
+        public static void SetUniformVector2(int location, int count, uint[] values)
+        {
+            var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform2uiv);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
+        }
+
         public static void SetUniform(int location, int count, int[] values)
         {
             var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform1iv);
+            fixed (void* p = values)
+            {
+                f(location, count, p);
+            }
+        }
+
+        public static void SetUniform(int location, int count, uint[] values)
+        {
+            var f = (delegate*<int, int, void*, void>) Load(GLF.glUniform1uiv);
             fixed (void* p = values)
             {
                 f(location, count, p);
@@ -378,6 +414,33 @@ namespace Castaway.OpenGL.Native
         public static void SetUniformMatrix2(int location, int count, bool transpose, float[] values)
         {
             var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix2fv);
+            fixed (void* p = values)
+            {
+                f(location, count, transpose, p);
+            }
+        }
+
+        public static void SetUniformMatrix4(int location, int count, bool normalize, double[] values)
+        {
+            var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix4dv);
+            fixed (void* p = values)
+            {
+                f(location, count, normalize, p);
+            }
+        }
+
+        public static void SetUniformMatrix3(int location, int count, bool normalize, double[] values)
+        {
+            var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix3dv);
+            fixed (void* p = values)
+            {
+                f(location, count, normalize, p);
+            }
+        }
+
+        public static void SetUniformMatrix2(int location, int count, bool transpose, double[] values)
+        {
+            var f = (delegate*<int, int, bool, void*, void>) Load(GLF.glUniformMatrix2dv);
             fixed (void* p = values)
             {
                 f(location, count, transpose, p);

@@ -1,4 +1,3 @@
-using System;
 using Castaway.Math;
 using NUnit.Framework;
 
@@ -12,9 +11,9 @@ namespace Castaway.Base.Tests.Math.Vectors
         public void TestEmptyNew()
         {
             var v = new Vector3();
-            Assert.AreEqual(0f, v.X);
-            Assert.AreEqual(0f, v.Y);
-            Assert.AreEqual(0f, v.Z);
+            Assert.AreEqual(0d, v.X);
+            Assert.AreEqual(0d, v.Y);
+            Assert.AreEqual(0d, v.Z);
         }
 
         [Test]
@@ -23,9 +22,9 @@ namespace Castaway.Base.Tests.Math.Vectors
             var a = new Vector3(1, 2, 3);
             var b = new Vector3(4, 5, 6);
             var v = a + b;
-            Assert.AreEqual(1f + 4f, v.X);
-            Assert.AreEqual(2f + 5f, v.Y);
-            Assert.AreEqual(3f + 6f, v.Z);
+            Assert.AreEqual(1d + 4d, v.X);
+            Assert.AreEqual(2d + 5d, v.Y);
+            Assert.AreEqual(3d + 6d, v.Z);
         }
 
         [Test]
@@ -34,9 +33,9 @@ namespace Castaway.Base.Tests.Math.Vectors
             var a = new Vector3(1, 2, 3);
             var b = new Vector3(4, 5, 6);
             var v = a - b;
-            Assert.AreEqual(1f - 4f, v.X);
-            Assert.AreEqual(2f - 5f, v.Y);
-            Assert.AreEqual(3f - 6f, v.Z);
+            Assert.AreEqual(1d - 4d, v.X);
+            Assert.AreEqual(2d - 5d, v.Y);
+            Assert.AreEqual(3d - 6d, v.Z);
         }
 
         [Test]
@@ -45,9 +44,9 @@ namespace Castaway.Base.Tests.Math.Vectors
             var a = new Vector3(1, 2, 3);
             var b = new Vector3(4, 5, 6);
             var v = a * b;
-            Assert.AreEqual(1f * 4f, v.X);
-            Assert.AreEqual(2f * 5f, v.Y);
-            Assert.AreEqual(3f * 6f, v.Z);
+            Assert.AreEqual(1d * 4d, v.X);
+            Assert.AreEqual(2d * 5d, v.Y);
+            Assert.AreEqual(3d * 6d, v.Z);
         }
 
         [Test]
@@ -56,9 +55,9 @@ namespace Castaway.Base.Tests.Math.Vectors
             var a = new Vector3(1, 2, 3);
             var b = new Vector3(4, 5, 6);
             var v = a / b;
-            Assert.AreEqual(1f / 4f, v.X);
-            Assert.AreEqual(2f / 5f, v.Y);
-            Assert.AreEqual(3f / 6f, v.Z);
+            Assert.AreEqual(1d / 4d, v.X);
+            Assert.AreEqual(2d / 5d, v.Y);
+            Assert.AreEqual(3d / 6d, v.Z);
         }
 
         [Test]
@@ -66,9 +65,9 @@ namespace Castaway.Base.Tests.Math.Vectors
         {
             var a = new Vector3(1, 2, 3);
             var v = a + 4f;
-            Assert.AreEqual(1f + 4f, v.X);
-            Assert.AreEqual(2f + 4f, v.Y);
-            Assert.AreEqual(3f + 4f, v.Z);
+            Assert.AreEqual(1d + 4d, v.X);
+            Assert.AreEqual(2d + 4d, v.Y);
+            Assert.AreEqual(3d + 4d, v.Z);
         }
 
         [Test]
@@ -76,9 +75,9 @@ namespace Castaway.Base.Tests.Math.Vectors
         {
             var a = new Vector3(1, 2, 3);
             var v = a - 4f;
-            Assert.AreEqual(1f - 4f, v.X);
-            Assert.AreEqual(2f - 4f, v.Y);
-            Assert.AreEqual(3f - 4f, v.Z);
+            Assert.AreEqual(1d - 4d, v.X);
+            Assert.AreEqual(2d - 4d, v.Y);
+            Assert.AreEqual(3d - 4d, v.Z);
         }
 
         [Test]
@@ -86,9 +85,9 @@ namespace Castaway.Base.Tests.Math.Vectors
         {
             var a = new Vector3(1, 2, 3);
             var v = a * 4f;
-            Assert.AreEqual(1f * 4f, v.X);
-            Assert.AreEqual(2f * 4f, v.Y);
-            Assert.AreEqual(3f * 4f, v.Z);
+            Assert.AreEqual(1d * 4d, v.X);
+            Assert.AreEqual(2d * 4d, v.Y);
+            Assert.AreEqual(3d * 4d, v.Z);
         }
 
         [Test]
@@ -96,18 +95,18 @@ namespace Castaway.Base.Tests.Math.Vectors
         {
             var a = new Vector3(1, 2, 3);
             var v = a / 4f;
-            Assert.AreEqual(1f / 4f, v.X);
-            Assert.AreEqual(2f / 4f, v.Y);
-            Assert.AreEqual(3f / 4f, v.Z);
+            Assert.AreEqual(1d / 4d, v.X);
+            Assert.AreEqual(2d / 4d, v.Y);
+            Assert.AreEqual(3d / 4d, v.Z);
         }
 
         [Test]
         public void TestToSpan()
         {
-            ReadOnlySpan<float> a = new Vector3(1, 2, 3);
-            Assert.AreEqual(1f, a[0]);
-            Assert.AreEqual(2f, a[1]);
-            Assert.AreEqual(3f, a[2]);
+            var a = (double[]) new Vector3(1, 2, 3);
+            Assert.AreEqual(1d, a[0]);
+            Assert.AreEqual(2d, a[1]);
+            Assert.AreEqual(3d, a[2]);
         }
     }
 }

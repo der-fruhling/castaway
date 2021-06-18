@@ -51,9 +51,9 @@ namespace Castaway.OpenGL.Controllers
             _previous = g.BoundShader!;
             if (Shader == null) throw new InvalidOperationException($"Unloaded shader {BuiltinShaderName}");
             Shader.Bind();
-            g.SetUniform(Shader, UniformType.TransformPerspective, camera.Get<CameraController>()!.PerspectiveTransform);
-            g.SetUniform(Shader, UniformType.TransformView, camera.Get<CameraController>()!.ViewTransform);
-            g.SetUniform(Shader, UniformType.ViewPosition, camera.Position);
+            g.SetFloatUniform(Shader, UniformType.TransformPerspective, camera.Get<CameraController>()!.PerspectiveTransform);
+            g.SetFloatUniform(Shader, UniformType.TransformView, camera.Get<CameraController>()!.ViewTransform);
+            g.SetFloatUniform(Shader, UniformType.ViewPosition, camera.Position);
             LightResolver.Push();
         }
 

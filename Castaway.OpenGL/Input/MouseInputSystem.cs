@@ -67,7 +67,7 @@ namespace Castaway.OpenGL.Input
         }
 
         public bool IsOver(Vector2 a, Vector2 b) =>
-            IsOver(a.X, a.Y, b.X, b.Y);
+            IsOver((float) a.X, (float) a.Y, (float) b.X, (float) b.Y);
 
         private void MouseButtonCallback(IntPtr window, MouseButton button, InputState state, ModifierKeys modifiers)
         {

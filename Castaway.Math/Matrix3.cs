@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Castaway.Math
 {
@@ -8,12 +9,16 @@ namespace Castaway.Math
         public Vector3 Y;
         public Vector3 Z;
 
-        public float[] Array => new[]
+        public double[] Array => new[]
         {
             X.X, Y.X, Z.X,
             X.Y, Y.Y, Z.Y,
             X.Z, Y.Z, Z.Z
         };
+
+        public float[] ArrayF => Array.Select(n => (float)n).ToArray();
+        public int[] ArrayI => Array.Select(n => (int)n).ToArray();
+        public uint[] ArrayU => Array.Select(n => (uint)n).ToArray();
 
         public Matrix3(Vector3 x, Vector3 y, Vector3 z)
         {
@@ -23,9 +28,9 @@ namespace Castaway.Math
         }
 
         public Matrix3(
-            float xx, float xy, float xz,
-            float yx, float yy, float yz,
-            float zx, float zy, float zz)
+            double xx, double xy, double xz,
+            double yx, double yy, double yz,
+            double zx, double zy, double zz)
             : this(new Vector3(xx, xy, xz),
                 new Vector3(yx, yy, yz),
                 new Vector3(zx, zy, zz))
@@ -47,7 +52,7 @@ namespace Castaway.Math
             return new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
-        public static Matrix3 operator *(Matrix3 a, float b)
+        public static Matrix3 operator *(Matrix3 a, double b)
         {
             return new(a.X * b, a.Y * b, a.Z * b);
         }
@@ -84,7 +89,7 @@ namespace Castaway.Math
                 a.Z.X * b.Z.X + a.Z.Y * b.Z.Y + a.Z.Z * b.Z.Z);
         }
 
-        public static Matrix3 Scale(float x, float y, float z = 1)
+        public static Matrix3 Scale(double x, double y, double z = 1)
         {
             var a = Ident;
             a.X.X = x;
@@ -96,7 +101,7 @@ namespace Castaway.Math
         public static Matrix3 Scale(Vector2 v) => Scale(v.X, v.Y);
         public static Matrix3 Scale(Vector3 v) => Scale(v.X, v.Y, v.Z);
 
-        public static Matrix3 Translate(float x, float y)
+        public static Matrix3 Translate(double x, double y)
         {
             var a = Ident;
             a.X.Z = x;

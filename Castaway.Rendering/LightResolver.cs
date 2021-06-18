@@ -56,9 +56,9 @@ namespace Castaway.Rendering
                 System.Math.Abs(_pushedAmbientLight - _ambientLight) < 0.00025f &&
                 _pushedAmbientLightColor == _ambientLightColor) return;
             
-            g.SetUniform(p, UniformType.AmbientLight, _ambientLight);
-            g.SetUniform(p, UniformType.AmbientLightColor, _ambientLightColor);
-            g.SetUniform(p, UniformType.PointLightCount, PointLights.Count);
+            g.SetFloatUniform(p, UniformType.AmbientLight, _ambientLight);
+            g.SetFloatUniform(p, UniformType.AmbientLightColor, _ambientLightColor);
+            g.SetIntUniform(p, UniformType.PointLightCount, PointLights.Count);
             for (var i = 0; i < PointLights.Count; i++)
             {
                 var l = PointLights[i];

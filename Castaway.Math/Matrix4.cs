@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Castaway.Math
 {
@@ -10,13 +11,17 @@ namespace Castaway.Math
         public Vector4 Z;
         public Vector4 W;
 
-        public float[] Array => new[]
+        public double[] Array => new[]
         {
             X.X, Y.X, Z.X, W.X,
             X.Y, Y.Y, Z.Y, W.Y,
             X.Z, Y.Z, Z.Z, W.Z,
             X.W, Y.W, Z.W, W.W
         };
+
+        public float[] ArrayF => Array.Select(n => (float)n).ToArray();
+        public int[] ArrayI => Array.Select(n => (int)n).ToArray();
+        public uint[] ArrayU => Array.Select(n => (uint)n).ToArray();
 
         public Matrix4(Vector4 x, Vector4 y, Vector4 z, Vector4 w)
         {
@@ -27,10 +32,10 @@ namespace Castaway.Math
         }
 
         public Matrix4(
-            float xx, float xy, float xz, float xw,
-            float yx, float yy, float yz, float yw,
-            float zx, float zy, float zz, float zw,
-            float wx, float wy, float wz, float ww)
+            double xx, double xy, double xz, double xw,
+            double yx, double yy, double yz, double yw,
+            double zx, double zy, double zz, double zw,
+            double wx, double wy, double wz, double ww)
             : this(new Vector4(xx, xy, xz, xw),
                 new Vector4(yx, yy, yz, yw),
                 new Vector4(zx, zy, zz, zw),
@@ -100,7 +105,7 @@ namespace Castaway.Math
                 ww: a.W.X * b.X.W + a.W.Y * b.Y.W + a.W.Z * b.Z.W + a.W.W * b.W.W);
         }
 
-        public static Matrix4 Scale(float x, float y, float z, float w = 1)
+        public static Matrix4 Scale(double x, double y, double z, double w = 1)
         {
             var a = Ident;
             a.X.X = x;
@@ -113,7 +118,7 @@ namespace Castaway.Math
         public static Matrix4 Scale(Vector3 v) => Scale(v.X, v.Y, v.Z);
         public static Matrix4 Scale(Vector4 v) => Scale(v.X, v.Y, v.Z, v.W);
 
-        public static Matrix4 Translate(float x, float y, float z)
+        public static Matrix4 Translate(double x, double y, double z)
         {
             var a = Ident;
             a.X.W = x;
