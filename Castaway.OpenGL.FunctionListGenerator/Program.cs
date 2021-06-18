@@ -66,7 +66,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
 
             Console.WriteLine("Parsing data");
             var commandLines = new List<string>();
-            commandLines.Add("namespace Castaway.OpenGL");
+            commandLines.Add("namespace Castaway.OpenGL.Native");
             commandLines.Add("{");
             commandLines.Add("    public enum GLF : ushort");
             commandLines.Add("    {");
@@ -78,7 +78,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
             Console.WriteLine("  Wrote GLF.Generated.cs");
 
             var constantLines = new List<string>();
-            constantLines.Add("namespace Castaway.OpenGL");
+            constantLines.Add("namespace Castaway.OpenGL.Native");
             constantLines.Add("{");
             constantLines.Add("    public enum GLC : int");
             constantLines.Add("    {");

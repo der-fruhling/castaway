@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!-- Unique -->
-        <Title>Castaway Levels</Title>
+        <Title>Castaway Assets</Title>
+        <PackageId>Castaway.Assets</PackageId>
+        <RootNamespace>Castaway.Assets</RootNamespace>
 
         <!-- Common -->
         <PackageVersion>0.0.20210613-pg.1</PackageVersion>
@@ -19,8 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+      <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.5.21301.5" />
     </ItemGroup>
 
 </Project>

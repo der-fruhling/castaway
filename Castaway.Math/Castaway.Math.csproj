@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <!-- Unique -->
-        <Title>Castaway Levels</Title>
+        <Title>Castaway Math</Title>
+        <PackageId>Castaway.Math</PackageId>
+        <RootNamespace>Castaway.Math</RootNamespace>
 
         <!-- Common -->
         <PackageVersion>0.0.20210613-pg.1</PackageVersion>
@@ -19,8 +20,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+      <Compile Remove="bin\**" />
+      <EmbeddedResource Remove="bin\**" />
+      <None Remove="bin\**" />
     </ItemGroup>
-
 </Project>
