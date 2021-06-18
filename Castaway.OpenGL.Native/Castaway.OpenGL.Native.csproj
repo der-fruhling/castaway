@@ -2,7 +2,9 @@
 
     <PropertyGroup>
         <!-- Unique -->
-        <Title>Castaway Levels</Title>
+        <Title>Castaway OpenGL Natives</Title>
+        <PackageId>Castaway.OpenGL.Native</PackageId>
+        <RootNamespace>Castaway.OpenGL.Native</RootNamespace>
 
         <!-- Common -->
         <PackageVersion>0.0.20210613-pg.1</PackageVersion>
@@ -19,8 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway\Castaway.Rendering\Castaway.Rendering.csproj" />
+      <PackageReference Include="glfw-net" Version="3.3.1" />
     </ItemGroup>
 
 </Project>

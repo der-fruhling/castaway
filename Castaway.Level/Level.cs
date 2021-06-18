@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Xml;
 using Castaway.Assets;
 using Castaway.Math;
-using Castaway.OpenGL;
+using Castaway.Rendering;
 
 namespace Castaway.Level
 {

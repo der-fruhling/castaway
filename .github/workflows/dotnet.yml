@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkgs
-        path: Castaway.*/bin/Release/Castaway.*.*.nupkg
+        path: Castaway.*/bin/Release/*.nupkg
   build-mac:
     name: macOS Build
     runs-on: macos-latest
@@ -81,6 +81,9 @@ jobs:
         if: github.event.inputs.allow-publish == 'true'
         run: |
           dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
-          dotnet nuget push Castaway.Base/bin/Release/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.Level/bin/Release/Castaway.Level.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
-          dotnet nuget push Castaway.Native/bin/Release/Castaway.Native.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.OpenGL/bin/Release/Castaway.OpenGL.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Math/bin/Release/Castaway.Math.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Assets/bin/Release/Castaway.Assets.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Rendering/bin/Release/Castaway.Rendering.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.OpenGL.Native/bin/Release/Castaway.OpenGL.Native.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github

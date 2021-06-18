@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Castaway;
-using Castaway.Assets;
+﻿using Castaway.Assets;
 using Castaway.Level;
 using Castaway.OpenGL.Input;
 using GLFW;
@@ -13,7 +11,7 @@ namespace Test
         private static void Main()
         {
             // Perform global initialization
-            CastawayEngine.Init();
+            AssetLoader.Init();
             
             using var window = new Window("name", false);
             window.Bind();
