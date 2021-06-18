@@ -21,7 +21,7 @@ namespace Castaway.Rendering
         {
             if (!Valid) throw new RenderObjectInvalidException(GetType(), Name);
         }
-        
+
         public abstract void Bind();
         public abstract void Unbind();
     }
@@ -64,16 +64,16 @@ namespace Castaway.Rendering
         public string[] GetOutputs() => _outputs.Keys.ToArray();
         public string[] GetRegisteredUniforms() => _uniforms.Keys.ToArray();
 
-        public VertexInputType GetInput(string name) => _inputs.ContainsKey(name) 
-            ? _inputs[name] 
+        public VertexInputType GetInput(string name) => _inputs.ContainsKey(name)
+            ? _inputs[name]
             : throw new InvalidOperationException($"Input {name} not registered.");
 
-        public uint GetOutput(string name) => _outputs.ContainsKey(name) 
-            ? _outputs[name] 
+        public uint GetOutput(string name) => _outputs.ContainsKey(name)
+            ? _outputs[name]
             : throw new InvalidOperationException($"Output {name} not registered.");
 
-        public UniformType GetUniform(string name) => _uniforms.ContainsKey(name) 
-            ? _uniforms[name] 
+        public UniformType GetUniform(string name) => _uniforms.ContainsKey(name)
+            ? _uniforms[name]
             : throw new InvalidOperationException($"Output {name} not registered.");
 
         public abstract void Link();
@@ -87,10 +87,10 @@ namespace Castaway.Rendering
         public abstract void Upload(IEnumerable<byte> bytes);
 
         protected IEnumerable<byte>? RealData = null;
-        
-        public IEnumerable<byte> Data 
-        { 
-            get => RealData ?? ImmutableArray<byte>.Empty; 
+
+        public IEnumerable<byte> Data
+        {
+            get => RealData ?? ImmutableArray<byte>.Empty;
             set => Upload(value);
         }
 
