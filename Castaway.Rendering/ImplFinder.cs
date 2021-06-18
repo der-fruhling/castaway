@@ -48,8 +48,9 @@ namespace Castaway.Rendering
             var major = GL.GetInt(GLC.GL_MAJOR_VERSION);
             var minor = GL.GetInt(GLC.GL_MINOR_VERSION);
 
-            if (Supports(major, minor, 3, 2))
-                return await Find("OpenGL-3.2");
+            if (Supports(major, minor, 4, 0)) return await Find("OpenGL-4.0");
+            if (Supports(major, minor, 3, 3)) return await Find("OpenGL-3.3");
+            if (Supports(major, minor, 3, 2)) return await Find("OpenGL-3.2");
 
             throw new GraphicsException($"Minimum OpenGL requirement is 3.2, found {major}.{minor}");
         }
