@@ -49,7 +49,7 @@
 
         <Controllers>
             <Shader>
-                <Builtin>Default</Builtin>
+                <Asset>/test.shdr</Asset>
             </Shader>
             <LoadedMesh>
                 <AssetPath>/cube.obj</AssetPath>
