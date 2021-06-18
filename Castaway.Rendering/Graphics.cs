@@ -188,6 +188,8 @@ namespace Castaway.Rendering
         public virtual void Clear() => throw new NotSupportedException();
         public virtual void SetClearColor(float r, float g, float b) => throw new NotSupportedException();
 
+        public virtual void PutImage(uint image, TextureObject texture) => throw new NotSupportedException();
+
         public virtual void Dispose() => throw new NotSupportedException();
     }
 }

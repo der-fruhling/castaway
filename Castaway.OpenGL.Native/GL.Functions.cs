@@ -643,5 +643,12 @@ namespace Castaway.OpenGL.Native
             var f = (delegate*<int, uint*, void>) Load(GLF.glDeleteVertexArrays);
             fixed (uint* p = vaos) f(vaos.Length, p);
         }
+
+        public static void BindImageTexture(uint unit, uint texture, int level, bool layered, int layer, GLC access,
+            GLC format)
+        {
+            var f = (delegate*<uint, uint, int, bool, int, GLC, GLC, void>) Load(GLF.glBindImageTexture);
+            f(unit, texture, level, layered, layer, access, format);
+        }
     }
 }
