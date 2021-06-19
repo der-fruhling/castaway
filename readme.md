@@ -10,24 +10,63 @@ applications with .NET Core. It supports custom shaders, `Level`s,
 is still a lot of work to be done, and my programming is almost certainly
 not bug free.
 
-If you find an issue with Castaway, report it! Feel free to not use the
-issue templates if you don't want to, I don't really care as long as the
-report is descriptive. Include an image and/or stacktrace if applicable.
-_(This un-restrictiveness (is that even a word?) on issue templates is caused
-in part by me not using the issue templates myself. :])_
-
 ## Using Castaway
 
-Castaway has a NuGet package on GitHub Packages. To use this, you will first
-have to set this up on your system.
+Castaway has a number of NuGet packages published to GitHub packages. You
+will need `Castaway.OpenGL` to use castaway. It includes an OpenGL implementation
+for the Castaway Graphics API, as well as depending on everything else you need.
 
-[Instructions here! Click me!](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry)
+Here's an example:
 
-Then, just install the `Castaway.Base` package from the source you added.
+```c#
+using Castaway.Assets;
+using Castaway.OpenGL;
+using Castaway.Rendering;
 
-Something like:
-```bash
-dotnet add <ProjectFile> package -s <SourceName> Castaway.Base
+// The Imports attribute is a workaround to the compiler discarding some
+// referenced assemblies unless they are used. API Implementations are
+// only created through reflection and therefore the compiler does not
+// know that it's being used, and will discard the reference.
+//
+// Referencing OpenGLImpl here uses a type from the OpenGL implementation,
+// which avoids this whole mess. This is the only purpose Imports serves.
+[Imports(typeof(OpenGLImpl))]
+internal static class Program
+{
+    private static void Main(string[] args)
+    {
+        // Initialize Assets
+        AssetLoader.Init();
+
+        // Create window.
+        using var window = new Window(800, 600, "Example", false);
+        window.Bind();
+
+        // Get Graphics implementation. The one used here will depend on your
+        // systems capabilities, up to OpenGL 4.2. The minimum for OpenGL is
+        // version 3.2.
+        var g = window.GL;
+        
+        // ** Any initialization magic would happen right here. **
+
+        // Show window and start render loop.
+        window.Visible = true;
+        while (!window.ShouldClose)
+        {
+            g.StartFrame();
+            // ** Rendering and Updateing would go right here. **
+            g.FinishFrame(window);
+        }
+        
+        // ** Object destruction would go right here. **
+        
+        // (`window` is automatically destroyed because of the `using` on it's
+        //  declaration. If `using` is omitted, call discard on the object
+        //  *before* Main exits.)
+    }
+}
 ```
 
-This will give you a usable install of castaway.
+## Documentation
+
+...would go [right here!](https://LiamCoalStudio.github.io/castaway) It just doesn't exist yet.
