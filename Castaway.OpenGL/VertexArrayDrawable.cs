@@ -10,7 +10,7 @@ namespace Castaway.OpenGL
         
         public VertexArrayDrawable(int vertexCount, BufferObject vertexArray) : base(vertexCount, vertexArray)
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             VAO = gl.CreateVAO();
             gl.BindVAO(VAO);
             VertexArray?.Bind();
@@ -19,7 +19,7 @@ namespace Castaway.OpenGL
 
         public VertexArrayDrawable(int vertexCount, BufferObject vertexArray, BufferObject elementArray) : base(vertexCount, vertexArray, elementArray)
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             VAO = gl.CreateVAO();
             gl.BindVAO(VAO);
             VertexArray?.Bind();

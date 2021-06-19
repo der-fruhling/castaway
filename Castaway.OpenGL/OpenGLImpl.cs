@@ -6,6 +6,7 @@ using Castaway.Math;
 using Castaway.OpenGL.Input;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
+using Castaway.Rendering.Structures;
 using GLFW;
 using Graphics = Castaway.Rendering.Graphics;
 using Window = Castaway.Rendering.Window;
@@ -13,15 +14,15 @@ using Window = Castaway.Rendering.Window;
 namespace Castaway.OpenGL
 {
     [Implements("OpenGL-3.2")]
-    public class OpenGL32 : Graphics
+    public class OpenGLImpl : Graphics
     {
-        public OpenGL32()
+        public OpenGLImpl()
         {
             GL.Init();
             Glfw.Init();
         }
 
-        ~OpenGL32() => DisposeGL();
+        ~OpenGLImpl() => DisposeGL();
 
         private void DisposeGL()
         {

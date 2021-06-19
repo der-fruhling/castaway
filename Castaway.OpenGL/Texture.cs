@@ -69,14 +69,14 @@ namespace Castaway.OpenGL
 
         public override void Bind(int slot)
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             gl.BindTexture(slot, Number);
             gl.BoundTextures[slot] = this;
         }
 
         public override void Unbind(int slot)
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             gl.UnbindTexture(slot);
             gl.BoundTextures[slot] = this;
         }

@@ -28,8 +28,10 @@ namespace Castaway.Rendering
             {
                 var types = AppDomain.CurrentDomain
                     .GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .Concat(Assembly.GetEntryAssembly()?.GetTypes() ?? Type.EmptyTypes)
+                    .Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies().Select(n => AppDomain.CurrentDomain.Load(n)))
+                    .Concat(new []{Assembly.GetEntryAssembly()})
+                    .Distinct()
+                    .SelectMany(a => a!.GetTypes())
                     .Distinct()
                     .Where(t => t.GetCustomAttribute<ImplementsAttribute>() != null);
                 var impls = new Dictionary<string, Type>();

@@ -111,7 +111,7 @@ namespace Castaway.OpenGL
 
             return Graphics.Current switch
             {
-                OpenGL32 => new VertexArrayDrawable(mesh.Elements.Length, vertexBuffer, elementBuffer),
+                OpenGLImpl => new VertexArrayDrawable(mesh.Elements.Length, vertexBuffer, elementBuffer),
                 _ => new Drawable(mesh.Elements.Length, vertexBuffer, elementBuffer)
             };
         }

@@ -1,11 +1,14 @@
 ﻿using Castaway.Assets;
 using Castaway.Level;
+using Castaway.OpenGL;
 using Castaway.OpenGL.Input;
+using Castaway.Rendering;
 using GLFW;
 using Window = Castaway.Rendering.Window;
 
 namespace Test
 {
+    [Imports(typeof(OpenGLImpl))]
     internal static class Program
     {
         private static void Main()

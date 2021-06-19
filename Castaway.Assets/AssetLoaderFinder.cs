@@ -24,11 +24,14 @@ namespace Castaway.Assets
         {
             _loaders = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.GetInterfaces().Contains(typeof(IAssetType))
-                            && t.GetCustomAttribute<LoadsAttribute>() != null)
+                .Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies().Select(n => AppDomain.CurrentDomain.Load(n)))
+                .Concat(new []{Assembly.GetEntryAssembly()})
+                .Distinct()
+                .SelectMany(a => a!.GetTypes())
+                .Where(t => t.GetInterfaces().Contains(typeof(IAssetType)) && t.GetCustomAttribute<LoadsAttribute>() != null)
                 .Select(t => (t.GetCustomAttribute<LoadsAttribute>()!.Extensions, t))
                 .SelectMany(t => t.Extensions.Select(e => (e, t.t)))
+                .Distinct()
                 .ToDictionary(t => t.e, t => t.t);
         }
 

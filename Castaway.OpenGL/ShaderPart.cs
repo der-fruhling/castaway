@@ -25,7 +25,7 @@ namespace Castaway.OpenGL
 
         public ShaderPart(ShaderStage stage, string sourceCode, string sourceLocation) : base(stage, sourceCode, sourceLocation)
         {
-            Number = (Graphics.Current as OpenGL32)?.NewShader(stage) ?? throw new InvalidOperationException($"Bad shader stage {stage} for OpenGL");
+            Number = (Graphics.Current as OpenGLImpl)?.NewShader(stage) ?? throw new InvalidOperationException($"Bad shader stage {stage} for OpenGL");
             
             GL.ShaderSource(Number, sourceCode);
             GL.CompileShader(Number);

@@ -15,14 +15,14 @@ namespace Castaway.OpenGL
         
         public override void Bind()
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             gl.BindShader(Number);
             Graphics.Current.BoundShader = this;
         }
 
         public override void Unbind()
         {
-            if (Graphics.Current is not OpenGL32 gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
+            if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             gl.UnbindShader();
             Graphics.Current.BoundShader = null;
         }
