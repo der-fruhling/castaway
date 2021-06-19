@@ -66,7 +66,3 @@ internal static class Program
     }
 }
 ```
-
-## Documentation
-
-...would go [right here!](https://LiamCoalStudio.github.io/castaway) It just doesn't exist yet.
