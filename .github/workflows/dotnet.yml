@@ -27,6 +27,7 @@ jobs:
       run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
     - name: Upload Binaries
       uses: actions/upload-artifact@v2
+      if: github.event.inputs.allow-publish == 'true'
       with:
         name: binaries
         path: ./Castaway.*/bin
