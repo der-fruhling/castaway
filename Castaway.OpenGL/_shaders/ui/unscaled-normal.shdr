@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Castaway Builtin Shader
+  - `unscaled-normal`
+  -->
+<shader>
+    <vertex>
+        <glsl order="Version">#version 150 core</glsl>
+
+        <input name="vPosition" from="PositionXYZ"/>
+        <input name="vColor" from="ColorRGB"/>
+
+        <output name="fColor" type="vec3"/>
+        
+        <uniform name="uFramebufferSize" type="ivec2" from="FramebufferSize"/> 
+
+        <function name="main"><![CDATA[
+            void main() {
+                gl_Position = vec4(vPosition / vec3(uFramebufferSize, 0), 1);
+                fColor = vColor;
+            }
+        ]]></function>
+    </vertex>
+
+    <fragment>
+        <glsl order="Version">#version 150 core</glsl>
+
+        <input name="fColor" type="vec3"/>
+
+        <output name="oColor" to="0"/>
+
+        <function name="main"><![CDATA[
+            void main() {
+                oColor = vec4(fColor, 1);
+            }
+        ]]></function>
+    </fragment>
+</shader>

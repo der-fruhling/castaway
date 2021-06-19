@@ -20,6 +20,7 @@ namespace Castaway.Rendering
         TextureSTV
     }
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum UniformType
     {
         Custom,
@@ -31,7 +32,9 @@ namespace Castaway.Rendering
         PointLightColorIndexed,
         AmbientLight,
         AmbientLightColor,
-        ViewPosition
+        ViewPosition,
+        FramebufferSize,
+        UIScale,
     }
 
     public enum ShaderStage
