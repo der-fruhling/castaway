@@ -23,47 +23,83 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build -c Release --no-restore
-    - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
-    - name: Upload
+    - name: Upload Projects
       uses: actions/upload-artifact@v2
       with:
-        name: nupkgs
-        path: ./*/bin/Release/*.nupkg
+        name: projects
+        path: ./Castaway.*
   build-mac:
-    name: macOS Build
+    name: Mac Build
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build -c Release --no-restore
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build -c Release --no-restore
   build-windows:
     name: Windows Build
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build -c Release --no-restore
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build -c Release --no-restore
+  test:
+    name: Ubuntu Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test -c Release --no-build --verbosity normal
+  test-mac:
+    name: Mac Test
+    runs-on: macos-latest
+    needs: build-mac
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test -c Release --no-build --verbosity normal
+  test-windows:
+    name: Windows Test
+    runs-on: windows-latest
+    needs: build-windows
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test -c Release --no-build --verbosity normal
   publish:
     name: Publish (${{ github.event.inputs.allow-publish }})
     runs-on: ubuntu-latest
-    needs: [build,build-windows,build-mac]
+    needs: [test, test-mac, test-windows]
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -74,7 +110,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v2
         with:
-          name: nupkgs
+          name: projects
       - name: List
         run: ls -R
       - name: Publish
