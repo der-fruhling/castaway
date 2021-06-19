@@ -31,7 +31,7 @@ jobs:
         name: binaries
         path: ./Castaway.*/bin
   build-mac:
-    name: Mac Build
+    name: Mac Build and Test
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
     - name: Test
       run: dotnet test Castaway.Base.Tests -c Release --verbosity normal --no-build --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
   build-windows:
-    name: Windows Build
+    name: Windows Build and Test
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
