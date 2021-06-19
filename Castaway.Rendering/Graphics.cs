@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Castaway.Math;
+using Castaway.Rendering.Structures;
 
 namespace Castaway.Rendering
 {
@@ -53,6 +54,7 @@ namespace Castaway.Rendering
         public virtual SeparatedShaderObject NewSepShader(ShaderStage stage, string source) => throw new NotSupportedException();
         public virtual ShaderObject NewShader(params SeparatedShaderObject[] objects) => throw new NotSupportedException();
         public virtual FramebufferObject NewFramebuffer() => throw new NotSupportedException();
+        public virtual Drawable NewDrawable(Mesh mesh) => throw new NotSupportedException();
 
         public virtual void UnbindBuffer(BufferTarget target) => throw new NotSupportedException();
         public virtual void UnbindTexture(int number) => throw new NotSupportedException();

@@ -94,6 +94,8 @@ namespace Castaway.OpenGL
 
         public override FramebufferObject NewFramebuffer() => new Framebuffer();
 
+        public override Drawable NewDrawable(Mesh mesh) => mesh.ConstructFor(BoundShader!);
+
         public override object NativeRepresentation(RenderObject renderObject)
         {
             dynamic d = renderObject;
