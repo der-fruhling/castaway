@@ -23,11 +23,7 @@ namespace Castaway.OpenGL
             VarOutputs,
             VarUniforms,
             Variables,
-            Functions,
-            PreFunctions,
-            PreVariables,
-            PostVariables,
-            PostFunctions
+            Functions
         }
 
         private enum Transform
@@ -100,7 +96,7 @@ namespace Castaway.OpenGL
             if (root.GetElementsByTagName("fragment").Count < 1)
                 throw new InvalidOperationException("Need at least one fragment shader.");
 
-            var shaders = new List<OpenGL.ShaderPart>();
+            var shaders = new List<ShaderPart>();
             var inputs = new Dictionary<string, VertexInputType>();
             var uniforms = new Dictionary<string, UniformType>();
             var transforms = new Dictionary<string, Transform>();
