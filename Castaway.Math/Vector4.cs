@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Castaway.Math
 {
     public struct Vector4
@@ -51,5 +53,11 @@ namespace Castaway.Math
         public static explicit operator int[](Vector4 v) => new[] {(int) v.X, (int) v.Y, (int) v.Z, (int) v.W};
 
         public override string ToString() => $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}, {nameof(W)}: {W}";
+
+        public static implicit operator Vector4(Color color) => new(
+            color.R / (float) byte.MaxValue,
+            color.G / (float) byte.MaxValue,
+            color.B / (float) byte.MaxValue,
+            color.A / (float) byte.MaxValue);
     }
 }
