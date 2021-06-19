@@ -67,7 +67,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --verbosity normal
   test-mac:
     name: Mac Test
     runs-on: macos-latest
@@ -81,7 +81,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --verbosity normal
   test-windows:
     name: Windows Test
     runs-on: windows-latest
@@ -95,7 +95,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --verbosity normal
   publish:
     name: Publish (${{ github.event.inputs.allow-publish }})
     runs-on: ubuntu-latest
