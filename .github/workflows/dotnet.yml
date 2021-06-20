@@ -22,15 +22,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build -c Debug --no-restore --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet build -c Debug --no-restore --nologo -clp:NoSummary
     - name: Test
-      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
     - name: Upload Binaries
       uses: actions/upload-artifact@v2
       if: github.event.inputs.allow-publish == 'true'
       with:
-        name: binaries
-        path: ./Castaway.*/bin
+        name: packages
+        path: ./Castaway.*/bin/Debug/*.nupkg
   build-mac:
     name: Mac Build and Test
     runs-on: macos-latest
@@ -43,9 +43,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build -c Debug --no-restore --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet build -c Debug --no-restore --nologo -clp:NoSummary
     - name: Test
-      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
   build-windows:
     name: Windows Build and Test
     runs-on: windows-latest
@@ -58,9 +58,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build -c Debug --no-restore --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet build -c Debug --no-restore --nologo -clp:NoSummary
     - name: Test
-      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;PerformanceSummary;ForceNoAlign"
+      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v2
         with:
-          name: binaries
+          name: packages
       - name: Publish
         if: github.event.inputs.allow-publish == 'true'
         run: |
