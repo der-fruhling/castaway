@@ -100,3 +100,4 @@ jobs:
           dotnet nuget push Castaway.Assets/bin/Debug/Castaway.Assets.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.Rendering/bin/Debug/Castaway.Rendering.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.OpenGL.Native/bin/Debug/Castaway.OpenGL.Native.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.Base/bin/Debug/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
