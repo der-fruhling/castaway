@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Castaway.Base;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
+using Serilog;
 
 namespace Castaway.OpenGL
 {
     public static class OpenGLEx
     {
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+        
         #region Mesh
         
         private static float[] ConstructVertexArray(this Mesh mesh, ShaderObject shader)
@@ -118,6 +122,7 @@ namespace Castaway.OpenGL
         
         public static Drawable ConstructUnoptimisedFor(this Mesh mesh, ShaderObject shader)
         {
+            Logger.Warning("Refrain from using {FunctionName}; use {Replacement}", nameof(ConstructUnoptimisedFor), nameof(ConstructFor));
             var vertexBuffer = new Buffer(BufferTarget.VertexArray, mesh.ConstructVertexArray(shader));
             var elementBuffer = new Buffer(BufferTarget.ElementArray, mesh.Elements);
 
