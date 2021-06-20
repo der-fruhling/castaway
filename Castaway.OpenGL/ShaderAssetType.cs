@@ -273,7 +273,10 @@ namespace Castaway.OpenGL
                     data = data.Insert(0, $"// Uniform {n} bound to {u}\n");
                 foreach (var (n, u) in outputs)
                     data = data.Insert(0, $"// Output {n} writes to {u}\n");
-                
+
+                var tempPath = Path.GetTempFileName();
+                var writeTask = File.WriteAllTextAsync(tempPath, data);
+
                 try
                 {
                     shaders.Add(new ShaderPart(xml.Name switch
@@ -291,6 +294,11 @@ namespace Castaway.OpenGL
                         Console.WriteLine($"{index + 1}\t{split[index]}");
 
                     throw;
+                }
+                finally
+                {
+                    writeTask.Wait();
+                    Logger.Debug("{FilePath}: Wrote results of {Shader} (at {Index}) to {Path}", path, xml.Name, i, tempPath);
                 }
             }
 
