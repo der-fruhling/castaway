@@ -4,13 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Castaway.Base;
 using Castaway.Rendering;
+using Serilog;
 
 namespace Castaway.OpenGL
 {
     [SuppressMessage("ReSharper", "CA2211")]
     public static class BuiltinShaders
     {
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+        
         // ReSharper disable InconsistentNaming
         public static ShaderObject? Default;
         public static ShaderObject? DefaultTextured;
@@ -39,6 +43,7 @@ namespace Castaway.OpenGL
                     });
             #endregion
             
+            Logger.Debug("Compiling builtin shaders");
             Default = ShaderAssetType.LoadOpenGL(taskList["default/normal"].Result, "b:default/normal");
             DefaultTextured = ShaderAssetType.LoadOpenGL(taskList["default/textured"].Result, "b:default/textured");
             Direct = ShaderAssetType.LoadOpenGL(taskList["direct/normal"].Result, "b:direct/normal");
@@ -47,10 +52,12 @@ namespace Castaway.OpenGL
             UIUnscaled = ShaderAssetType.LoadOpenGL(taskList["ui/unscaled-normal"].Result, "b:ui/unscaled-normal");
             UIScaledTextured = ShaderAssetType.LoadOpenGL(taskList["ui/scaled-textured"].Result, "b:ui/scaled-textured");
             UIUnscaledTextured = ShaderAssetType.LoadOpenGL(taskList["ui/unscaled-textured"].Result, "b:ui/unscaled-textured");
+            Logger.Information("Compiled builtin shaders");
         }
 
         public static void Destroy()
         {
+            Logger.Information("Disposing of builtin shaders");
             Default?.Dispose();
             DefaultTextured?.Dispose();
             Direct?.Dispose();
@@ -59,10 +66,12 @@ namespace Castaway.OpenGL
             UIUnscaled?.Dispose();
             UIScaledTextured?.Dispose();
             UIUnscaledTextured?.Dispose();
+            Logger.Information("Finished disposing of builtin shaders");
         }
 
         private static async Task<string> ReadShader(string path)
         {
+            Logger.Verbose("Reading manifest file at {Path}", path);
             var asm = Assembly.GetExecutingAssembly();
             await using var stream = asm.GetManifestResourceStream($"Castaway.OpenGL._shaders.{path}");
             var reader = new StreamReader(stream!);

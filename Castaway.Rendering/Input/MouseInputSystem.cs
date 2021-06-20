@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Castaway.Base;
 using Castaway.Math;
-using Castaway.Rendering;
 using GLFW;
+using Serilog;
 
 namespace Castaway.OpenGL.Input
 {
@@ -12,6 +13,7 @@ namespace Castaway.OpenGL.Input
         private readonly MouseEnterCallback _mouseEnterCallback;
 
         private readonly Dictionary<MouseButton, ButtonState> _buttons = new();
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         public float PositionScale = 1.0f;
 
@@ -101,11 +103,13 @@ namespace Castaway.OpenGL.Input
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
+            Logger.Verbose("Mouse click event: ({State} {Key}) = {NewState} at {Position}", state, button, _buttons[button], CursorPosition);
         }
 
         private void MouseEnterCallback(IntPtr window, bool entering)
         {
             IsOverWindow = entering;
+            Logger.Verbose("Mouse is over window = {Value}", entering);
         }
     }
 }

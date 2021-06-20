@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using Castaway.Assets;
+using Castaway.Base;
 using Castaway.Level;
 using Castaway.Rendering;
+using Serilog;
 
 namespace Castaway.OpenGL.Controllers
 {

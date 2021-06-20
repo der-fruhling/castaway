@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Castaway.Rendering;
+using Castaway.Base;
 using GLFW;
+using Serilog;
 
 namespace Castaway.OpenGL.Input
 {
@@ -9,6 +10,7 @@ namespace Castaway.OpenGL.Input
     {
         private readonly KeyCallback _callback;
         private readonly Dictionary<Keys, ButtonState> _keys = new();
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         internal KeyboardInputSystem()
         {
@@ -71,6 +73,7 @@ namespace Castaway.OpenGL.Input
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
+            Logger.Verbose("Key event: ({State} {Key}) = {NewState}", state, key, _keys[key]);
         }
     }
 }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Castaway.Base;
 using Castaway.OpenGL.Native;
+using Serilog;
 
 namespace Castaway.Rendering
 {
     public class ImplFinder
     {
         private static Dictionary<string, Type>? _implementations;
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         
         public static async Task<Graphics?> Find(string name)
         {
@@ -26,6 +29,7 @@ namespace Castaway.Rendering
         {
             return await Task.Run(() =>
             {
+                Logger.Debug("Searching for implementations");
                 var types = AppDomain.CurrentDomain
                     .GetAssemblies()
                     .Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies().Select(n => AppDomain.CurrentDomain.Load(n)))
@@ -34,8 +38,11 @@ namespace Castaway.Rendering
                     .SelectMany(a => a!.GetTypes())
                     .Distinct()
                     .Where(t => t.GetCustomAttribute<ImplementsAttribute>() != null);
+                var implList = types as Type[] ?? types.ToArray();
+                Logger.Debug("Found {Count} implementations", implList.Length);
+                foreach(var i in implList) Logger.Verbose("Implementation {Name} {Type}", i.GetCustomAttribute<ImplementsAttribute>()!.Name, i);
                 var impls = new Dictionary<string, Type>();
-                foreach (var type in types)
+                foreach (var type in implList)
                 {
                     var impl = type.GetCustomAttribute<ImplementsAttribute>();
                     impls.Add(impl!.Name, type);

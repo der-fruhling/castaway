@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Castaway.Base;
 using GLFW;
+using Serilog;
 
 namespace Castaway.Rendering
 {
@@ -8,6 +10,7 @@ namespace Castaway.Rendering
     {
         // ReSharper disable once InconsistentNaming
         public readonly Graphics GL;
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         static Window()
         {
@@ -17,24 +20,42 @@ namespace Castaway.Rendering
         
         public Window(int width, int height, string title, bool fullscreen, bool visible, Graphics? api = null)
         {
+            Logger.Debug("Starting window creation");
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.CocoaRetinaFrameBuffer, true);
+            Logger.Debug("Window Hint {Hint} = {Value}", Hint.CocoaRetinaFrameBuffer, true);
             Glfw.WindowHint(Hint.Visible, visible);
+            Logger.Debug("Window Hint {Hint} = {Value}", Hint.Visible, visible);
             if (fullscreen)
             {
                 var mon = Glfw.PrimaryMonitor;
                 var vid = Glfw.GetVideoMode(mon);
+                Logger.Debug("Window Size = {Width}x{Height}", vid.Width, vid.Height);
                 Native = Glfw.CreateWindow(vid.Width, vid.Height, title, mon, GLFW.Window.None);
             }
             else
             {
+                Logger.Debug("Window Size = {Width}x{Height}", width, height);
                 Native = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
             }
             Bind();
-            GL = api ?? ImplFinder.FindOptimalImplementation().Result!;
+            Logger.Debug("Window created successfully");
+            api ??= ImplFinder.FindOptimalImplementation().Result;
+            if (api == null)
+            {
+                api = ImplFinder.Find("OpenGL-3.2").Result;
+                Logger.Warning("API from FindOptimalImplementation was null; using {ApiType} instead", api.GetType());
+            }
+            GL = api;
+            Logger.Debug("Applied API {ApiType} to window", GL.GetType());
             GL.Window = this;
             GL.WindowInit(this);
             Glfw.SwapInterval(1);
+            _title = title;
+            _visible = visible;
+            VSync = true;
+            Logger.Debug("Finished setting up window");
+            Logger.Information("Created window {@Window}", this);
         }
 
         public Window(int width, int height, string title, bool visible = true)
@@ -54,20 +75,11 @@ namespace Castaway.Rendering
             await Task.Run(Dispose);
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            Glfw.DestroyWindow(Native);
-        }
-
         public void Dispose()
         {
-            ReleaseUnmanagedResources();
-            GC.SuppressFinalize(this);
-        }
-
-        ~Window()
-        {
-            ReleaseUnmanagedResources();
+            Logger.Information("Destroyed window {@Window}", this);
+            Glfw.DestroyWindow(Native);
+            GL.Dispose();
         }
 
         internal void IBind()
@@ -80,9 +92,13 @@ namespace Castaway.Rendering
         public void SetSize(int x, int y) => Glfw.SetWindowSize(Native, x, y);
         public void GetFramebufferSize(out int x, out int y) => Glfw.GetFramebufferSize(Native, out x, out y);
 
+        private string _title;
+        private bool _visible, _vsync;
+        
         public string Title
         {
-            set => Glfw.SetWindowTitle(Native, value);
+            get => _title;
+            set => Glfw.SetWindowTitle(Native, _title = value);
         }
 
         public bool ShouldClose
@@ -93,10 +109,23 @@ namespace Castaway.Rendering
 
         public bool Visible
         {
+            get => _visible;
             set
             {
-                if (value) Glfw.ShowWindow(Native);
+                // ReSharper disable once AssignmentInConditionalExpression
+                if (_visible = value) Glfw.ShowWindow(Native);
                 else Glfw.HideWindow(Native);
+            }
+        }
+
+        public bool VSync
+        {
+            get => _vsync;
+            set
+            {
+                _vsync = value;
+                Glfw.SwapInterval(value ? 1 : 0);
+                Logger.Debug("VSync = {Value}", value);
             }
         }
 

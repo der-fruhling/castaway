@@ -1,14 +1,18 @@
 using System;
+using Castaway.Base;
 using Castaway.Level;
 using Castaway.Math;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
+using Serilog;
 
 namespace Castaway.OpenGL.Controllers
 {
     [ControllerBase]
     public abstract class CameraController : Castaway.Level.CameraController
     {
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+
         public FramebufferObject? Framebuffer;
         public Matrix4 PerspectiveTransform;
         public Matrix4 ViewTransform;
@@ -29,6 +33,8 @@ namespace Castaway.OpenGL.Controllers
                 new(new Vector3(1, 1, 0),   texture: new Vector3(1, 1, 0)),
             }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructUnoptimisedFor(BuiltinShaders.DirectTextured!);
             // TODO Work around unoptimised fullscreen buffer.
+            
+            Logger.Debug("Created new camera {Type} filling {ID}", GetType(), CameraID);
         }
 
         public override void OnDestroy(LevelObject parent)
@@ -37,6 +43,7 @@ namespace Castaway.OpenGL.Controllers
             Framebuffer?.Dispose();
             _fullscreenDrawable?.Dispose();
             _fullscreenDrawable = null;
+            Logger.Debug("Removed camera filling {ID}", CameraID);
         }
 
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)

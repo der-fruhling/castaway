@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Castaway.Base;
 using Castaway.Math;
 using Castaway.OpenGL.Input;
 using Castaway.Rendering.Structures;
 using GLFW;
+using Serilog;
 
 namespace Castaway.Rendering.UI
 {
@@ -20,6 +22,8 @@ namespace Castaway.Rendering.UI
         public (int X, int Y) Area;
         
         private bool _initialized = false;
+
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         protected UIElement(int x, int y, int width, int height, Corner relative = Corner.BottomLeft)
         {
@@ -133,9 +137,25 @@ namespace Castaway.Rendering.UI
         public void UpdateElement()
         {
             Update();
-            if(WasLeftClicked) ReactLeftClick();
-            if(WasRightClicked) ReactRightClick();
-            if(WasMiddleClicked) ReactMiddleClick();
+            
+            if (WasLeftClicked)
+            {
+                Logger.Verbose("Left click detected: {@State}", InputSystem.Mouse);
+                ReactLeftClick();
+            }
+
+            if (WasRightClicked)
+            {
+                Logger.Verbose("Right click detected: {@State}", InputSystem.Mouse);
+                ReactRightClick();
+            }
+
+            if (WasMiddleClicked)
+            {
+                Logger.Verbose("Middle click detected: {@State}", InputSystem.Mouse);
+                ReactMiddleClick();
+            }
+            
             foreach(var c in Children) c.UpdateElement();
         }
 
@@ -143,6 +163,7 @@ namespace Castaway.Rendering.UI
         {
             if (!_initialized)
             {
+                Logger.Verbose("Initializing UIElement: {@This}", this);
                 Initialize();
                 _initialized = true;
             }

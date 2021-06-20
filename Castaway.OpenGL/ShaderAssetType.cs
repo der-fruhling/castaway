@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using Castaway.Assets;
+using Castaway.Base;
 using Castaway.Rendering;
+using Serilog;
 
 namespace Castaway.OpenGL
 {
     [Loads("shdr")]
     public class ShaderAssetType : XMLAssetType
     {
+        private static ILogger Logger = CastawayGlobal.GetLogger();
+        
         private enum Ordering
         {
             Version,
@@ -81,6 +86,7 @@ namespace Castaway.OpenGL
 
         public static ShaderObject LoadOpenGL(string str, string path)
         {
+            Logger.Debug("Loading shader from {Path}", path);
             var doc = new XmlDocument();
             doc.LoadXml(str);
             return LoadOpenGL(doc, path);

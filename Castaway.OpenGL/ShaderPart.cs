@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using Castaway.Assets;
+using Castaway.Base;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
+using Serilog;
 
 namespace Castaway.OpenGL
 {
@@ -13,6 +15,7 @@ namespace Castaway.OpenGL
         public bool CompileSuccess => GL.GetShader(Number, GL.ShaderQuery.CompileStatus) == 1;
         public override string Name => $"{Number}->{Stage}({Valid})";
         public override bool Valid => CompileSuccess && !Destroyed;
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         public string CompileLog
         {
@@ -31,7 +34,12 @@ namespace Castaway.OpenGL
             GL.CompileShader(Number);
             
             GL.GetShaderInfoLog(Number, out _, out var log);
-            if(log.Any()) Console.Error.WriteLine(log);
+            if (log.Any())
+            {
+                Logger.Warning("Shader Log ({Stage} @ {Location})", stage, sourceLocation);
+                var lines = log.Split('\n');
+                foreach(var l in lines) Logger.Warning("{Line}", l.Trim());
+            }
             if (!CompileSuccess) throw new GraphicsException($"Failed to compile {stage} shader");
         }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using Castaway.Base;
+using Serilog;
 
 namespace Castaway.Level
 {
@@ -28,6 +30,7 @@ namespace Castaway.Level
 
     public static class ControllerFinder
     {
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         private static Dictionary<string, Type> _controllers;
         private static List<Type> _controllerBases;
         
@@ -49,6 +52,7 @@ namespace Castaway.Level
             _controllerBases = types
                 .Where(t => t.GetCustomAttribute<ControllerBaseAttribute>() != null)
                 .ToList();
+            Logger.Debug("Running with controller set: {Controllers}", _controllers);
         }
 
         public static void RegisterController(Type controller)
@@ -58,6 +62,8 @@ namespace Castaway.Level
                 throw new InvalidOperationException($"All controllers need a {nameof(ControllerNameAttribute)}");
             var name = attr.Name ?? controller.Name;
             _controllers.Add(name, controller);
+            Logger.Debug("Registered new controller {Controller} as {Name}", controller, name);
+            Logger.Debug("Running with controller set: {Controllers}", _controllers);
         }
 
         public static Type Get(string name) => _controllers.ContainsKey(name) 

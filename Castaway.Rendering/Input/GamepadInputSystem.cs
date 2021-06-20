@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Castaway.Base;
 using Castaway.Math;
 using GLFW;
+using Serilog;
 using Exception = System.Exception;
 
 namespace Castaway.OpenGL.Input
@@ -94,6 +96,7 @@ namespace Castaway.OpenGL.Input
     {
         private readonly JoystickCallback _joystickCallback;
         private GamepadTypeImpl? _impl;
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         public List<Joystick> Available { get; } = new();
         public bool Locked = false;
@@ -182,11 +185,13 @@ namespace Castaway.OpenGL.Input
                     }
                     Available.Add(joystick);
                     Active = (int) joystick;
+                    Logger.Information("Connected gamepad {ID}", (int) joystick);
                     break;
                 case ConnectionStatus.Disconnected:
                     Available.Remove(joystick);
                     var ptr = Glfw.GetJoystickUserPointer((int) joystick);
                     Marshal.FreeHGlobal(ptr);
+                    Logger.Information("Disconnected gamepad {ID}", (int) joystick);
                     break;
                 case ConnectionStatus.Unknown:
                     break;

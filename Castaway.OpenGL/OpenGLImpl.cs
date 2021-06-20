@@ -2,12 +2,14 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
+using Castaway.Base;
 using Castaway.Math;
 using Castaway.OpenGL.Input;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
 using GLFW;
+using Serilog;
 using Graphics = Castaway.Rendering.Graphics;
 using Window = Castaway.Rendering.Window;
 
@@ -16,6 +18,8 @@ namespace Castaway.OpenGL
     [Implements("OpenGL-3.2")]
     public class OpenGLImpl : Graphics
     {
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+        
         public OpenGLImpl()
         {
             GL.Init();

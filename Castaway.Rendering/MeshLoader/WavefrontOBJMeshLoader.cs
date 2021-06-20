@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Castaway.Base;
 using Castaway.Math;
 using Castaway.Rendering.Structures;
+using Serilog;
 
 namespace Castaway.Rendering.MeshLoader
 {
     public static class WavefrontOBJ
     {
+        private static ILogger Logger = CastawayGlobal.GetLogger();
+        
         public static async Task<Mesh> ReadMesh(string[] lines)
         {
             return await Task.Run(delegate
             {
+                Logger.Debug("Starting load of Wavefront OBJ mesh ({LineCount} lines)", lines.Length);
                 var positions = new List<Vector3>();
                 var textureCoords = new List<Vector3>();
                 var normals = new List<Vector3>();
@@ -128,15 +133,16 @@ namespace Castaway.Rendering.MeshLoader
                             case "mtllib": /* TODO Implement Materials */ break;
                             case "usemtl": /* TODO Implement Materials */ break;
                             case "s": /* TODO Implement `s` */ break;
-                            case "o": break;
+                            case "o":
+                                Logger.Verbose("In object {Name}", parts[1]);
+                                break;
                             default:
                                 throw new InvalidOperationException($"Invalid line {line}");
                         }
                     }
-                    catch (IndexOutOfRangeException)
+                    catch (IndexOutOfRangeException e)
                     {
-                        Console.Error.WriteLine($"Not enough data on line {i + 1}");
-                        throw;
+                        throw new AggregateException($"Not enough data on line {i+1}", e);
                     }
                 }
 

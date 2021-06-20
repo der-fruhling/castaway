@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Serilog;
 
 namespace Castaway.OpenGL.FunctionListGenerator
 {
@@ -11,14 +12,14 @@ namespace Castaway.OpenGL.FunctionListGenerator
     {
         private const string Url = "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml";
 
-        private static string ExtractNameFromCommand(XmlElement e)
+        private static string ExtractNameFromCommand(ILogger log, XmlElement e)
         {
             var proto = e.GetElementsByTagName("proto").Item(0) as XmlElement;
             var name = proto!.GetElementsByTagName("name").Item(0) as XmlElement;
             return name!.InnerText;
         }
 
-        private static void Search(ICollection<string> commands, IDictionary<string, string> constants, XmlElement e)
+        private static void Search(ILogger log, ICollection<string> commands, IDictionary<string, string> constants, XmlElement e)
         {
             switch (e.Name)
             {
@@ -26,7 +27,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
                     commands.Add(e.GetAttribute("name"));
                     return;
                 case "command" when e.HasChildNodes:
-                    commands.Add(ExtractNameFromCommand(e));
+                    commands.Add(ExtractNameFromCommand(log, e));
                     return;
                 case "enum" when e.HasAttribute("value"):
                     var v = e.GetAttribute("value");
@@ -44,50 +45,63 @@ namespace Castaway.OpenGL.FunctionListGenerator
             foreach (var n in e.GetElementsByTagName("*"))
             {
                 var element = n as XmlElement;
-                Search(commands, constants, element!);
+                Search(log, commands, constants, element!);
             }
         }
 
         private static void Main()
         {
+            using var log = new LoggerConfiguration()
+                .WriteTo.Console(outputTemplate: "({Timestamp:HH:mm:ss} {Level:u3}) {Message:lj}{NewLine}{Exception}")
+                .MinimumLevel.Information()
+                .CreateLogger();
+            
             var doc = new XmlDocument();
-            Console.WriteLine($"Downloading document from {Url}");
-            var reader = new XmlTextReader(Url);
-            Console.WriteLine("Loading content");
-            doc.Load(reader);
-            reader.Dispose();
+            log.Information("Downloading document from {Url}", Url);
+            using (var reader = new XmlTextReader(Url))
+            {
+                log.Information("Loading content");
+                doc.Load(reader);
+            }
 
-            Console.WriteLine("Searching");
+            log.Information("Searching XML data for points of interest");
             var root = doc.GetElementsByTagName("registry").Item(0) as XmlElement;
             var commands = new List<string>();
             var constants = new Dictionary<string, string>();
-            Search(commands, constants, root!);
-            commands = commands.OrderBy(a => a).Distinct().ToList();
+            Search(log, commands, constants, root!);
+            log.Debug("Found {Count} commands before filtering", commands.Count);
+            log.Debug("Found {Count} constants before filtering", constants.Count);
+            commands = commands.Distinct().ToList();
+            log.Debug("Found {Count} commands after filtering", commands.Count);
+            log.Debug("Found {Count} constants after filtering", constants.Count);
 
-            Console.WriteLine("Parsing data");
+            log.Information("Generating enum GLF");
             var commandLines = new List<string>();
             commandLines.Add("namespace Castaway.OpenGL.Native");
             commandLines.Add("{");
             commandLines.Add("    public enum GLF : ushort");
             commandLines.Add("    {");
+            log.Debug("Iterating {Count} commands", commands.Count);
             commandLines.AddRange(commands.Select(c => $"        {c},"));
             commandLines.Add("    }");
             commandLines.Add("}");
 
             File.WriteAllLines("GLF.Generated.cs", commandLines);
-            Console.WriteLine("  Wrote GLF.Generated.cs");
+            log.Debug("Finished generating enum GLF; wrote to GLF.Generated.cs");
 
+            log.Information("Generating enum GLC");
             var constantLines = new List<string>();
             constantLines.Add("namespace Castaway.OpenGL.Native");
             constantLines.Add("{");
             constantLines.Add("    public enum GLC : int");
             constantLines.Add("    {");
+            log.Debug("Iterating {Count} constants", constants.Count);
             constantLines.AddRange(constants.Select(c => $"        {c.Key}={c.Value},"));
             constantLines.Add("    }");
             constantLines.Add("}");
 
             File.WriteAllLines("GLC.Generated.cs", constantLines);
-            Console.WriteLine("  Wrote GLC.Generated.cs");
+            log.Debug("Finished generating enum GLC; wrote to GLC.Generated.cs");
         }
     }
 }
