@@ -21,15 +21,13 @@ on:
         description: Disable Windows Build and Test
         required: false
         default: 'false'
-env:
-  disable-ubuntu: ${{ github.event.inputs.disable-ubuntu }}
-  disable-mac: ${{ github.event.inputs.disable-mac }}
-  disable-windows: ${{ github.event.inputs.disable-windows }}
 jobs:
   build:
+    env:
+      disable: ${{ github.event.inputs.disable-ubuntu }}
     name: Ubuntu Build and Test
     runs-on: ubuntu-latest
-    if: env.disable-ubuntu != 'true'
+    if: env.disable != 'true'
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -49,9 +47,11 @@ jobs:
         name: packages
         path: ./Castaway.*/bin/Debug/*.nupkg
   build-mac:
+    env:
+      disable: ${{ github.event.inputs.disable-mac }}
     name: Mac Build and Test
     runs-on: macos-latest
-    if: env.disable-mac != 'true'
+    if: env.disable != 'true'
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -65,9 +65,11 @@ jobs:
     - name: Test
       run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;ErrorsOnly"
   build-windows:
+    env:
+      disable: ${{ github.event.inputs.disable-windows }}
     name: Windows Build and Test
     runs-on: windows-latest
-    if: env.disable-windows != 'true'
+    if: env.disable != 'true'
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -81,6 +83,10 @@ jobs:
     - name: Test
       run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;ErrorsOnly"
   publish:
+    env:
+      disable-ubuntu: ${{ github.event.inputs.disable-ubuntu }}
+      disable-mac: ${{ github.event.inputs.disable-mac }}
+      disable-windows: ${{ github.event.inputs.disable-windows }}
     name: Publish
     runs-on: ubuntu-latest
     needs: [build, build-mac, build-windows]
