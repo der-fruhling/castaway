@@ -7,7 +7,7 @@ using GLFW;
 using Serilog;
 using Exception = System.Exception;
 
-namespace Castaway.OpenGL.Input
+namespace Castaway.Rendering.Input
 {
     public enum GamepadType
     {

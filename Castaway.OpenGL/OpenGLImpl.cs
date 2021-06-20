@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using Castaway.Base;
 using Castaway.Math;
-using Castaway.OpenGL.Input;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
+using Castaway.Rendering.Input;
 using Castaway.Rendering.Structures;
 using GLFW;
 using Serilog;
@@ -120,6 +120,7 @@ namespace Castaway.OpenGL
         public override void FinishFrame(Window window)
         {
             window.SwapBuffers();
+            InputSystem.Clear();
             _stopwatch.Stop();
             FrameTimes.Insert(0, (float) _stopwatch.Elapsed.TotalSeconds);
             const int MaxTimes = 60;

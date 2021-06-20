@@ -5,7 +5,7 @@ using Castaway.Math;
 using GLFW;
 using Serilog;
 
-namespace Castaway.OpenGL.Input
+namespace Castaway.Rendering.Input
 {
     public class MouseInputSystem
     {

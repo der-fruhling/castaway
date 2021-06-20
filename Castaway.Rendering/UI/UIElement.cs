@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Castaway.Base;
 using Castaway.Math;
-using Castaway.OpenGL.Input;
+using Castaway.Rendering.Input;
 using Castaway.Rendering.Structures;
 using GLFW;
 using Serilog;

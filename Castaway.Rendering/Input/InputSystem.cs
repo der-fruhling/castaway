@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Castaway.OpenGL.Input
+namespace Castaway.Rendering.Input
 {
     public static class InputSystem
     {

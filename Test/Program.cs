@@ -2,8 +2,8 @@
 using Castaway.Base;
 using Castaway.Level;
 using Castaway.OpenGL;
-using Castaway.OpenGL.Input;
 using Castaway.Rendering;
+using Castaway.Rendering.Input;
 using GLFW;
 using Serilog.Events;
 using Window = Castaway.Rendering.Window;

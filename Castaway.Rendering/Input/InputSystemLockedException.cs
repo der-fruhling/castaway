@@ -1,6 +1,6 @@
 using System;
 
-namespace Castaway.OpenGL.Input
+namespace Castaway.Rendering.Input
 {
     public class InputSystemLockedException : Exception { }
 }

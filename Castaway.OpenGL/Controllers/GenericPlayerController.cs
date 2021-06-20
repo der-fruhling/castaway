@@ -1,8 +1,8 @@
 using System;
 using Castaway.Level;
 using Castaway.Math;
-using Castaway.OpenGL.Input;
 using Castaway.Rendering;
+using Castaway.Rendering.Input;
 using GLFW;
 
 namespace Castaway.OpenGL.Controllers

@@ -4,7 +4,7 @@ using Castaway.Base;
 using GLFW;
 using Serilog;
 
-namespace Castaway.OpenGL.Input
+namespace Castaway.Rendering.Input
 {
     public class KeyboardInputSystem
     {
