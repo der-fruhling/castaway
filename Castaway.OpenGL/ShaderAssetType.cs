@@ -38,16 +38,6 @@ namespace Castaway.OpenGL
             Model
         }
 
-        private struct Struct
-        {
-            public Dictionary<string, UniformType> Uniforms;
-
-            public Struct(Dictionary<string, UniformType> uniforms)
-            {
-                Uniforms = uniforms;
-            }
-        }
-        
         private static readonly string[] GlobalNodeTypes =
         {
             "input", 

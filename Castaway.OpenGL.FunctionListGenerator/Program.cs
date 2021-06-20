@@ -23,9 +23,6 @@ namespace Castaway.OpenGL.FunctionListGenerator
         {
             switch (e.Name)
             {
-                case "command" when !e.HasChildNodes:
-                    commands.Add(e.GetAttribute("name"));
-                    return;
                 case "command" when e.HasChildNodes:
                     commands.Add(ExtractNameFromCommand(log, e));
                     return;
@@ -37,6 +34,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
                     constants[e.GetAttribute("name")] = v;
                     return;
                 case "extension":
+                case "feature":
                     return;
             }
 

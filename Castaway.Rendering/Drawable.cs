@@ -22,11 +22,6 @@ namespace Castaway.Rendering
             ElementArray = elementArray;
         }
 
-        public void Bind()
-        {
-            VertexArray?.Bind();
-        }
-
         public void Dispose()
         {
             GC.SuppressFinalize(this);

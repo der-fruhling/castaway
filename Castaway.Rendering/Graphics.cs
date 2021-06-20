@@ -34,7 +34,6 @@ namespace Castaway.Rendering
 
         public ShaderObject? BoundShader { get; set; }
         public FramebufferObject? BoundFramebuffer { get; set; }
-        public Drawable? BoundDrawable { get; set; }
         public readonly TextureObject?[] BoundTextures = new TextureObject?[32];
 
         public abstract string Name { get; }

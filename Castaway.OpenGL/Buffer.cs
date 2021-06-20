@@ -72,30 +72,10 @@ namespace Castaway.OpenGL
         {
             return !left.Equals(right);
         }
-
-        private void ReleaseUnmanagedResources()
-        {
-            GL.DeleteBuffers(1, new []{Number});
-        }
-
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                Destroyed = true;
-            }
-        }
-
+        
         public override void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~Buffer()
-        {
-            Dispose(false);
+            GL.DeleteBuffers(1, new []{Number});
         }
 
         public override void Upload(IEnumerable<byte> bytes)

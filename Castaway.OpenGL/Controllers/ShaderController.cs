@@ -8,18 +8,12 @@ using Serilog;
 
 namespace Castaway.OpenGL.Controllers
 {
-    public enum BuiltinShader
-    {
-        Default,
-        TexturedDefault,
-        NoTransform,
-        TexturedNoTransform
-    }
-
     [ControllerName("Shader")]
     public class ShaderController : EmptyController
     {
-        [LevelSerialized("Builtin")] public BuiltinShader BuiltinShaderName;
+        private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+        
+        [LevelSerialized("Builtin")] public string BuiltinShaderName;
 
         [LevelSerialized("Asset")] public string AssetName = string.Empty;
         public ShaderObject? Shader;
@@ -32,17 +26,15 @@ namespace Castaway.OpenGL.Controllers
             if (AssetName.Any())
             {
                 Shader = AssetLoader.Loader!.GetAssetByName(AssetName).To<ShaderObject>();
+                Logger.Debug("Initialized shader controller with asset at {Path}", AssetName);
             }
             else
             {
-                Shader = BuiltinShaderName switch
-                {
-                    BuiltinShader.Default => BuiltinShaders.Default,
-                    BuiltinShader.TexturedDefault => BuiltinShaders.DefaultTextured,
-                    BuiltinShader.NoTransform => BuiltinShaders.Direct,
-                    BuiltinShader.TexturedNoTransform => BuiltinShaders.DirectTextured,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                Shader = typeof(BuiltinShaders).GetField(BuiltinShaderName)?.GetValue(null) as ShaderObject;
+                if (Shader == null)
+                    throw new InvalidOperationException(
+                        $"Invalid builtin shader name encountered: {BuiltinShaderName}");
+                Logger.Debug("Initialized shader controller with builtin shader {Name}", BuiltinShaderName);
             }
         }
 
