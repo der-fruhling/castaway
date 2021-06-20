@@ -8,6 +8,8 @@ namespace Castaway.OpenGL
     [Implements("OpenGL-4.0")]
     public class OpenGL40 : OpenGL33
     {
+        public override string Name => "OpenGL-4.0";
+        
         public override void SetDoubleUniform(ShaderObject p, string name, double i)
         {
             if (p is not Shader s)

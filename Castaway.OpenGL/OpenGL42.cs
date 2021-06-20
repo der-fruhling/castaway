@@ -7,6 +7,8 @@ namespace Castaway.OpenGL
     [Implements("OpenGL-4.2")]
     public class OpenGL42 : OpenGL41
     {
+        public override string Name => "OpenGL-4.2";
+        
         public override void PutImage(uint image, TextureObject texture)
         {
             if (texture is not Texture t) throw new InvalidOperationException("Must only use OpenGL types.");
