@@ -43,9 +43,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build -c Debug --no-restore --nologo -clp:NoSummary
+      run: dotnet build -c Debug --no-restore --nologo -clp:"NoSummary;ErrorsOnly"
     - name: Test
-      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
+      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;ErrorsOnly"
   build-windows:
     name: Windows Build and Test
     runs-on: windows-latest
@@ -58,9 +58,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build -c Debug --no-restore --nologo -clp:NoSummary
+      run: dotnet build -c Debug --no-restore --nologo -clp:"NoSummary;ErrorsOnly"
     - name: Test
-      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
+      run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;ErrorsOnly"
   publish:
     name: Publish
     runs-on: ubuntu-latest
