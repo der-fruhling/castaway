@@ -3,6 +3,8 @@
     <PropertyGroup>
         <!-- Unique -->
         <Title>Castaway Levels</Title>
+        <PackageId>Castaway.Level</PackageId>
+        <RootNamespace>Castaway.Level</RootNamespace>
 
         <!-- Common -->
         <PackageVersion>0.0.20210619-pg.1</PackageVersion>
