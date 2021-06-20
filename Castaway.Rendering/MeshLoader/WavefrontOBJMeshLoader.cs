@@ -146,6 +146,7 @@ namespace Castaway.Rendering.MeshLoader
                     }
                 }
 
+                Logger.Verbose("Starting to compact {Count} vertices", vertices.Count);
                 var realVertices = new List<Mesh.Vertex>();
                 for (uint i = 0; i < vertices.Count; i++)
                 {
@@ -161,6 +162,7 @@ namespace Castaway.Rendering.MeshLoader
                     }
                 }
 
+                Logger.Debug("Finished mesh construction; {ElementCount} elements, {VertexCount} vertices", elements.Count, realVertices.Count);
                 return new Mesh(realVertices.ToArray(), elements.ToArray());
             });
         }
