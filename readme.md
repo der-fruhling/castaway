@@ -61,7 +61,7 @@ internal static class Program
         // ** Object destruction would go right here. **
         
         // (`window` is automatically destroyed because of the `using` on it's
-        //  declaration. If `using` is omitted, call discard on the object
+        //  declaration. If `using` is omitted, call Dispose() on the object
         //  *before* Main exits.)
     }
 }
