@@ -3,7 +3,7 @@ using Castaway.Math;
 namespace Castaway.Level
 {
     [ControllerBase]
-    public abstract class CameraController : EmptyController
+    public abstract class CameraController : Controller
     {
         [LevelSerialized("ID")] public uint CameraID;
         [LevelSerialized("NearCutoff")] public float NearCutoff = 0.01f;

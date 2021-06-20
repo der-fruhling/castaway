@@ -10,7 +10,7 @@ namespace Castaway.Level
         public Vector3 Position = new(0, 0, 0), Scale = new(1, 1, 1);
         public Vector3 RealPosition => Position + (Parent?.RealPosition ?? new Vector3(0, 0, 0));
         public Quaternion Rotation = Quaternion.Rotation(0, 0, 0).Normalize();
-        public List<EmptyController> Controllers = new();
+        public List<Controller> Controllers = new();
         public List<LevelObject> Subobjects = new();
         public LevelObject? Parent;
         public Level Level;
@@ -48,9 +48,9 @@ namespace Castaway.Level
         public void Add(LevelObject obj) => Subobjects.Add(obj);
         public LevelObject Get(string name) => Subobjects.Single(o => o.Name == name);
         public LevelObject this[string i] => Get(i);
-        public T? Get<T>() where T : EmptyController => Controllers.SingleOrDefault(c => c is T) as T;
-        public T[] GetAll<T>() where T : EmptyController => Controllers.Where(c => c is T).Cast<T>().ToArray();
-        public void Add(EmptyController controller) => Controllers.Add(controller);
+        public T? Get<T>() where T : Controller => Controllers.SingleOrDefault(c => c is T) as T;
+        public T[] GetAll<T>() where T : Controller => Controllers.Where(c => c is T).Cast<T>().ToArray();
+        public void Add(Controller controller) => Controllers.Add(controller);
 
         public void OnPreRender(LevelObject cam)
         {

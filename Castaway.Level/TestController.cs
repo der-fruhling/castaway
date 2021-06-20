@@ -5,7 +5,7 @@ namespace Castaway.Level
 {
     [DebuggerDisplay("Test1={" + nameof(Test1) + "}, Test2={" + nameof(Test2) + "}")]
     [ControllerName("Test")]
-    public class TestController : EmptyController
+    public class TestController : Controller
     {
         [LevelSerialized("Test1")]
         public int Test1;

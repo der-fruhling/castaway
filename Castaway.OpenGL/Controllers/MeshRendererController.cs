@@ -8,7 +8,7 @@ using Serilog;
 namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("MeshRenderer")]
-    public class MeshRendererController : EmptyController
+    public class MeshRendererController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         private Drawable? _drawable;

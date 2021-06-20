@@ -60,7 +60,7 @@ namespace Castaway.Level
             return o;
         }
 
-        private EmptyController ParseController(XmlElement e, string? api)
+        private Controller ParseController(XmlElement e, string? api)
         {
             var t = ControllerFinder.Get(e.Name);
             var inst = Activator.CreateInstance(t);
@@ -84,7 +84,7 @@ namespace Castaway.Level
                 }
             }
             
-            return (inst as EmptyController)!;
+            return (inst as Controller)!;
         }
 
         private static object Load(Type t, string v)

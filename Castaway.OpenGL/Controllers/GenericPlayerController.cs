@@ -8,7 +8,7 @@ using GLFW;
 namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("GenericPlayer")]
-    public class GenericPlayerController : EmptyController
+    public class GenericPlayerController : Controller
     {
         private float _rx, _ry;
         

@@ -6,7 +6,7 @@ using Castaway.Rendering;
 namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("Light")]
-    public class LightController : EmptyController
+    public class LightController : Controller
     {
         [LevelSerialized("Type")] public LightType Type;
         [LevelSerialized("Color")] public Vector3 Color = new(1, 1, 1);

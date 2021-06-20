@@ -9,7 +9,7 @@ using Serilog;
 namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("Shader")]
-    public class ShaderController : EmptyController
+    public class ShaderController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         
