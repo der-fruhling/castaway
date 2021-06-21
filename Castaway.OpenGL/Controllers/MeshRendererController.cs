@@ -34,6 +34,7 @@ namespace Castaway.OpenGL.Controllers
             if (_lastBound != g.BoundShader || _drawable == null)
             {
                 _drawable = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g.BoundShader!);
+                _lastBound = g.BoundShader;
             }
             g.Draw(g.BoundShader!, _drawable!);
         }
