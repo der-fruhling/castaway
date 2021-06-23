@@ -15,7 +15,7 @@ namespace Test
     {
         private static int Main()
         {
-            CastawayGlobal.LevelSwitch.MinimumLevel = LogEventLevel.Information;
+            CastawayGlobal.LevelSwitch.MinimumLevel = LogEventLevel.Verbose;
             return CastawayGlobal.Run<Program>();
         }
 
