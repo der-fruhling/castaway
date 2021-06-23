@@ -11,7 +11,7 @@ using Castaway.Rendering.Structures;
 namespace Castaway.Rendering
 {
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
-    public abstract class Graphics : IDisposable
+    public abstract class Graphics : RenderObject
     {
         protected static ThreadLocal<Window?> CurrentlyBound = new(() => null);
         public Window? Window;
@@ -35,8 +35,6 @@ namespace Castaway.Rendering
         public ShaderObject? BoundShader { get; set; }
         public FramebufferObject? BoundFramebuffer { get; set; }
         public readonly TextureObject?[] BoundTextures = new TextureObject?[32];
-
-        public abstract string Name { get; }
 
         public readonly Dictionary<BufferTarget, BufferObject?> BoundBuffers = new()
         {
@@ -191,6 +189,10 @@ namespace Castaway.Rendering
 
         public virtual void PutImage(uint image, TextureObject texture) => throw new NotSupportedException();
 
-        public virtual void Dispose() => throw new NotSupportedException();
+        public override void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            throw new NotSupportedException();
+        }
     }
 }

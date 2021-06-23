@@ -15,22 +15,15 @@ namespace Castaway.Rendering
     {
         public abstract void Dispose();
         public abstract string Name { get; }
-        public abstract bool Valid { get; }
-
-        public void CheckValid()
-        {
-            if (!Valid) throw new RenderObjectInvalidException(GetType(), Name);
-        }
-
-        public abstract void Bind();
-        public abstract void Unbind();
     }
 
-    public abstract class SeparatedShaderObject : RenderObject
+    public abstract class SeparatedShaderObject : RenderObject, IValidatable
     {
         public readonly ShaderStage Stage;
         public readonly string SourceCode;
         public readonly string SourceLocation;
+        
+        public abstract bool Valid { get; }
 
         protected SeparatedShaderObject(ShaderStage stage, string sourceCode, string sourceLocation)
         {
@@ -38,18 +31,17 @@ namespace Castaway.Rendering
             SourceCode = sourceCode;
             SourceLocation = sourceLocation;
         }
-
-        public sealed override void Bind() => throw new NotSupportedException();
-        public sealed override void Unbind() => throw new NotSupportedException();
     }
 
-    public abstract class ShaderObject : RenderObject
+    public abstract class ShaderObject : RenderObject, IValidatable, IBindable
     {
         public SeparatedShaderObject[] Shaders { get; }
 
         private readonly Dictionary<string, VertexInputType> _inputs = new();
         private readonly Dictionary<string, uint> _outputs = new();
         private readonly Dictionary<string, UniformType> _uniforms = new();
+        
+        public abstract bool Valid { get; }
 
         protected ShaderObject(SeparatedShaderObject[] shaders)
         {
@@ -80,13 +72,17 @@ namespace Castaway.Rendering
 
         public string? GetUniform(UniformType type) => _uniforms.Keys.SingleOrDefault(n => GetUniform(n) == type);
         public string? GetUniform(UniformType type, int i) => GetUniform(type)?.Replace("$INDEX", i.ToString());
+        public abstract void Bind();
+        public abstract void Unbind();
     }
 
-    public abstract class BufferObject : RenderObject
+    public abstract class BufferObject : RenderObject, IValidatable, IBindable
     {
         public abstract void Upload(IEnumerable<byte> bytes);
 
         protected IEnumerable<byte>? RealData = null;
+        
+        public abstract bool Valid { get; }
 
         public IEnumerable<byte> Data
         {
@@ -130,21 +126,24 @@ namespace Castaway.Rendering
         public virtual void Upload(params uint[][] uintses) => Upload(uintses.SelectMany(a => a));
         public virtual void Upload(params float[][] floatses) => Upload(floatses.SelectMany(a => a));
         public virtual void Upload(params double[][] doubleses) => Upload(doubleses.SelectMany(a => a));
+        public abstract void Bind();
+        public abstract void Unbind();
     }
 
-    public abstract class TextureObject : RenderObject
+    public abstract class TextureObject : RenderObject, IValidatable
     {
         public abstract void Bind(int slot);
         public abstract void Unbind(int slot);
-
-        public sealed override void Bind() => throw new NotSupportedException();
-        public sealed override void Unbind() => throw new NotSupportedException();
+        public abstract bool Valid { get; }
     }
 
-    public abstract class FramebufferObject : RenderObject
+    public abstract class FramebufferObject : RenderObject, IValidatable, IBindable
     {
         public TextureObject? Color;
         public TextureObject? Stencil;
         public TextureObject? Depth;
+        public abstract bool Valid { get; }
+        public abstract void Bind();
+        public abstract void Unbind();
     }
 }
