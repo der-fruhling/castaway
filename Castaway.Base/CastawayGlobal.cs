@@ -13,20 +13,19 @@ namespace Castaway.Base
     public static class CastawayGlobal
     {
         public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
-        
-        private static readonly ILogger Logger = new LoggerConfiguration()
-            .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher())
-            .WriteTo.Console(outputTemplate: "[{Level:u3} {Timestamp:HH:mm:ss.fff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
-            .WriteTo.File("castaway.log", outputTemplate: "{Level} {Timestamp:HH:mm:ss.fff} [{ThreadName}] [{SourceContext}]; {Message:lj}{NewLine}{Exception}")
-            .WriteTo.File(new CompactJsonFormatter(), "castaway.log.jsonl", LogEventLevel.Debug)
-            .MinimumLevel.ControlledBy(LevelSwitch)
-            .CreateLogger();
 
-        public static ILogger GetLogger(Type type) => Logger.ForContext(type);
+        public static ILogger GetLogger(Type type) => Log.Logger.ForContext(type);
         public static ILogger GetLogger() => GetLogger(new StackTrace().GetFrame(1)!.GetMethod()!.DeclaringType!);
 
         public static int Run<T>() where T : class, IApplication, new()
         {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher())
+                .WriteTo.Console(outputTemplate: "[{Level:u3} {Timestamp:HH:mm:ss.fff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File("castaway.log", outputTemplate: "{Level} {Timestamp:HH:mm:ss.fff} [{ThreadName}] [{SourceContext}]; {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File(new CompactJsonFormatter(), "castaway.log.jsonl", LogEventLevel.Debug)
+                .MinimumLevel.ControlledBy(LevelSwitch)
+                .CreateLogger();
             Thread.CurrentThread.Name = "MainThread";
             var returnCode = 0;
             var logger = GetLogger();

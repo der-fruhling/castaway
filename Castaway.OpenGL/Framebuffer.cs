@@ -1,6 +1,7 @@
 using System;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
+using Serilog;
 
 namespace Castaway.OpenGL
 {
@@ -66,6 +67,7 @@ namespace Castaway.OpenGL
             Color = new Texture(a[0]);
             
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, 0);
+            Log.Verbose("Updated framebuffer {Number} to size {Width}x{Height}", Number, w, h);
         }
 
         public void Update(int w, int h)
