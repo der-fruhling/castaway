@@ -42,6 +42,8 @@ namespace Test
 
             _level.Start();
             _window.Visible = true;
+
+            InputSystem.Mouse.RawInput = true;
         }
 
         public void StartFrame()

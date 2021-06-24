@@ -15,6 +15,7 @@ namespace Castaway.OpenGL.Controllers
         
         [LevelSerialized("MovementSpeed")] public float MovementSpeed = 0.125f;
         [LevelSerialized("RotationSpeed")] public float RotationSpeed = 2f;
+        [LevelSerialized("MouseSensitivity")] public float MouseSensitivity = 0.15f;
         [LevelSerialized("Lock.Depth")] public bool DepthLocked = false;
         [LevelSerialized("Lock.Rotation")] public bool RotationLocked = false;
         [LevelSerialized("Lock.Movement")] public bool MovementLocked = false;
@@ -65,8 +66,19 @@ namespace Castaway.OpenGL.Controllers
                 if (InputSystem.Keyboard.IsDown(Keys.Right)) _rx -= rotateSpeed * g.FrameChange;
             });
 
+            var mouseTask = Task.Run(delegate
+            {
+                if(!InputSystem.Mouse.RawInput) return;
+                var pos = InputSystem.Mouse.CursorMovement;
+                var x = MathEx.ToRadians((float) pos.X * MouseSensitivity * g.FrameChange);
+                var y = MathEx.ToRadians((float) pos.Y * MouseSensitivity * g.FrameChange);
+                _rx -= x;
+                _ry -= y;
+            });
+
             await gamepadTask;
             await keyboardTask;
+            await mouseTask;
             
             _ry = MathEx.Clamp(_ry, MathF.PI / -2, MathF.PI / 2);
 

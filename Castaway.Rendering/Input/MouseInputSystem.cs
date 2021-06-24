@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castaway.Base;
 using Castaway.Math;
 using GLFW;
@@ -16,6 +17,22 @@ namespace Castaway.Rendering.Input
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
         public float PositionScale = 1.0f;
+
+        private bool _rawInput;
+        
+        public bool RawInput
+        {
+            get => _rawInput;
+            set
+            {
+                _rawInput = value;
+                var w = Graphics.Current.Window!.Native;
+                Glfw.SetInputMode(w, InputMode.RawMouseMotion, 1);
+                Glfw.SetInputMode(w, InputMode.Cursor, (int) (value ? CursorMode.Disabled : CursorMode.Normal));
+            }
+        }
+
+        public Vector2 CursorMovement => CursorPosition;
 
         public MouseInputSystem()
         {
@@ -37,15 +54,22 @@ namespace Castaway.Rendering.Input
                 if (_buttons[button].HasFlag(ButtonState.JustPressed)) _buttons[button] &= ~ButtonState.JustPressed;
                 if (_buttons[button].HasFlag(ButtonState.JustReleased)) _buttons[button] &= ~ButtonState.JustReleased;
             }
+
+            if (RawInput) CursorPosition = new Vector2(0, 0);
         }
 
         public Vector2 CursorPosition
         {
             get
             {
-                var window = Graphics.Current.Window!.Native;
+                var window = Graphics.BoundWindows.Single().Native;
                 Glfw.GetCursorPosition(window, out var x, out var y);
-                return new Vector2((float) x, (float) y) / PositionScale;
+                return new Vector2(x, y) / PositionScale;
+            }
+            set
+            {
+                var window = Graphics.BoundWindows.Single().Native;
+                Glfw.SetCursorPosition(window, value.X, value.Y);
             }
         }
 
