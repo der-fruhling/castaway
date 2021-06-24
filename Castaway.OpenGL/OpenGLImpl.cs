@@ -47,6 +47,7 @@ namespace Castaway.OpenGL
             InputSystem.Init();
             GL.Enable(GLC.GL_DEPTH_TEST);
             GL.Enable(GLC.GL_CULL_FACE);
+            window.WindowResize += (w, h) => GL.Viewport(0, 0, w, h);
         }
 
         public override BufferObject NewBuffer(BufferTarget target, float[]? data = null)
