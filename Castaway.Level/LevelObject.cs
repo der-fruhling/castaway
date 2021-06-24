@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Castaway.Math;
 
 namespace Castaway.Level
@@ -33,11 +34,11 @@ namespace Castaway.Level
             foreach(var c in Controllers) c.PostRender(cam, this);
         }
 
-        public void OnUpdate()
+        public async Task OnUpdate()
         {
-            foreach(var c in Controllers) c.PreUpdate(this);
-            foreach(var c in Controllers) c.OnUpdate(this);
-            foreach(var c in Controllers) c.PostUpdate(this);
+            foreach (var task in Controllers.Select(c => c.PreUpdate(this))) await task;
+            foreach (var task in Controllers.Select(c => c.OnUpdate(this))) await task;
+            foreach (var task in Controllers.Select(c => c.PostUpdate(this))) await task;
         }
 
         public void OnDestroy()

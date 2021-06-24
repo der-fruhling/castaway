@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Castaway.Base;
 using Serilog;
 
@@ -18,9 +19,9 @@ namespace Castaway.Level
         public virtual void PreRender(LevelObject camera, LevelObject parent) {}
         public virtual void OnRender(LevelObject camera, LevelObject parent) {}
         public virtual void PostRender(LevelObject camera, LevelObject parent) {}
-        public virtual void PreUpdate(LevelObject parent) {}
-        public virtual void OnUpdate(LevelObject parent) {}
-        public virtual void PostUpdate(LevelObject parent) {}
+        public virtual async Task PreUpdate(LevelObject parent) {}
+        public virtual async Task OnUpdate(LevelObject parent) {}
+        public virtual async Task PostUpdate(LevelObject parent) {}
         public virtual void OnDestroy(LevelObject parent) => Logger.Verbose("Destroying {@This}", this);
         public virtual void PreRenderFrame(LevelObject camera, LevelObject? parent) {}
         public virtual void PostRenderFrame(LevelObject camera, LevelObject? parent) {}
