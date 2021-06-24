@@ -8,9 +8,14 @@ namespace Castaway.Rendering
 {
     public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
     {
+        public delegate void ResizeEventHandler(int newWidth, int newHeight);
+        
         // ReSharper disable once InconsistentNaming
         public readonly Graphics GL;
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
+
+        public event ResizeEventHandler WindowResize = delegate {  };
+        private SizeCallback _sizeCallback;
 
         static Window()
         {
@@ -54,6 +59,11 @@ namespace Castaway.Rendering
             _title = title;
             _visible = visible;
             VSync = true;
+            Glfw.SetWindowSizeCallback(Native, _sizeCallback = (_, w, h) =>
+            {
+                WindowResize(w, h);
+                Logger.Verbose("Resized {Window} to {Width}x{Height}", Title, w, h);
+            });
             Logger.Debug("Finished setting up window");
             GetSize(out var w, out var h);
             Logger.Information("Created window {Window} with size {Width}x{Height}", Title, w, h);

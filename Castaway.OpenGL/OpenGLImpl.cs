@@ -114,7 +114,9 @@ namespace Castaway.OpenGL
         public override FramebufferObject NewFramebuffer()
         {
             BindWindow();
-            return new Framebuffer();
+            var f = new Framebuffer();
+            Window!.WindowResize += f.Update;
+            return f;
         }
 
         public override Drawable NewDrawable(Mesh mesh)
