@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Castaway.Base;
+using Castaway.Math;
 using GLFW;
 using Serilog;
 
@@ -54,7 +55,6 @@ namespace Castaway.Rendering
                 WindowResize(w, h);
                 Logger.Verbose("Resized {Window} to {Width}x{Height}", Title, w, h);
             });
-            _fullscreen = fullscreen;
             Logger.Debug("Finished setting up window");
             GetSize(out var w, out var h);
             Logger.Information("Created window {Window} with size {Width}x{Height}", Title, w, h);
@@ -95,18 +95,27 @@ namespace Castaway.Rendering
         public void GetFramebufferSize(out int x, out int y) => Glfw.GetFramebufferSize(Native, out x, out y);
 
         private string _title;
-        private bool _visible, _vsync, _fullscreen;
+        private bool _visible, _vsync;
+        private Vector2? _sizeBeforeFullscreen, _positionBeforeFullscreen;
         
         public string Title
         {
             get => _title;
-            set => Glfw.SetWindowTitle(Native, _title = value);
+            set
+            {
+                Glfw.SetWindowTitle(Native, _title = value);
+                Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(Title), Title);
+            }
         }
 
         public bool ShouldClose
         {
             get => Glfw.WindowShouldClose(Native);
-            set => Glfw.SetWindowShouldClose(Native, value);
+            set
+            {
+                Glfw.SetWindowShouldClose(Native, value);
+                Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(ShouldClose), ShouldClose);
+            }
         }
 
         public bool Visible
@@ -117,6 +126,7 @@ namespace Castaway.Rendering
                 // ReSharper disable once AssignmentInConditionalExpression
                 if (_visible = value) Glfw.ShowWindow(Native);
                 else Glfw.HideWindow(Native);
+                Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(Visible), Visible);
             }
         }
 
@@ -127,7 +137,7 @@ namespace Castaway.Rendering
             {
                 _vsync = value;
                 Glfw.SwapInterval(value ? 1 : 0);
-                Logger.Debug("VSync = {Value}", value);
+                Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(VSync), VSync);
             }
         }
 
@@ -165,14 +175,19 @@ namespace Castaway.Rendering
 
         public bool Fullscreen
         {
-            get => _fullscreen;
+            get => Glfw.GetWindowMonitor(Native) != Monitor.None;
             set
             {
+                Logger.Information("{EnterOrExit} fullscreen...", value ? "Entering" : "Exiting");
                 var mon = Glfw.PrimaryMonitor;
                 var vid = Glfw.GetVideoMode(mon);
                 int x, y, w, h;
+                GetSize(out var ow, out var oh);
+                Glfw.GetWindowPosition(Native, out var ox, out var oy);
                 if (value)
                 {
+                    _sizeBeforeFullscreen = new Vector2(ow, oh);
+                    _positionBeforeFullscreen = new Vector2(ox, oy);
                     w = vid.Width;
                     h = vid.Height;
                     x = 0;
@@ -180,13 +195,36 @@ namespace Castaway.Rendering
                 }
                 else
                 {
-                    Glfw.GetWindowSize(Native, out w, out h);
-                    x = vid.Width / 2 - w;
-                    y = vid.Height / 2 - w;
+                    if (_sizeBeforeFullscreen.HasValue)
+                    {
+                        w = (int) _sizeBeforeFullscreen.Value.X;
+                        h = (int) _sizeBeforeFullscreen.Value.Y;
+                    }
+                    else
+                    {
+                        w = ow;
+                        h = oh;
+                    }
+
+                    if (_positionBeforeFullscreen.HasValue)
+                    {
+                        x = (int) _positionBeforeFullscreen.Value.X;
+                        y = (int) _positionBeforeFullscreen.Value.Y;
+                    }
+                    else
+                    {
+                        x = ox;
+                        y = oy;
+                    }
+
+                    _positionBeforeFullscreen = null;
+                    _sizeBeforeFullscreen = null;
                 }
 
-                Glfw.SetWindowMonitor(Native, value ? mon : Monitor.None, x, y, w, h, vid.RefreshRate);
-                _fullscreen = value;
+                if(value) Glfw.SetWindowMonitor(Native, mon, 0, 0, vid.Width, vid.Height, vid.RefreshRate);
+                else Glfw.SetWindowMonitor(Native, Monitor.None, x, y, w, h, 0);
+                
+                Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(Fullscreen), Fullscreen);
             }
         }
     }
