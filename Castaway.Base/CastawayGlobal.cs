@@ -38,10 +38,7 @@ namespace Castaway.Base
                 {
                     try
                     {
-                        application.StartFrame();
-                        application.Render();
-                        application.Update();
-                        application.EndFrame();
+                        ProcessFrame(application);
                     }
                     catch (RecoverableException e)
                     {
@@ -61,6 +58,14 @@ namespace Castaway.Base
                 application.Dispose();
             }
             return returnCode;
+        }
+
+        private static void ProcessFrame(IApplication application)
+        {
+            application.StartFrame();
+            application.Render();
+            application.Update();
+            application.EndFrame();
         }
     }
 }
