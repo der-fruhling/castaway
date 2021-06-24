@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Castaway.Rendering
 {
-    public sealed class Window : IDisposable, IAsyncDisposable
+    public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
     {
         // ReSharper disable once InconsistentNaming
         public readonly Graphics GL;
@@ -133,6 +133,33 @@ namespace Castaway.Rendering
         public void SwapBuffers()
         {
             Glfw.SwapBuffers(Native);
+        }
+
+        public bool Equals(Window? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _title == other._title && _visible == other._visible && _vsync == other._vsync && Native.Equals(other.Native);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || obj is Window other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_title, _visible, _vsync, Native);
+        }
+
+        public static bool operator ==(Window? left, Window? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Window? left, Window? right)
+        {
+            return !Equals(left, right);
         }
     }
 }
