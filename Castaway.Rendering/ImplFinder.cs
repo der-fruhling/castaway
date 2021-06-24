@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Castaway.Base;
-using Castaway.OpenGL.Native;
+using GLFW;
 using Serilog;
 
 namespace Castaway.Rendering
@@ -52,10 +52,11 @@ namespace Castaway.Rendering
             });
         }
 
-        public static async Task<Graphics?> FindOptimalImplementation()
+        public static async Task<Graphics?> FindOptimalImplementation(Window window)
         {
-            var major = GL.GetInt(GLC.GL_MAJOR_VERSION);
-            var minor = GL.GetInt(GLC.GL_MINOR_VERSION);
+            var v = Glfw.GetContextVersion(window.Native);
+            var major = v.Major;
+            var minor = v.Minor;
 
             if (Supports(major, minor, 4, 2)) return await Find("OpenGL-4.2");
             if (Supports(major, minor, 4, 1)) return await Find("OpenGL-4.1");

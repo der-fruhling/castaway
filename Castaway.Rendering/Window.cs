@@ -40,7 +40,7 @@ namespace Castaway.Rendering
             }
             Bind();
             Logger.Debug("Window created successfully");
-            api ??= ImplFinder.FindOptimalImplementation().Result;
+            api ??= ImplFinder.FindOptimalImplementation(this).Result;
             if (api == null)
             {
                 api = ImplFinder.Find("OpenGL-3.2").Result;
