@@ -34,6 +34,16 @@ namespace Castaway.OpenGL
         {
             var window = Graphics.Current.Window;
             window!.GetFramebufferSize(out var w, out var h);
+            New(w, h);
+        }
+
+        public override void Dispose()
+        {
+            GL.DeleteFramebuffers(1, Number);
+        }
+
+        private void New(int w, int h)
+        {
             GL.GenFramebuffers(1, out var a);
             Number = a[0];
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, Number);
@@ -58,9 +68,10 @@ namespace Castaway.OpenGL
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, 0);
         }
 
-        public override void Dispose()
+        public void Update(int w, int h)
         {
-            GL.DeleteFramebuffers(1, Number);
+            Dispose();
+            New(w, h);
         }
     }
 }
