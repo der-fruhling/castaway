@@ -14,7 +14,7 @@ namespace Castaway.Base
     {
         public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
         
-        private static readonly Logger Logger = new LoggerConfiguration()
+        private static readonly ILogger Logger = new LoggerConfiguration()
             .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher())
             .WriteTo.Console(outputTemplate: "[{Level:u3} {Timestamp:HH:mm:ss.fff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
             .WriteTo.File("castaway.log", outputTemplate: "{Level} {Timestamp:HH:mm:ss.fff} [{ThreadName}] [{SourceContext}]; {Message:lj}{NewLine}{Exception}")
