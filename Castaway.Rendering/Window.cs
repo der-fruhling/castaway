@@ -55,7 +55,8 @@ namespace Castaway.Rendering
             _visible = visible;
             VSync = true;
             Logger.Debug("Finished setting up window");
-            Logger.Information("Created window {@Window}", this);
+            GetSize(out var w, out var h);
+            Logger.Information("Created window {Window} with size {Width}x{Height}", Title, w, h);
         }
 
         public Window(int width, int height, string title, bool visible = true)
@@ -77,7 +78,7 @@ namespace Castaway.Rendering
 
         public void Dispose()
         {
-            Logger.Information("Destroyed window {@Window}", this);
+            Logger.Information("Destroyed window {Window}", Title);
             Glfw.DestroyWindow(Native);
             GL.Dispose();
         }
