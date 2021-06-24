@@ -57,6 +57,8 @@ namespace Castaway.OpenGL.Controllers
                     if (InputSystem.Keyboard.IsDown(Keys.D)) move.X += MovementSpeed * g.FrameChange;
                     if (InputSystem.Keyboard.IsDown(Keys.W)) move.Z -= MovementSpeed * g.FrameChange;
                     if (InputSystem.Keyboard.IsDown(Keys.S)) move.Z += MovementSpeed * g.FrameChange;
+                    if (InputSystem.Keyboard.IsDown(Keys.LeftShift)) move.Y -= MovementSpeed * g.FrameChange;
+                    if (InputSystem.Keyboard.IsDown(Keys.Space)) move.Y += MovementSpeed * g.FrameChange;
                 }
 
                 if (RotationLocked) return;
@@ -87,7 +89,8 @@ namespace Castaway.OpenGL.Controllers
                 var rotate = new Quaternion(1, 0, 0, 0);
                 rotate *= Quaternion.Rotation(Vector3.Up, _rx);
                 rotate *= Quaternion.Rotation(Vector3.Right, _ry);
-                parent.Position += rotate * move;
+                parent.Position += rotate * new Vector3(move.X, 0, move.Z);
+                parent.Position.Y += move.Y;
                 parent.Rotation = rotate;
             });
         }
