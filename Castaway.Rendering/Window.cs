@@ -31,25 +31,15 @@ namespace Castaway.Rendering
             Logger.Debug("Window Hint {Hint} = {Value}", Hint.CocoaRetinaFrameBuffer, true);
             Glfw.WindowHint(Hint.Visible, visible);
             Logger.Debug("Window Hint {Hint} = {Value}", Hint.Visible, visible);
-            if (fullscreen)
-            {
-                var mon = Glfw.PrimaryMonitor;
-                var vid = Glfw.GetVideoMode(mon);
-                Logger.Debug("Window Size = {Width}x{Height}", vid.Width, vid.Height);
-                Native = Glfw.CreateWindow(vid.Width, vid.Height, title, mon, GLFW.Window.None);
-            }
-            else
-            {
-                Logger.Debug("Window Size = {Width}x{Height}", width, height);
-                Native = Glfw.CreateWindow(width, height, title, Monitor.None, GLFW.Window.None);
-            }
+            Logger.Debug("Window Size = {Width}x{Height}", width, height);
+            Native = Glfw.CreateWindow(width, height, title, fullscreen ? Glfw.PrimaryMonitor : Monitor.None, GLFW.Window.None);
             Bind();
             Logger.Debug("Window created successfully");
             api ??= ImplFinder.FindOptimalImplementation(this).Result;
             if (api == null)
             {
                 api = ImplFinder.Find("OpenGL-3.2").Result;
-                Logger.Warning("API from FindOptimalImplementation was null; using {ApiType} instead", api.GetType());
+                Logger.Warning("API from FindOptimalImplementation was null; using {ApiType} instead", api!.GetType());
             }
             GL = api;
             Logger.Debug("Applied API {ApiType} to window", GL.GetType());
@@ -64,6 +54,7 @@ namespace Castaway.Rendering
                 WindowResize(w, h);
                 Logger.Verbose("Resized {Window} to {Width}x{Height}", Title, w, h);
             });
+            _fullscreen = fullscreen;
             Logger.Debug("Finished setting up window");
             GetSize(out var w, out var h);
             Logger.Information("Created window {Window} with size {Width}x{Height}", Title, w, h);
@@ -104,7 +95,7 @@ namespace Castaway.Rendering
         public void GetFramebufferSize(out int x, out int y) => Glfw.GetFramebufferSize(Native, out x, out y);
 
         private string _title;
-        private bool _visible, _vsync;
+        private bool _visible, _vsync, _fullscreen;
         
         public string Title
         {
@@ -170,6 +161,33 @@ namespace Castaway.Rendering
         public static bool operator !=(Window? left, Window? right)
         {
             return !Equals(left, right);
+        }
+
+        public bool Fullscreen
+        {
+            get => _fullscreen;
+            set
+            {
+                var mon = Glfw.PrimaryMonitor;
+                var vid = Glfw.GetVideoMode(mon);
+                int x, y, w, h;
+                if (value)
+                {
+                    w = vid.Width;
+                    h = vid.Height;
+                    x = 0;
+                    y = 0;
+                }
+                else
+                {
+                    Glfw.GetWindowSize(Native, out w, out h);
+                    x = vid.Width / 2 - w;
+                    y = vid.Height / 2 - w;
+                }
+
+                Glfw.SetWindowMonitor(Native, value ? mon : Monitor.None, x, y, w, h, vid.RefreshRate);
+                _fullscreen = value;
+            }
         }
     }
 }

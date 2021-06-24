@@ -162,6 +162,8 @@ namespace Castaway.OpenGL
             BindWindow();
             _stopwatch.Restart();
             Glfw.PollEvents();
+            if (InputSystem.Keyboard.IsDown(Keys.F11))
+                Window!.Fullscreen = !Window!.Fullscreen;
             Clear();
             if(InputSystem.Gamepad.Valid) InputSystem.Gamepad.Read();
         }
