@@ -11,6 +11,7 @@ namespace Castaway.OpenGL
         
         public override void PutImage(uint image, TextureObject texture)
         {
+            BindWindow();
             if (texture is not Texture t) throw new InvalidOperationException("Must only use OpenGL types.");
             GL.BindImageTexture(image, t.Number, 0, false, 0, GLC.GL_READ_WRITE, GLC.GL_RGBA32F);
         }

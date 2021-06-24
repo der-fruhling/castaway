@@ -13,7 +13,7 @@ namespace Castaway.Rendering
     [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     public abstract class Graphics : RenderObject
     {
-        protected static ThreadLocal<Window?> CurrentlyBound = new(() => null);
+        private static readonly ThreadLocal<Window?> CurrentlyBound = new(() => null);
         public Window? Window;
 
         public List<float> FrameTimes = new();

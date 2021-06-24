@@ -12,6 +12,7 @@ namespace Castaway.OpenGL
         
         public override void SetDoubleUniform(ShaderObject p, string name, double i)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
@@ -19,6 +20,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
@@ -26,6 +28,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
@@ -33,6 +36,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z, double w)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
@@ -40,6 +44,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, Matrix2 m)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
@@ -47,6 +52,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, Matrix3 m)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
@@ -54,6 +60,7 @@ namespace Castaway.OpenGL
 
         public override void SetDoubleUniform(ShaderObject p, string name, Matrix4 m)
         {
+            BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
             GL.SetUniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
