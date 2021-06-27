@@ -132,7 +132,7 @@ namespace Castaway.OpenGL
             dynamic d = renderObject;
             try
             {
-                return d.Number is uint u ? u : uint.MaxValue;
+                return d.Number is uint u ? u : throw new InvalidOperationException($"{renderObject.GetType().Name} is not an OpenGL type.");
             }
             catch (MissingMemberException e)
             {
