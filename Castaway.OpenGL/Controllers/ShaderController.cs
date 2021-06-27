@@ -13,7 +13,7 @@ namespace Castaway.OpenGL.Controllers
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         
-        [LevelSerialized("Builtin")] public string BuiltinShaderName;
+        [LevelSerialized("Builtin")] public string BuiltinShaderName = string.Empty;
 
         [LevelSerialized("Asset")] public string AssetName = string.Empty;
         public ShaderObject? Shader;
