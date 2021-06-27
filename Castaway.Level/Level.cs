@@ -159,7 +159,7 @@ namespace Castaway.Level
         public void Update()
         {
             if(!_objects.Any()) return;
-            foreach(var o in _objects) o.OnUpdate();
+            foreach(var o in _objects) o.OnUpdate().Wait();
         }
 
         public void End()
