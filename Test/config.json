@@ -1,5 +1,8 @@
 {
   "assets": {
     "discover": ["Assets"]
+  },
+  "log": {
+    "level": "information"
   }
 }

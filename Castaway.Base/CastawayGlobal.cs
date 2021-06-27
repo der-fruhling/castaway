@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 using System.Threading;
 using Serilog;
 using Serilog.Core;
@@ -20,15 +22,31 @@ namespace Castaway.Base
         public static int Run<T>() where T : class, IApplication, new()
         {
             Log.Logger = new LoggerConfiguration()
-                .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher())
-                .WriteTo.Console(outputTemplate: "[{Level:u3} {Timestamp:HH:mm:ss.fff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
-                .WriteTo.File("castaway.log", outputTemplate: "{Level} {Timestamp:HH:mm:ss.fff} [{ThreadName}] [{SourceContext}]; {Message:lj}{NewLine}{Exception}")
+                .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher(), new ThreadIdEnricher())
+                .WriteTo.Console(outputTemplate: "[{Level:u4} {Timestamp:HH:mm:ss.ffffff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File("castaway.log", outputTemplate: "{Level:w4} {Timestamp:HH:mm:ss.ffffff} [{ThreadName} {ThreadId}] : {SourceContext}; {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(new CompactJsonFormatter(), "castaway.log.jsonl", LogEventLevel.Debug)
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .CreateLogger();
             Thread.CurrentThread.Name = "MainThread";
             var returnCode = 0;
             var logger = GetLogger();
+
+            try
+            {
+                LoadConfig(logger);
+            }
+            catch (MessageException e)
+            {
+                e.Log(logger);
+                if(e.IsFatal) return 1;
+            }
+            catch (Exception e)
+            {
+                logger.Fatal(e, "An error occurred while loading the configuration");
+                return 1;
+            }
+
             var application = new T();
             logger.Information("Started application {@App}", application);
             try
@@ -43,6 +61,11 @@ namespace Castaway.Base
                     {
                         logger.Error(e, "A recoverable error occurred; frame will be passed");
                         application.Recover(e);
+                    }
+                    catch (MessageException e)
+                    {
+                        e.Log(logger);
+                        e.Repair(logger);
                     }
                 }
             }
@@ -59,12 +82,60 @@ namespace Castaway.Base
             return returnCode;
         }
 
+        private static void LoadConfig(ILogger logger)
+        {
+            using var json = JsonDocument.Parse(File.ReadAllText("config.json"));
+            var root = json.RootElement;
+            var eLog = root.GetProperty("log");
+            
+            Try(logger, delegate
+            {
+                var eLogLevelS = eLog.OptionalProperty("level")?.GetString() 
+                                 ?? Enum.GetName(LogEventLevel.Information)!;
+                var eLogLevel = TryParseEnum<LogEventLevel>(eLogLevelS, true);
+                LevelSwitch.MinimumLevel = eLogLevel 
+                    ?? throw new EnumParseException(
+                        "/log/level", eLogLevelS, typeof(LogEventLevel),
+                        () => LevelSwitch.MinimumLevel = LogEventLevel.Information,
+                        LogEventLevel.Information);
+                logger.Verbose("LogLevel = {Value}", eLogLevel);
+            });
+            
+            
+            logger.Debug("Loaded config from config.json");
+        }
+
         private static void ProcessFrame(IApplication application)
         {
             application.StartFrame();
             application.Render();
             application.Update();
             application.EndFrame();
+        }
+
+        private static JsonElement? OptionalProperty(this JsonElement e, string name) => 
+            e.TryGetProperty(name, out var r) ? r : null;
+
+        private static T? TryParseEnum<T>(string name, bool ignoreCase = false) where T : struct =>
+            Enum.TryParse<T>(name, ignoreCase, out var t) ? t : null;
+
+        private static void Try(ILogger logger, Action a)
+        {
+            try
+            {
+                a();
+            }
+            catch (MessageException e)
+            {
+                if (e.IsFatal) throw;
+                e.Log(logger);
+                e.Repair(logger);
+            }
+            catch (Exception e)
+            {
+                logger.Error("{Type} occurred in config stage: /log/level", e.GetType());
+                throw;
+            }
         }
     }
 }

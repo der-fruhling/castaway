@@ -15,14 +15,16 @@ namespace Castaway.Level
             _inheritorLogger = CastawayGlobal.GetLogger(this.GetType());
         }
 
-        public virtual void OnInit(LevelObject parent) => Logger.Verbose("Initializing {@This}", this);
+        public virtual void OnInit(LevelObject parent) => Logger.Verbose("Initializing {$This} on {Parent}", this, parent.Name);
         public virtual void PreRender(LevelObject camera, LevelObject parent) {}
         public virtual void OnRender(LevelObject camera, LevelObject parent) {}
         public virtual void PostRender(LevelObject camera, LevelObject parent) {}
+        #pragma warning disable 1998
         public virtual async Task PreUpdate(LevelObject parent) {}
         public virtual async Task OnUpdate(LevelObject parent) {}
         public virtual async Task PostUpdate(LevelObject parent) {}
-        public virtual void OnDestroy(LevelObject parent) => Logger.Verbose("Destroying {@This}", this);
+        #pragma warning restore 1998
+        public virtual void OnDestroy(LevelObject parent) => Logger.Verbose("Destroying {$This} on {Parent}", this, parent.Name);
         public virtual void PreRenderFrame(LevelObject camera, LevelObject? parent) {}
         public virtual void PostRenderFrame(LevelObject camera, LevelObject? parent) {}
     }

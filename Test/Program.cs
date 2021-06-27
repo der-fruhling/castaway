@@ -5,7 +5,6 @@ using Castaway.OpenGL;
 using Castaway.Rendering;
 using Castaway.Rendering.Input;
 using GLFW;
-using Serilog.Events;
 using Window = Castaway.Rendering.Window;
 
 namespace Test
@@ -13,11 +12,7 @@ namespace Test
     [Imports(typeof(OpenGLImpl))]
     internal class Program : IApplication
     {
-        private static int Main()
-        {
-            CastawayGlobal.LevelSwitch.MinimumLevel = LogEventLevel.Verbose;
-            return CastawayGlobal.Run<Program>();
-        }
+        private static int Main() => CastawayGlobal.Run<Program>();
 
         private Window _window;
         private Level _level;
