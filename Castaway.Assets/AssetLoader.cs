@@ -56,7 +56,7 @@ namespace Castaway.Assets
         public static void Init()
         {
             Loader = new AssetLoader();
-            var json = JsonDocument.Parse(File.ReadAllText("config.json"));
+            using var json = JsonDocument.Parse(File.ReadAllText("config.json"));
             var root = json.RootElement;
             var assets = root.GetProperty("assets");
             var discover = assets.GetProperty("discover");
