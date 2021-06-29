@@ -17,15 +17,26 @@ namespace Castaway.Base
     {
         public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
 
-        public static ILogger GetLogger(Type type) => Log.Logger.ForContext(type);
-        public static ILogger GetLogger() => GetLogger(new StackTrace().GetFrame(1)!.GetMethod()!.DeclaringType!);
+        public static ILogger GetLogger(Type type)
+        {
+            return Log.Logger.ForContext(type);
+        }
+
+        public static ILogger GetLogger()
+        {
+            return GetLogger(new StackTrace().GetFrame(1)!.GetMethod()!.DeclaringType!);
+        }
 
         public static int Run<T>() where T : class, IApplication, new()
         {
             Log.Logger = new LoggerConfiguration()
                 .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher(), new ThreadIdEnricher())
-                .WriteTo.Console(outputTemplate: "[{Level:u4} {Timestamp:HH:mm:ss.ffffff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
-                .WriteTo.File("castaway.log", outputTemplate: "{Level:w4} {Timestamp:HH:mm:ss.ffffff} [{ThreadName} {ThreadId}] : {SourceContext}; {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console(
+                    outputTemplate:
+                    "[{Level:u4} {Timestamp:HH:mm:ss.ffffff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File("castaway.log",
+                    outputTemplate:
+                    "{Level:w4} {Timestamp:HH:mm:ss.ffffff} [{ThreadName} {ThreadId}] : {SourceContext}; {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(new CompactJsonFormatter(), "castaway.log.jsonl", LogEventLevel.Debug)
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .CreateLogger();
@@ -41,7 +52,6 @@ namespace Castaway.Base
             try
             {
                 while (!application.ShouldStop)
-                {
                     try
                     {
                         ProcessFrame(application);
@@ -56,7 +66,6 @@ namespace Castaway.Base
                         e.Log(logger);
                         e.Repair(logger);
                     }
-                }
             }
             catch (Exception e)
             {
@@ -68,6 +77,7 @@ namespace Castaway.Base
                 logger.Information("Application terminating");
                 application.Dispose();
             }
+
             return returnCode;
         }
 
@@ -76,20 +86,20 @@ namespace Castaway.Base
             using var json = JsonDocument.Parse(File.ReadAllText("config.json"));
             var root = json.RootElement;
             var eLog = root.GetProperty("log");
-            
+
             Try(logger, delegate
             {
-                var eLogLevelS = eLog.OptionalProperty("level")?.GetString() 
+                var eLogLevelS = eLog.OptionalProperty("level")?.GetString()
                                  ?? Enum.GetName(LogEventLevel.Information)!;
                 var eLogLevel = TryParseEnum<LogEventLevel>(eLogLevelS, true);
-                LevelSwitch.MinimumLevel = eLogLevel 
+                LevelSwitch.MinimumLevel = eLogLevel
                                            ?? throw new EnumParseException(
                                                "/log/level", eLogLevelS, typeof(LogEventLevel),
                                                () => LevelSwitch.MinimumLevel = LogEventLevel.Information,
                                                LogEventLevel.Information);
                 logger.Verbose("LogLevel = {Value}", eLogLevel);
             });
-            
+
             logger.Debug("Loaded config from config.json");
         }
 
@@ -101,11 +111,15 @@ namespace Castaway.Base
             application.EndFrame();
         }
 
-        private static JsonElement? OptionalProperty(this JsonElement e, string name) => 
-            e.TryGetProperty(name, out var r) ? r : null;
+        private static JsonElement? OptionalProperty(this JsonElement e, string name)
+        {
+            return e.TryGetProperty(name, out var r) ? r : null;
+        }
 
-        private static T? TryParseEnum<T>(string name, bool ignoreCase = false) where T : struct =>
-            Enum.TryParse<T>(name, ignoreCase, out var t) ? t : null;
+        private static T? TryParseEnum<T>(string name, bool ignoreCase = false) where T : struct
+        {
+            return Enum.TryParse<T>(name, ignoreCase, out var t) ? t : null;
+        }
 
         private static void Try(ILogger logger, Action a)
         {
@@ -126,6 +140,9 @@ namespace Castaway.Base
             }
         }
 
-        private static Task TryAsync(ILogger logger, Action a) => Task.Run(() => Try(logger, a));
+        private static Task TryAsync(ILogger logger, Action a)
+        {
+            return Task.Run(() => Try(logger, a));
+        }
     }
 }

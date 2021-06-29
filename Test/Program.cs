@@ -14,10 +14,9 @@ namespace Test
     [Imports(typeof(OpenGLImpl), typeof(ShaderController))]
     internal class Program : IApplication
     {
-        private static int Main() => CastawayGlobal.Run<Program>();
+        private Level _level;
 
         private Window _window;
-        private Level _level;
 #pragma warning disable 649
         private Graphics g;
 #pragma warning restore 649
@@ -28,10 +27,10 @@ namespace Test
         {
             // Perform global initialization
             AssetLoader.Init();
-            
+
             _window = new Window(800, 600, "name", false);
             _window.Bind();
-            
+
             Log.Information("{@Shader}", BuiltinShaders.DirectTextured);
 
             g = _window.GL;
@@ -72,12 +71,17 @@ namespace Test
             g.Clear();
             g.FinishFrame(_window);
         }
-        
+
         public void Dispose()
         {
             _window.Visible = false;
             _level.End();
             _window.Dispose();
+        }
+
+        private static int Main()
+        {
+            return CastawayGlobal.Run<Program>();
         }
     }
 }

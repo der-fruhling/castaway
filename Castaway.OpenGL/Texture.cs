@@ -6,18 +6,11 @@ namespace Castaway.OpenGL
 {
     public sealed class Texture : TextureObject
     {
-        public bool Destroyed { get; set; }
-        public uint Number { get; set; }
-        public override string Name => $"{Number}({Valid})";
-        public override bool Valid => GL.IsTexture(Number);
-        
-        public uint BindingPoint { get; internal set; }
-
         public Texture(uint number)
         {
             Number = number;
-        } 
-        
+        }
+
         public Texture(int width, int height, float[]? data)
         {
             GL.GenTextures(1, out var at);
@@ -31,6 +24,13 @@ namespace Castaway.OpenGL
             GL.GenerateMipmap(GLC.GL_TEXTURE_2D);
             Number = t;
         }
+
+        public bool Destroyed { get; set; }
+        public uint Number { get; set; }
+        public override string Name => $"{Number}({Valid})";
+        public override bool Valid => GL.IsTexture(Number);
+
+        public uint BindingPoint { get; internal set; }
 
         public static implicit operator uint(Texture t)
         {

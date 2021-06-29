@@ -7,13 +7,14 @@ using Serilog;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("MeshRenderer"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("MeshRenderer")]
+    [Imports(typeof(OpenGLImpl))]
     public class MeshRendererController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         private Drawable? _drawable;
         private ShaderObject? _lastBound;
-        
+
         public override void OnInit(LevelObject parent)
         {
             base.OnInit(parent);
@@ -36,6 +37,7 @@ namespace Castaway.Level.OpenGL
                 _drawable = parent.Get<MeshController>()!.Mesh!.Value.ConstructFor(g.BoundShader!);
                 _lastBound = g.BoundShader;
             }
+
             g.Draw(g.BoundShader!, _drawable!);
         }
     }

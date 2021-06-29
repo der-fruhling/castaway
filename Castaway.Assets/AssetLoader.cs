@@ -9,7 +9,7 @@ namespace Castaway.Assets
     public class AssetLoader
     {
         public static AssetLoader? Loader;
-        
+
         private Dictionary<string, (string, IAssetType)> Assets;
 
         public AssetLoader()
@@ -62,7 +62,7 @@ namespace Castaway.Assets
             var discover = assets.GetProperty("discover");
 
             for (var i = 0; i < discover.GetArrayLength(); i++)
-                Loader.Discover(discover[i].GetString() 
+                Loader.Discover(discover[i].GetString()
                                 ?? throw new InvalidOperationException("Discovery paths must be strings."));
         }
     }

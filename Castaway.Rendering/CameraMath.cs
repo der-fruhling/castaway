@@ -27,9 +27,9 @@ namespace Castaway.Rendering
         {
             return new()
             {
-                X = new Vector4((2 * n) / (r - l), 0, (r + l) / (r - l), 0),
-                Y = new Vector4(0, (2 * n) / (t - b), (t + b) / (t - b), 0),
-                Z = new Vector4(0, 0, -((f + n) / (f - n)), -((2 * f * n) / (f - n))),
+                X = new Vector4(2 * n / (r - l), 0, (r + l) / (r - l), 0),
+                Y = new Vector4(0, 2 * n / (t - b), (t + b) / (t - b), 0),
+                Z = new Vector4(0, 0, -((f + n) / (f - n)), -(2 * f * n / (f - n))),
                 W = new Vector4(0, 0, -1, 0)
             };
         }

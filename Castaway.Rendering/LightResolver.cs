@@ -7,15 +7,17 @@ namespace Castaway.Rendering
 {
     public enum LightType
     {
-        Point,
+        Point
     }
-    
-    public abstract class Light {}
-    
+
+    public abstract class Light
+    {
+    }
+
     public class PointLight : Light
     {
-        public Vector3 Position;
         public Vector3 Color;
+        public Vector3 Position;
 
         public PointLight(Vector3 position, Vector3 color)
         {
@@ -23,7 +25,7 @@ namespace Castaway.Rendering
             Color = color;
         }
     }
-    
+
     public static class LightResolver
     {
         private static readonly List<PointLight> PointLights = new();
@@ -34,7 +36,7 @@ namespace Castaway.Rendering
         private static ImmutableArray<PointLight> _pushedPointLights;
         private static float _pushedAmbientLight;
         private static Vector3 _pushedAmbientLightColor;
-        
+
         public static void Add(PointLight light)
         {
             PointLights.Add(light);
@@ -50,12 +52,12 @@ namespace Castaway.Rendering
         {
             var g = Graphics.Current;
             var p = g.BoundShader!;
-            
+
             if (_pushedShader == p &&
                 PointLights.SequenceEqual(_pushedPointLights) &&
                 System.Math.Abs(_pushedAmbientLight - _ambientLight) < 0.00025f &&
                 _pushedAmbientLightColor == _ambientLightColor) return;
-            
+
             g.SetFloatUniform(p, UniformType.AmbientLight, _ambientLight);
             g.SetFloatUniform(p, UniformType.AmbientLightColor, _ambientLightColor);
             g.SetIntUniform(p, UniformType.PointLightCount, PointLights.Count);

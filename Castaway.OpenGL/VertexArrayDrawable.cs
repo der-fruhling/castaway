@@ -5,9 +5,9 @@ namespace Castaway.OpenGL
 {
     public class VertexArrayDrawable : Drawable
     {
-        internal uint VAO;
         internal bool SetUp;
-        
+        internal uint VAO;
+
         public VertexArrayDrawable(int vertexCount, BufferObject vertexArray) : base(vertexCount, vertexArray)
         {
             if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
@@ -17,7 +17,8 @@ namespace Castaway.OpenGL
             gl.UnbindVAO();
         }
 
-        public VertexArrayDrawable(int vertexCount, BufferObject vertexArray, BufferObject elementArray) : base(vertexCount, vertexArray, elementArray)
+        public VertexArrayDrawable(int vertexCount, BufferObject vertexArray, BufferObject elementArray) : base(
+            vertexCount, vertexArray, elementArray)
         {
             if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
             VAO = gl.CreateVAO();

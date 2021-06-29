@@ -7,15 +7,25 @@ namespace Castaway.UI
     {
         private List<UIElement> _elements = new();
 
-        public void Add(UIElement e) => _elements.Add(e);
-        public void Add(params UIElement[] e) => _elements.AddRange(e);
-        public void Overwrite() => _elements.Clear();
+        public void Add(UIElement e)
+        {
+            _elements.Add(e);
+        }
+
+        public void Add(params UIElement[] e)
+        {
+            _elements.AddRange(e);
+        }
+
+        public void Overwrite()
+        {
+            _elements.Clear();
+        }
 
         public void Draw()
         {
             foreach (var element in _elements)
             {
-                
             }
         }
     }

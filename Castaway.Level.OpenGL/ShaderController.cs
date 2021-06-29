@@ -8,17 +8,18 @@ using Serilog;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("Shader"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("Shader")]
+    [Imports(typeof(OpenGLImpl))]
     public class ShaderController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-        
-        [LevelSerialized("Builtin")] public string BuiltinShaderName = string.Empty;
-
-        [LevelSerialized("Asset")] public string AssetName = string.Empty;
-        public ShaderObject? Shader;
 
         private ShaderObject? _previous;
+
+        [LevelSerialized("Asset")] public string AssetName = string.Empty;
+
+        [LevelSerialized("Builtin")] public string BuiltinShaderName = string.Empty;
+        public ShaderObject? Shader;
 
         public override void OnInit(LevelObject parent)
         {
@@ -45,7 +46,8 @@ namespace Castaway.Level.OpenGL
             _previous = g.BoundShader!;
             if (Shader == null) throw new InvalidOperationException($"Unloaded shader {BuiltinShaderName}");
             Shader.Bind();
-            g.SetFloatUniform(Shader, UniformType.TransformPerspective, camera.Get<CameraController>()!.PerspectiveTransform);
+            g.SetFloatUniform(Shader, UniformType.TransformPerspective,
+                camera.Get<CameraController>()!.PerspectiveTransform);
             g.SetFloatUniform(Shader, UniformType.TransformView, camera.Get<CameraController>()!.ViewTransform);
             g.SetFloatUniform(Shader, UniformType.ViewPosition, camera.Position);
             LightResolver.Push();

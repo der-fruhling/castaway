@@ -19,13 +19,20 @@ namespace Castaway.OpenGL
     public class OpenGLImpl : Graphics
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-        
+
+        private readonly Stopwatch _stopwatch = new();
+
         public OpenGLImpl()
         {
             GL.Init();
         }
 
-        ~OpenGLImpl() => DisposeGL();
+        public override string Name => "OpenGL-3.2";
+
+        ~OpenGLImpl()
+        {
+            DisposeGL();
+        }
 
         private void DisposeGL()
         {
@@ -37,8 +44,6 @@ namespace Castaway.OpenGL
             GC.SuppressFinalize(this);
             DisposeGL();
         }
-
-        public override string Name => "OpenGL-3.2";
 
         public override void WindowInit(Window window)
         {
@@ -62,8 +67,8 @@ namespace Castaway.OpenGL
             var r = color.R / (float) byte.MaxValue;
             var g = color.G / (float) byte.MaxValue;
             var b = color.B / (float) byte.MaxValue;
-            
-            for (int i = 0; i < width * height * 3; i += 3)
+
+            for (var i = 0; i < width * height * 3; i += 3)
             {
                 data[i + 0] = r;
                 data[i + 1] = g;
@@ -85,15 +90,13 @@ namespace Castaway.OpenGL
             var data = new float[bitmap.Width * bitmap.Height * 3];
 
             for (var i = 0; i < bitmap.Width; i++)
+            for (var j = 0; j < bitmap.Height; j++)
             {
-                for (var j = 0; j < bitmap.Height; j++)
-                {
-                    var k = i * j * 3;
-                    var p = bitmap.GetPixel(i, j);
-                    data[k + 0] = p.R / (float) byte.MaxValue;
-                    data[k + 1] = p.G / (float) byte.MaxValue;
-                    data[k + 2] = p.B / (float) byte.MaxValue;
-                }
+                var k = i * j * 3;
+                var p = bitmap.GetPixel(i, j);
+                data[k + 0] = p.R / (float) byte.MaxValue;
+                data[k + 1] = p.G / (float) byte.MaxValue;
+                data[k + 2] = p.B / (float) byte.MaxValue;
             }
 
             return new Texture(bitmap.Width, bitmap.Height, data);
@@ -131,7 +134,9 @@ namespace Castaway.OpenGL
             dynamic d = renderObject;
             try
             {
-                return d.Number is uint u ? u : throw new InvalidOperationException($"{renderObject.GetType().Name} is not an OpenGL type.");
+                return d.Number is uint u
+                    ? u
+                    : throw new InvalidOperationException($"{renderObject.GetType().Name} is not an OpenGL type.");
             }
             catch (MissingMemberException e)
             {
@@ -140,8 +145,6 @@ namespace Castaway.OpenGL
                 throw;
             }
         }
-        
-        private readonly Stopwatch _stopwatch = new();
 
         public override void FinishFrame(Window window)
         {
@@ -152,7 +155,7 @@ namespace Castaway.OpenGL
             const int MaxTimes = 60;
             if (FrameTimes.Count > MaxTimes) FrameTimes.RemoveRange(MaxTimes, FrameTimes.Count - MaxTimes);
         }
-        
+
         /// <summary>
         /// Should be called at the start of the frame.
         /// </summary>
@@ -164,7 +167,7 @@ namespace Castaway.OpenGL
             if (InputSystem.Keyboard.WasJustPressed(Keys.F11))
                 Window!.Fullscreen = !Window!.Fullscreen;
             Clear();
-            if(InputSystem.Gamepad.Valid) InputSystem.Gamepad.Read();
+            if (InputSystem.Gamepad.Valid) InputSystem.Gamepad.Read();
         }
 
         public override void Draw(ShaderObject shader, Drawable buffer)
@@ -172,7 +175,8 @@ namespace Castaway.OpenGL
             BindWindow();
             if (buffer.VertexArray == null) throw new InvalidOperationException("Drawables must have a vertex array.");
             if (buffer.VertexArray is not Buffer v)
-                throw new InvalidOperationException($"Cannot use vertex buffer of type {buffer.VertexArray?.GetType()}");
+                throw new InvalidOperationException(
+                    $"Cannot use vertex buffer of type {buffer.VertexArray?.GetType()}");
             if (shader is not Shader s)
                 throw new InvalidOperationException($"Cannot use shader of type {shader.GetType().FullName}");
 
@@ -184,7 +188,8 @@ namespace Castaway.OpenGL
                     s.Binder!.Apply(v);
                     vaoDraw.SetUp = true;
                 }
-                if (vaoDraw.ElementArray != null) 
+
+                if (vaoDraw.ElementArray != null)
                     GL.DrawElements(GLC.GL_TRIANGLES, buffer.VertexCount, GLC.GL_UNSIGNED_INT, 0);
                 else
                     GL.DrawArrays(GLC.GL_TRIANGLES, 0, buffer.VertexCount);
@@ -199,7 +204,8 @@ namespace Castaway.OpenGL
                 if (buffer.ElementArray != null)
                 {
                     if (buffer.ElementArray is not Buffer)
-                        throw new InvalidOperationException($"Cannot use element buffer of type {buffer.ElementArray?.GetType()}");
+                        throw new InvalidOperationException(
+                            $"Cannot use element buffer of type {buffer.ElementArray?.GetType()}");
                     buffer.ElementArray.Bind();
                     GL.DrawElements(GLC.GL_TRIANGLES, buffer.VertexCount, GLC.GL_UNSIGNED_INT, 0);
                 }
@@ -207,6 +213,7 @@ namespace Castaway.OpenGL
                 {
                     GL.DrawArrays(GLC.GL_TRIANGLES, 0, buffer.VertexCount);
                 }
+
                 DeleteVAOs(vao);
             }
         }
@@ -217,7 +224,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{f});
+            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] {f});
         }
 
         public override void SetFloatUniform(ShaderObject p, string name, float x, float y)
@@ -226,7 +233,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
+            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y});
         }
 
         public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z)
@@ -235,7 +242,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z});
         }
 
         public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z, float w)
@@ -244,7 +251,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
+            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z, w});
         }
 
         public override void SetIntUniform(ShaderObject p, string name, int i)
@@ -253,7 +260,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
+            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] {i});
         }
 
         public override void SetIntUniform(ShaderObject p, string name, int x, int y)
@@ -262,7 +269,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
+            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y});
         }
 
         public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z)
@@ -271,7 +278,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z});
         }
 
         public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z, int w)
@@ -280,7 +287,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
+            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z, w});
         }
 
         public override void SetUIntUniform(ShaderObject p, string name, uint i)
@@ -289,7 +296,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
+            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] {i});
         }
 
         public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y)
@@ -298,7 +305,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
+            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y});
         }
 
         public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z)
@@ -307,7 +314,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z});
         }
 
         public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z, uint w)
@@ -316,7 +323,7 @@ namespace Castaway.OpenGL
             if (name.Length == 0) return;
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
+            GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z, w});
         }
 
         public override void SetFloatUniform(ShaderObject p, string name, Vector2 v)
@@ -468,7 +475,7 @@ namespace Castaway.OpenGL
             BindWindow();
             GL.BindTexture(GLC.GL_TEXTURE_2D, 0);
         }
-        
+
         internal virtual void BindTexture(int number, uint t)
         {
             MakeActiveTexture(number);

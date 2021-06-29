@@ -6,12 +6,13 @@ using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("Light"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("Light")]
+    [Imports(typeof(OpenGLImpl))]
     public class LightController : Controller
     {
-        [LevelSerialized("Type")] public LightType Type;
         [LevelSerialized("Color")] public Vector3 Color = new(1, 1, 1);
-        
+        [LevelSerialized("Type")] public LightType Type;
+
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
         {
             base.PreRenderFrame(camera, parent);

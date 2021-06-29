@@ -6,7 +6,7 @@ namespace Castaway.OpenGL
     public class OpenGL41 : OpenGL40
     {
         public override string Name => "OpenGL-4.1";
-        
+
         // TODO Program Pipelines?
     }
 }

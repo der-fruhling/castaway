@@ -9,21 +9,22 @@ using GLFW;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("GenericPlayer"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("GenericPlayer")]
+    [Imports(typeof(OpenGLImpl))]
     public class GenericPlayerController : Controller
     {
         private float _rx, _ry;
-        
-        [LevelSerialized("MovementSpeed")] public float MovementSpeed = 0.125f;
-        [LevelSerialized("RotationSpeed")] public float RotationSpeed = 2f;
-        [LevelSerialized("MouseSensitivity")] public float MouseSensitivity = 0.15f;
         [LevelSerialized("Lock.Depth")] public bool DepthLocked = false;
-        [LevelSerialized("Lock.Rotation")] public bool RotationLocked = false;
+        [LevelSerialized("MouseSensitivity")] public float MouseSensitivity = 0.15f;
         [LevelSerialized("Lock.Movement")] public bool MovementLocked = false;
+
+        [LevelSerialized("MovementSpeed")] public float MovementSpeed = 0.125f;
         [LevelSerialized("Lock.X")] public bool MovementXLocked = false;
         [LevelSerialized("Lock.Y")] public bool MovementYLocked = false;
         [LevelSerialized("Lock.Z")] public bool MovementZLocked = false;
-        
+        [LevelSerialized("Lock.Rotation")] public bool RotationLocked = false;
+        [LevelSerialized("RotationSpeed")] public float RotationSpeed = 2f;
+
         public override async Task OnUpdate(LevelObject parent)
         {
             await base.OnUpdate(parent);
@@ -71,7 +72,7 @@ namespace Castaway.Level.OpenGL
 
             var mouseTask = Task.Run(delegate
             {
-                if(!InputSystem.Mouse.RawInput) return;
+                if (!InputSystem.Mouse.RawInput) return;
                 var pos = InputSystem.Mouse.CursorMovement;
                 var x = MathEx.ToRadians((float) pos.X * MouseSensitivity * g.FrameChange);
                 var y = MathEx.ToRadians((float) pos.Y * MouseSensitivity * g.FrameChange);
@@ -82,7 +83,7 @@ namespace Castaway.Level.OpenGL
             await gamepadTask;
             await keyboardTask;
             await mouseTask;
-            
+
             _ry = MathEx.Clamp(_ry, MathF.PI / -2, MathF.PI / 2);
 
             await Task.Run(() =>

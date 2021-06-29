@@ -9,13 +9,13 @@ namespace Castaway.OpenGL
     public class OpenGL40 : OpenGL33
     {
         public override string Name => "OpenGL-4.0";
-        
+
         public override void SetDoubleUniform(ShaderObject p, string name, double i)
         {
             BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new []{i});
+            GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] {i});
         }
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y)
@@ -23,7 +23,7 @@ namespace Castaway.OpenGL
             BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new []{x, y});
+            GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y});
         }
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z)
@@ -31,7 +31,7 @@ namespace Castaway.OpenGL
             BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z});
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z});
         }
 
         public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z, double w)
@@ -39,7 +39,7 @@ namespace Castaway.OpenGL
             BindWindow();
             if (p is not Shader s)
                 throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new []{x, y, z, w});
+            GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] {x, y, z, w});
         }
 
         public override void SetDoubleUniform(ShaderObject p, string name, Matrix2 m)

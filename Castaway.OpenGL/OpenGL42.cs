@@ -8,7 +8,7 @@ namespace Castaway.OpenGL
     public class OpenGL42 : OpenGL41
     {
         public override string Name => "OpenGL-4.2";
-        
+
         public override void PutImage(uint image, TextureObject texture)
         {
             BindWindow();

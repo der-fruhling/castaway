@@ -19,9 +19,9 @@ namespace Castaway.Math
             X.W, Y.W, Z.W, W.W
         };
 
-        public float[] ArrayF => Array.Select(n => (float)n).ToArray();
-        public int[] ArrayI => Array.Select(n => (int)n).ToArray();
-        public uint[] ArrayU => Array.Select(n => (uint)n).ToArray();
+        public float[] ArrayF => Array.Select(n => (float) n).ToArray();
+        public int[] ArrayI => Array.Select(n => (int) n).ToArray();
+        public uint[] ArrayU => Array.Select(n => (uint) n).ToArray();
 
         public Matrix4(Vector4 x, Vector4 y, Vector4 z, Vector4 w)
         {
@@ -114,9 +114,16 @@ namespace Castaway.Math
             a.W.W = w;
             return a;
         }
-        
-        public static Matrix4 Scale(Vector3 v) => Scale(v.X, v.Y, v.Z);
-        public static Matrix4 Scale(Vector4 v) => Scale(v.X, v.Y, v.Z, v.W);
+
+        public static Matrix4 Scale(Vector3 v)
+        {
+            return Scale(v.X, v.Y, v.Z);
+        }
+
+        public static Matrix4 Scale(Vector4 v)
+        {
+            return Scale(v.X, v.Y, v.Z, v.W);
+        }
 
         public static Matrix4 Translate(double x, double y, double z)
         {
@@ -127,7 +134,10 @@ namespace Castaway.Math
             return a;
         }
 
-        public static Matrix4 Translate(Vector3 v) => Translate(v.X, v.Y, v.Z);
+        public static Matrix4 Translate(Vector3 v)
+        {
+            return Translate(v.X, v.Y, v.Z);
+        }
 
         public bool Equals(Matrix4 other)
         {

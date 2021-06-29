@@ -18,22 +18,39 @@ namespace Castaway.Math
             Z = z;
         }
 
-        public Quaternion(double w, Vector3 v) : this(w, v.X, v.Y, v.Z) {}
+        public Quaternion(double w, Vector3 v) : this(w, v.X, v.Y, v.Z)
+        {
+        }
 
-        public static Quaternion operator +(Quaternion a, Quaternion b) => new(
-            a.W + b.W, a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Quaternion operator +(Quaternion a, Quaternion b)
+        {
+            return new(
+                a.W + b.W, a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        }
 
-        public static Quaternion operator *(Quaternion a, Quaternion b) => new(
-            w: a.W * b.W - a.X * b.X - a.Y * b.Y - a.Z * b.Z,
-            x: a.W * b.X + a.X * b.W + a.Y * b.Z - a.Z * b.Y,
-            y: a.W * b.Y + a.Y * b.W + a.Z * b.X - a.X * b.Z,
-            z: a.W * b.Z + a.Z * b.W + a.X * b.Y - a.Y * b.X);
+        public static Quaternion operator *(Quaternion a, Quaternion b)
+        {
+            return new(
+                w: a.W * b.W - a.X * b.X - a.Y * b.Y - a.Z * b.Z,
+                x: a.W * b.X + a.X * b.W + a.Y * b.Z - a.Z * b.Y,
+                y: a.W * b.Y + a.Y * b.W + a.Z * b.X - a.X * b.Z,
+                z: a.W * b.Z + a.Z * b.W + a.X * b.Y - a.Y * b.X);
+        }
 
-        public static double Inner(Quaternion a, Quaternion b) =>
-            a.W * b.W + a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        public static double Inner(Quaternion a, Quaternion b)
+        {
+            return a.W * b.W + a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        }
 
-        public Quaternion Conjugate() => new(W, -X, -Y, -Z);
-        public double Norm() => System.Math.Sqrt(W*W + X*X + Y*Y + Z*Z);
+        public Quaternion Conjugate()
+        {
+            return new(W, -X, -Y, -Z);
+        }
+
+        public double Norm()
+        {
+            return System.Math.Sqrt(W * W + X * X + Y * Y + Z * Z);
+        }
 
         public Quaternion Normalize()
         {
@@ -44,15 +61,15 @@ namespace Castaway.Math
         public Matrix3 ToMatrix()
         {
             return new(
-                xx: 1 - 2 * (Y*Y + Z*Z),
+                xx: 1 - 2 * (Y * Y + Z * Z),
                 xy: 2 * (X * Y - W * Z),
                 xz: 2 * (W * Y + X * Z),
                 yx: 2 * (X * Y + W * Z),
-                yy: 1 - 2 * (X*X + Z*Z),
+                yy: 1 - 2 * (X * X + Z * Z),
                 yz: 2 * (-W * X + Y * Z),
                 zx: 2 * (-W * Y + X * Z),
                 zy: 2 * (W * X + Y * Z),
-                zz: 1 - 2 * (X*X + Y*Y));
+                zz: 1 - 2 * (X * X + Y * Y));
         }
 
         public Matrix4 ToMatrix4()
@@ -80,13 +97,20 @@ namespace Castaway.Math
                 z: cosRoll * cosPitch * sinYaw + sinRoll * sinPitch * cosYaw);
         }
 
-        public static Quaternion Rotation(Vector3 vector) => Rotation(vector.X, vector.Y, vector.Z);
+        public static Quaternion Rotation(Vector3 vector)
+        {
+            return Rotation(vector.X, vector.Y, vector.Z);
+        }
 
-        public static Quaternion DegreesRotation(float x, float y, float z) =>
-            Rotation(MathEx.ToRadians(x), MathEx.ToRadians(y), MathEx.ToRadians(z));
-        
-        public static Quaternion DegreesRotation(Vector3 v) =>
-            Rotation(MathEx.ToRadians(v));
+        public static Quaternion DegreesRotation(float x, float y, float z)
+        {
+            return Rotation(MathEx.ToRadians(x), MathEx.ToRadians(y), MathEx.ToRadians(z));
+        }
+
+        public static Quaternion DegreesRotation(Vector3 v)
+        {
+            return Rotation(MathEx.ToRadians(v));
+        }
 
         public Vector3 ToEulerAngles()
         {
@@ -97,8 +121,8 @@ namespace Castaway.Math
             vector.X = System.Math.Atan2(xa, xb);
 
             var ya = 2 * (W * Y - Z * X);
-            vector.Y = System.Math.Abs(ya) >= 1 
-                ? System.Math.CopySign(MathF.PI / 2, ya) 
+            vector.Y = System.Math.Abs(ya) >= 1
+                ? System.Math.CopySign(MathF.PI / 2, ya)
                 : System.Math.Asin(ya);
 
             var za = 2 * (W * Z + X * Y);
@@ -108,14 +132,19 @@ namespace Castaway.Math
             return vector;
         }
 
-        public static Quaternion Rotation(Vector3 axis, float angle) => new(
-            w: MathF.Cos(angle / 2),
-            x: MathF.Sin(angle / 2) * axis.X,
-            y: MathF.Sin(angle / 2) * axis.Y,
-            z: MathF.Sin(angle / 2) * axis.Z);
+        public static Quaternion Rotation(Vector3 axis, float angle)
+        {
+            return new(
+                w: MathF.Cos(angle / 2),
+                x: MathF.Sin(angle / 2) * axis.X,
+                y: MathF.Sin(angle / 2) * axis.Y,
+                z: MathF.Sin(angle / 2) * axis.Z);
+        }
 
-        public static Quaternion DegreesRotation(Vector3 axis, float angle) =>
-            Rotation(axis, MathEx.ToRadians(angle));
+        public static Quaternion DegreesRotation(Vector3 axis, float angle)
+        {
+            return Rotation(axis, MathEx.ToRadians(angle));
+        }
 
         public static Vector3 operator *(Quaternion a, Vector3 b)
         {

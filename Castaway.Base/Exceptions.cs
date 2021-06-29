@@ -6,13 +6,14 @@ namespace Castaway.Base
     public abstract class MessageException : Exception
     {
         public readonly bool IsFatal;
-        
+
         protected MessageException(string? message, bool isFatal) : base(message)
         {
             IsFatal = isFatal;
         }
 
-        protected MessageException(string? message, Exception? innerException, bool isFatal) : base(message, innerException)
+        protected MessageException(string? message, Exception? innerException, bool isFatal) : base(message,
+            innerException)
         {
             IsFatal = isFatal;
         }
@@ -20,16 +21,16 @@ namespace Castaway.Base
         public abstract void Log(ILogger logger);
         public abstract void Repair(ILogger logger);
     }
-    
+
     public class EnumParseException : MessageException
     {
         public string Context, Value;
-        public Type Type;
         public object Default;
         public Action RepairState;
+        public Type Type;
 
         public EnumParseException(string context, string got, Type type, Action repairState) : base(
-            $"In {context}: Got {got}; needed any of {string.Join(", ", Enum.GetNames(type))}", 
+            $"In {context}: Got {got}; needed any of {string.Join(", ", Enum.GetNames(type))}",
             false)
         {
             Context = context;
@@ -38,9 +39,9 @@ namespace Castaway.Base
             RepairState = repairState;
             Default = 0;
         }
-        
+
         public EnumParseException(string context, string got, Type type, Action repairState, object @default) : base(
-            $"In {context}: Got {got}; needed any of {string.Join(", ", Enum.GetNames(type))}", 
+            $"In {context}: Got {got}; needed any of {string.Join(", ", Enum.GetNames(type))}",
             false)
         {
             Context = context;

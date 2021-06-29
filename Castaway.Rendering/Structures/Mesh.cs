@@ -11,7 +11,7 @@ namespace Castaway.Rendering.Structures
             public Vector4 Color;
             public Vector3 Normal;
             public Vector3 Texture;
-            
+
             public Vertex(Vector3 position, Vector4? color = null, Vector3? texture = null, Vector3? normal = null)
             {
                 Position = position;
@@ -22,7 +22,8 @@ namespace Castaway.Rendering.Structures
 
             public bool Equals(Vertex other)
             {
-                return Position.Equals(other.Position) && Color.Equals(other.Color) && Normal.Equals(other.Normal) && Texture.Equals(other.Texture);
+                return Position.Equals(other.Position) && Color.Equals(other.Color) && Normal.Equals(other.Normal) &&
+                       Texture.Equals(other.Texture);
             }
 
             public override bool Equals(object? obj)

@@ -5,6 +5,6 @@ namespace Castaway.UI
         TopLeft,
         BottomLeft,
         TopRight,
-        BottomRight,
+        BottomRight
     }
 }

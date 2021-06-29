@@ -9,8 +9,8 @@ namespace Castaway.OpenGL
     public class ShaderInputBinder
     {
         private (int Location, int Index, int Size, VertexInputType Type)[] _bindings;
-        private int _stride;
         private uint _number;
+        private int _stride;
 
         internal ShaderInputBinder(Shader program)
         {
@@ -27,9 +27,9 @@ namespace Castaway.OpenGL
                     VertexInputType.ColorG => 1,
                     VertexInputType.ColorRGB => 3,
                     VertexInputType.ColorRGBA => 4,
-                    #pragma warning disable 618
+#pragma warning disable 618
                     VertexInputType.ColorBGRA => 4,
-                    #pragma warning restore 618
+#pragma warning restore 618
                     VertexInputType.NormalXY => 2,
                     VertexInputType.NormalXYZ => 3,
                     VertexInputType.TextureS => 1,

@@ -9,7 +9,8 @@ namespace Castaway.UI
         private readonly Vector4 _color;
         private Drawable? _drawable;
 
-        public UISolidColor(Vector4 color, int x, int y, int width, int height, Corner relative = Corner.BottomLeft) : base(x, y, width, height, relative)
+        public UISolidColor(Vector4 color, int x, int y, int width, int height, Corner relative = Corner.BottomLeft) :
+            base(x, y, width, height, relative)
         {
             _color = color;
         }
@@ -26,7 +27,6 @@ namespace Castaway.UI
 
         protected override void Update()
         {
-            
         }
     }
 }

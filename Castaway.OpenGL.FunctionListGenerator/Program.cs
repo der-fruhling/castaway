@@ -19,7 +19,8 @@ namespace Castaway.OpenGL.FunctionListGenerator
             return name!.InnerText;
         }
 
-        private static void Search(ILogger log, ICollection<string> commands, IDictionary<string, string> constants, XmlElement e)
+        private static void Search(ILogger log, ICollection<string> commands, IDictionary<string, string> constants,
+            XmlElement e)
         {
             switch (e.Name)
             {
@@ -53,7 +54,7 @@ namespace Castaway.OpenGL.FunctionListGenerator
                 .WriteTo.Console(outputTemplate: "({Timestamp:HH:mm:ss} {Level:u3}) {Message:lj}{NewLine}{Exception}")
                 .MinimumLevel.Information()
                 .CreateLogger();
-            
+
             var doc = new XmlDocument();
             log.Information("Downloading document from {Url}", Url);
             using (var reader = new XmlTextReader(Url))

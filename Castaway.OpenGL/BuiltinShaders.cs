@@ -15,34 +15,25 @@ namespace Castaway.OpenGL
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
-        // ReSharper disable InconsistentNaming
-        public static ShaderObject Default = null!;
-        public static ShaderObject DefaultTextured = null!;
-        public static ShaderObject Direct = null!;
-        public static ShaderObject DirectTextured = null!;
-        public static ShaderObject UIUnscaled = null!;
-        public static ShaderObject UIScaled = null!;
-        public static ShaderObject UIUnscaledTextured = null!;
-        public static ShaderObject UIScaledTextured = null!;
-        // ReSharper restore InconsistentNaming
-
         public static void Init()
         {
             #region Mess
+
             var taskList = Assembly.GetExecutingAssembly().GetManifestResourceNames()
                 .Where(s => s.StartsWith("Castaway.OpenGL._shaders."))
                 .Select(s => s.Replace("Castaway.OpenGL._shaders.", ""))
                 .Select(s => (string.Join('/', s.Split('.')[..^1]), ReadShader(s)))
                 .Aggregate(
-                    new Dictionary<string, Task<string>>(), 
+                    new Dictionary<string, Task<string>>(),
                     (dict, t) =>
                     {
                         var (name, task) = t;
                         dict[name] = task;
                         return dict;
                     });
+
             #endregion
-            
+
             Logger.Debug("Compiling builtin shaders");
             Default = ShaderAssetType.LoadOpenGL(taskList["default/normal"].Result, "b:default/normal");
             DefaultTextured = ShaderAssetType.LoadOpenGL(taskList["default/textured"].Result, "b:default/textured");
@@ -50,8 +41,10 @@ namespace Castaway.OpenGL
             DirectTextured = ShaderAssetType.LoadOpenGL(taskList["direct/textured"].Result, "b:direct/textured");
             UIScaled = ShaderAssetType.LoadOpenGL(taskList["ui/scaled-normal"].Result, "b:ui/scaled-normal");
             UIUnscaled = ShaderAssetType.LoadOpenGL(taskList["ui/unscaled-normal"].Result, "b:ui/unscaled-normal");
-            UIScaledTextured = ShaderAssetType.LoadOpenGL(taskList["ui/scaled-textured"].Result, "b:ui/scaled-textured");
-            UIUnscaledTextured = ShaderAssetType.LoadOpenGL(taskList["ui/unscaled-textured"].Result, "b:ui/unscaled-textured");
+            UIScaledTextured =
+                ShaderAssetType.LoadOpenGL(taskList["ui/scaled-textured"].Result, "b:ui/scaled-textured");
+            UIUnscaledTextured =
+                ShaderAssetType.LoadOpenGL(taskList["ui/unscaled-textured"].Result, "b:ui/unscaled-textured");
             Logger.Information("Compiled builtin shaders");
         }
 
@@ -77,5 +70,17 @@ namespace Castaway.OpenGL
             var reader = new StreamReader(stream!);
             return await reader.ReadToEndAsync();
         }
+
+        // ReSharper disable InconsistentNaming
+        public static ShaderObject Default = null!;
+        public static ShaderObject DefaultTextured = null!;
+        public static ShaderObject Direct = null!;
+        public static ShaderObject DirectTextured = null!;
+        public static ShaderObject UIUnscaled = null!;
+        public static ShaderObject UIScaled = null!;
+        public static ShaderObject UIUnscaledTextured = null!;
+
+        public static ShaderObject UIScaledTextured = null!;
+        // ReSharper restore InconsistentNaming
     }
 }

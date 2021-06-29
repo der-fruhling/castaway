@@ -14,9 +14,9 @@ namespace Castaway.Math
             X.Y, Y.Y
         };
 
-        public float[] ArrayF => Array.Select(n => (float)n).ToArray();
-        public int[] ArrayI => Array.Select(n => (int)n).ToArray();
-        public uint[] ArrayU => Array.Select(n => (uint)n).ToArray();
+        public float[] ArrayF => Array.Select(n => (float) n).ToArray();
+        public int[] ArrayI => Array.Select(n => (int) n).ToArray();
+        public uint[] ArrayU => Array.Select(n => (uint) n).ToArray();
 
         public Matrix2(Vector2 x, Vector2 y)
         {

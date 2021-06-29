@@ -11,6 +11,7 @@ namespace Castaway.Rendering
         ColorG,
         ColorRGB,
         ColorRGBA,
+
         [Obsolete("Use " + nameof(ColorRGBA) + " instead")]
         ColorBGRA,
         NormalXY,
@@ -34,7 +35,7 @@ namespace Castaway.Rendering
         AmbientLightColor,
         ViewPosition,
         FramebufferSize,
-        UIScale,
+        UIScale
     }
 
     public enum ShaderStage

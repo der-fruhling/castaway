@@ -5,12 +5,13 @@ using Castaway.Rendering.Structures;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("PlaneMesh"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("PlaneMesh")]
+    [Imports(typeof(OpenGLImpl))]
     public class PlaneMeshController : MeshController
     {
-        [LevelSerialized("Size")] public Vector2 Size = new(1, 1);
         [LevelSerialized("Color")] public Vector4 Color = new(1, 1, 1, 1);
-        
+        [LevelSerialized("Size")] public Vector2 Size = new(1, 1);
+
         public override void OnInit(LevelObject parent)
         {
             var right = Size.X / 2f;

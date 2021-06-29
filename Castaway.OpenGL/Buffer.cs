@@ -8,14 +8,60 @@ namespace Castaway.OpenGL
 {
     internal sealed class Buffer : BufferObject
     {
-        public bool Destroyed { get; set; }
-        public uint Number { get; set; }
-
         public uint SetupProgram;
         public BufferTarget Target;
+
+        public Buffer(BufferTarget target, uint number)
+        {
+            Target = target;
+            Number = number;
+        }
+
+        public Buffer(BufferTarget target, uint number, IEnumerable<float> data) : this(target, number)
+        {
+            Upload(data);
+        }
+
+        public Buffer(BufferTarget target, uint number, IEnumerable<uint> data) : this(target, number)
+        {
+            Upload(data);
+        }
+
+        public Buffer(BufferTarget target, uint number, IEnumerable<int> data) : this(target, number)
+        {
+            Upload(data);
+        }
+
+        public Buffer(BufferTarget target, uint number, IEnumerable<double> data) : this(target, number)
+        {
+            Upload(data);
+        }
+
+        public Buffer(BufferTarget target) : this(target, GL.CreateBuffer())
+        {
+        }
+
+        public Buffer(BufferTarget target, IEnumerable<float> data) : this(target, GL.CreateBuffer(), data)
+        {
+        }
+
+        public Buffer(BufferTarget target, IEnumerable<uint> data) : this(target, GL.CreateBuffer(), data)
+        {
+        }
+
+        public Buffer(BufferTarget target, IEnumerable<int> data) : this(target, GL.CreateBuffer(), data)
+        {
+        }
+
+        public Buffer(BufferTarget target, IEnumerable<double> data) : this(target, GL.CreateBuffer(), data)
+        {
+        }
+
+        public bool Destroyed { get; set; }
+        public uint Number { get; set; }
         public override string Name => $"{Target}->{Number}({Valid})";
         public override bool Valid => GL.IsBuffer(Number) && !Destroyed;
-        
+
         public override void Bind()
         {
             if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
@@ -29,23 +75,6 @@ namespace Castaway.OpenGL
             gl.UnbindBuffer(Target);
             gl.BoundBuffers[Target] = null;
         }
-
-        public Buffer(BufferTarget target, uint number)
-        {
-            Target = target;
-            Number = number;
-        }
-
-        public Buffer(BufferTarget target, uint number, IEnumerable<float> data) : this(target, number) => Upload(data);
-        public Buffer(BufferTarget target, uint number, IEnumerable<uint> data) : this(target, number) => Upload(data);
-        public Buffer(BufferTarget target, uint number, IEnumerable<int> data) : this(target, number) => Upload(data);
-        public Buffer(BufferTarget target, uint number, IEnumerable<double> data) : this(target, number) => Upload(data);
-        
-        public Buffer(BufferTarget target) : this(target, GL.CreateBuffer()) { }
-        public Buffer(BufferTarget target, IEnumerable<float> data) : this(target, GL.CreateBuffer(), data) { }
-        public Buffer(BufferTarget target, IEnumerable<uint> data) : this(target, GL.CreateBuffer(), data) { }
-        public Buffer(BufferTarget target, IEnumerable<int> data) : this(target, GL.CreateBuffer(), data) { }
-        public Buffer(BufferTarget target, IEnumerable<double> data) : this(target, GL.CreateBuffer(), data) { }
 
         public bool Equals(Buffer other)
         {
@@ -72,10 +101,10 @@ namespace Castaway.OpenGL
         {
             return !left.Equals(right);
         }
-        
+
         public override void Dispose()
         {
-            GL.DeleteBuffers(1, new []{Number});
+            GL.DeleteBuffers(1, new[] {Number});
         }
 
         public override void Upload(IEnumerable<byte> bytes)

@@ -7,8 +7,8 @@ namespace Castaway.Assets
     {
         private readonly AssetLoader _loader;
         public readonly string Index;
-        private bool _isLoaded;
         private byte[]? _bytes;
+        private bool _isLoaded;
         public IAssetType Type;
 
         internal Asset(string index, AssetLoader loader, IAssetType type)
@@ -38,6 +38,9 @@ namespace Castaway.Assets
             return _bytes ?? throw new InvalidOperationException("Not loaded.");
         }
 
-        public T To<T>() => Type.To<T>(this);
+        public T To<T>()
+        {
+            return Type.To<T>(this);
+        }
     }
 }

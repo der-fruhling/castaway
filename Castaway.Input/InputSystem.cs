@@ -26,12 +26,12 @@ namespace Castaway.Input
             var value = new List<string>();
             const char delimiter = ',';
 
-            if(state.HasFlag(ButtonState.Down)) value.Add(nameof(ButtonState.Down));
-            if(state.HasFlag(ButtonState.Up)) value.Add(nameof(ButtonState.Up));
-            if(state.HasFlag(ButtonState.JustPressed)) value.Add(nameof(ButtonState.JustPressed));
-            if(state.HasFlag(ButtonState.JustReleased)) value.Add(nameof(ButtonState.JustReleased));
-            if(state.HasFlag(ButtonState.NeverPressed)) value.Add(nameof(ButtonState.NeverPressed));
-            
+            if (state.HasFlag(ButtonState.Down)) value.Add(nameof(ButtonState.Down));
+            if (state.HasFlag(ButtonState.Up)) value.Add(nameof(ButtonState.Up));
+            if (state.HasFlag(ButtonState.JustPressed)) value.Add(nameof(ButtonState.JustPressed));
+            if (state.HasFlag(ButtonState.JustReleased)) value.Add(nameof(ButtonState.JustReleased));
+            if (state.HasFlag(ButtonState.NeverPressed)) value.Add(nameof(ButtonState.NeverPressed));
+
             return string.Join(delimiter, value);
         }
     }

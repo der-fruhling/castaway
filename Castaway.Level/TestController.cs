@@ -7,11 +7,9 @@ namespace Castaway.Level
     [ControllerName("Test")]
     public class TestController : Controller
     {
-        [LevelSerialized("Test1")]
-        public int Test1;
-        
-        [LevelSerialized("Test2")]
-        public int Test2;
+        [LevelSerialized("Test1")] public int Test1;
+
+        [LevelSerialized("Test2")] public int Test2;
 
         public override void OnInit(LevelObject parent)
         {

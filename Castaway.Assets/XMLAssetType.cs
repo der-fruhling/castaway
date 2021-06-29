@@ -16,7 +16,8 @@ namespace Castaway.Assets
                 var d = new XmlDocument();
                 d.LoadXml(To<string>(a));
                 return (T) (dynamic) d;
-            } 
+            }
+
             throw new InvalidOperationException($"Cannot convert XMLAssetType to {typeof(T).FullName}");
         }
     }

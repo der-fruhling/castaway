@@ -2,5 +2,7 @@ using System;
 
 namespace Castaway.Input
 {
-    public class InputSystemLockedException : Exception { }
+    public class InputSystemLockedException : Exception
+    {
+    }
 }

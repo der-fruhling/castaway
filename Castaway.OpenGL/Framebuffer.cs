@@ -7,6 +7,13 @@ namespace Castaway.OpenGL
 {
     internal sealed class Framebuffer : FramebufferObject
     {
+        public Framebuffer()
+        {
+            var window = Graphics.Current.Window;
+            window!.GetFramebufferSize(out var w, out var h);
+            New(w, h);
+        }
+
         public bool Destroyed { get; set; }
         public uint Number { get; set; }
         public override string Name => $"{Number}({Valid})";
@@ -31,13 +38,6 @@ namespace Castaway.OpenGL
             gl.BoundFramebuffer = null;
         }
 
-        public Framebuffer()
-        {
-            var window = Graphics.Current.Window;
-            window!.GetFramebufferSize(out var w, out var h);
-            New(w, h);
-        }
-
         public override void Dispose()
         {
             GL.DeleteFramebuffers(1, Number);
@@ -48,9 +48,9 @@ namespace Castaway.OpenGL
             GL.GenFramebuffers(1, out var a);
             Number = a[0];
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, Number);
-            
+
             GL.GenTextures(1, out a);
-            
+
             GL.BindTexture(GLC.GL_TEXTURE_2D, a[0]);
             GL.TexParameter(GLC.GL_TEXTURE_2D, GLC.GL_TEXTURE_WRAP_S, (int) GLC.GL_REPEAT);
             GL.TexParameter(GLC.GL_TEXTURE_2D, GLC.GL_TEXTURE_WRAP_T, (int) GLC.GL_REPEAT);
@@ -63,9 +63,9 @@ namespace Castaway.OpenGL
             GL.BindRenderbuffer(GLC.GL_RENDERBUFFER, a[0]);
             GL.RenderbufferStorage(GLC.GL_RENDERBUFFER, GLC.GL_DEPTH24_STENCIL8, w, h);
             GL.FramebufferRenderbuffer(GLC.GL_FRAMEBUFFER, GLC.GL_DEPTH_STENCIL_ATTACHMENT, GLC.GL_RENDERBUFFER, a[0]);
-            
+
             Color = new Texture(a[0]);
-            
+
             GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, 0);
             Log.Verbose("Updated framebuffer {Number} to size {Width}x{Height}", Number, w, h);
         }

@@ -10,20 +10,23 @@ namespace Castaway.Rendering
     public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
     {
         public delegate void ResizeEventHandler(int newWidth, int newHeight);
-        
-        // ReSharper disable once InconsistentNaming
-        public readonly Graphics GL;
+
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
-        public event ResizeEventHandler WindowResize = delegate {  };
+        // ReSharper disable once InconsistentNaming
+        public readonly Graphics GL;
+        private Vector2? _sizeBeforeFullscreen, _positionBeforeFullscreen;
         private SizeCallback _sizeCallback;
+
+        private string _title;
+        private bool _visible, _vsync;
 
         static Window()
         {
             Glfw.Init();
             AppDomain.CurrentDomain.ProcessExit += (_, _) => Glfw.Terminate();
         }
-        
+
         public Window(int width, int height, string title, bool fullscreen, bool visible, Graphics? api = null)
         {
             Logger.Debug("Starting window creation");
@@ -33,7 +36,8 @@ namespace Castaway.Rendering
             Glfw.WindowHint(Hint.Visible, visible);
             Logger.Debug("Window Hint {Hint} = {Value}", Hint.Visible, visible);
             Logger.Debug("Window Size = {Width}x{Height}", width, height);
-            Native = Glfw.CreateWindow(width, height, title, fullscreen ? Glfw.PrimaryMonitor : Monitor.None, GLFW.Window.None);
+            Native = Glfw.CreateWindow(width, height, title, fullscreen ? Glfw.PrimaryMonitor : Monitor.None,
+                GLFW.Window.None);
             Bind();
             Logger.Debug("Window created successfully");
             api ??= ImplFinder.FindOptimalImplementation(this).Result;
@@ -42,6 +46,7 @@ namespace Castaway.Rendering
                 api = ImplFinder.Find("OpenGL-3.2").Result;
                 Logger.Warning("API from FindOptimalImplementation was null; using {ApiType} instead", api!.GetType());
             }
+
             GL = api;
             Logger.Debug("Applied API {ApiType} to window", GL.GetType());
             GL.Window = this;
@@ -72,32 +77,6 @@ namespace Castaway.Rendering
 
         public GLFW.Window Native { get; }
 
-        public async ValueTask DisposeAsync()
-        {
-            await Task.Run(Dispose);
-        }
-
-        public void Dispose()
-        {
-            Logger.Information("Destroyed window {Window}", Title);
-            GL.Dispose();
-            Glfw.DestroyWindow(Native);
-        }
-
-        internal void IBind()
-        {
-            Glfw.MakeContextCurrent(Native);
-        }
-
-        public void Bind() => Graphics.BindWindow(this);
-        public void GetSize(out int x, out int y) => Glfw.GetWindowSize(Native, out x, out y);
-        public void SetSize(int x, int y) => Glfw.SetWindowSize(Native, x, y);
-        public void GetFramebufferSize(out int x, out int y) => Glfw.GetFramebufferSize(Native, out x, out y);
-
-        private string _title;
-        private bool _visible, _vsync;
-        private Vector2? _sizeBeforeFullscreen, _positionBeforeFullscreen;
-        
         public string Title
         {
             get => _title;
@@ -139,38 +118,6 @@ namespace Castaway.Rendering
                 Glfw.SwapInterval(value ? 1 : 0);
                 Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(VSync), VSync);
             }
-        }
-
-        public void SwapBuffers()
-        {
-            Glfw.SwapBuffers(Native);
-        }
-
-        public bool Equals(Window? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _title == other._title && _visible == other._visible && _vsync == other._vsync && Native.Equals(other.Native);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || obj is Window other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_title, _visible, _vsync, Native);
-        }
-
-        public static bool operator ==(Window? left, Window? right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Window? left, Window? right)
-        {
-            return !Equals(left, right);
         }
 
         public bool Fullscreen
@@ -221,11 +168,83 @@ namespace Castaway.Rendering
                     _sizeBeforeFullscreen = null;
                 }
 
-                if(value) Glfw.SetWindowMonitor(Native, mon, 0, 0, vid.Width, vid.Height, vid.RefreshRate);
+                if (value) Glfw.SetWindowMonitor(Native, mon, 0, 0, vid.Width, vid.Height, vid.RefreshRate);
                 else Glfw.SetWindowMonitor(Native, Monitor.None, x, y, w, h, 0);
-                
+
                 Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(Fullscreen), Fullscreen);
             }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await Task.Run(Dispose);
+        }
+
+        public void Dispose()
+        {
+            Logger.Information("Destroyed window {Window}", Title);
+            GL.Dispose();
+            Glfw.DestroyWindow(Native);
+        }
+
+        public bool Equals(Window? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _title == other._title && _visible == other._visible && _vsync == other._vsync &&
+                   Native.Equals(other.Native);
+        }
+
+        public event ResizeEventHandler WindowResize = delegate { };
+
+        internal void IBind()
+        {
+            Glfw.MakeContextCurrent(Native);
+        }
+
+        public void Bind()
+        {
+            Graphics.BindWindow(this);
+        }
+
+        public void GetSize(out int x, out int y)
+        {
+            Glfw.GetWindowSize(Native, out x, out y);
+        }
+
+        public void SetSize(int x, int y)
+        {
+            Glfw.SetWindowSize(Native, x, y);
+        }
+
+        public void GetFramebufferSize(out int x, out int y)
+        {
+            Glfw.GetFramebufferSize(Native, out x, out y);
+        }
+
+        public void SwapBuffers()
+        {
+            Glfw.SwapBuffers(Native);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || obj is Window other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_title, _visible, _vsync, Native);
+        }
+
+        public static bool operator ==(Window? left, Window? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Window? left, Window? right)
+        {
+            return !Equals(left, right);
         }
     }
 }

@@ -5,10 +5,10 @@ using Castaway.Rendering;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("OrthoCamera"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("OrthoCamera")]
+    [Imports(typeof(OpenGLImpl))]
     public class OrthographicCameraController : CameraController
     {
-
         public override void OnInit(LevelObject parent)
         {
             base.OnInit(parent);
@@ -29,7 +29,7 @@ namespace Castaway.Level.OpenGL
             var win = Graphics.Current.Window!;
             PerspectiveTransform = CameraMath.Ortho(win, FarCutoff, NearCutoff, Size);
         }
-        
+
         public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
         {
             base.PreRenderFrame(camera, parent);

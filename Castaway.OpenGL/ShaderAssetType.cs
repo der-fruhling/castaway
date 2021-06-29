@@ -16,36 +16,15 @@ namespace Castaway.OpenGL
     public class ShaderAssetType : XMLAssetType
     {
         private static ILogger Logger = CastawayGlobal.GetLogger();
-        
-        private enum Ordering
-        {
-            Version,
-            Start,
-            End,
-            Structs,
-            VarConsts,
-            VarInputs,
-            VarOutputs,
-            VarUniforms,
-            Variables,
-            Functions
-        }
-
-        private enum Transform
-        {
-            Perspective,
-            View,
-            Model
-        }
 
         private static readonly string[] GlobalNodeTypes =
         {
-            "input", 
-            "output", 
-            "uniform", 
-            "uniform-from", 
-            "transform", 
-            "var", 
+            "input",
+            "output",
+            "uniform",
+            "uniform-from",
+            "transform",
+            "var",
             "const",
             "array"
         };
@@ -57,16 +36,16 @@ namespace Castaway.OpenGL
             [VertexInputType.ColorG] = "float",
             [VertexInputType.ColorRGB] = "vec3",
             [VertexInputType.ColorRGBA] = "vec4",
-            #pragma warning disable 618
+#pragma warning disable 618
             [VertexInputType.ColorBGRA] = "vec4",
-            #pragma warning restore 618
+#pragma warning restore 618
             [VertexInputType.NormalXY] = "vec2",
             [VertexInputType.NormalXYZ] = "vec3",
             [VertexInputType.TextureS] = "float",
             [VertexInputType.TextureST] = "vec2",
             [VertexInputType.TextureSTV] = "vec3"
         };
-        
+
         public override T To<T>(Asset a)
         {
             if (typeof(T) == typeof(ShaderObject))
@@ -99,7 +78,7 @@ namespace Castaway.OpenGL
             var outputs = new Dictionary<string, uint>();
 
             var enumerator = root.ChildNodes;
-            for (int i = 0; i < enumerator.Count; i++)
+            for (var i = 0; i < enumerator.Count; i++)
             {
                 var xml = enumerator.Item(i);
                 if (xml is not XmlElement element)
@@ -108,7 +87,7 @@ namespace Castaway.OpenGL
                 foreach (var e in Enum.GetValues<Ordering>())
                     code[e] = new List<string>();
                 var shaderEnumerator = element.ChildNodes;
-                for (int j = 0; j < shaderEnumerator.Count; j++)
+                for (var j = 0; j < shaderEnumerator.Count; j++)
                 {
                     var e = shaderEnumerator.Item(j) as XmlElement;
                     if (GlobalNodeTypes.Any(e!.Name.Equals))
@@ -180,7 +159,7 @@ namespace Castaway.OpenGL
                                 break;
                             case "const":
                                 code[Ordering.VarConsts].Add(qual +
-                                                              "const " +
+                                                             "const " +
                                                              $"{e.GetAttribute("type")} " +
                                                              $"{e.GetAttribute("name")}" +
                                                              $" = {e.InnerText};");
@@ -230,13 +209,11 @@ namespace Castaway.OpenGL
 
                         if (children.Count == 0) result += "    /* empty */ float _;\n";
                         else
-                        {
-                            for (int k = 0; k < children.Count; k++)
+                            for (var k = 0; k < children.Count; k++)
                             {
                                 var c = children.Item(k) as XmlElement;
                                 result += $"    {c!.GetAttribute("type")} {c.GetAttribute("name")};\n";
                             }
-                        }
 
                         result += "};";
                         code[Ordering.Structs].Add(result);
@@ -298,12 +275,12 @@ namespace Castaway.OpenGL
                 finally
                 {
                     writeTask.Wait();
-                    Logger.Debug("{FilePath}: Wrote results of {Shader} (at {Index}) to {Path}", path, xml.Name, i, tempPath);
+                    Logger.Debug("{FilePath}: Wrote results of {Shader} (at {Index}) to {Path}", path, xml.Name, i,
+                        tempPath);
                 }
             }
 
             foreach (var (n, t) in transforms)
-            {
                 uniforms[n] = t switch
                 {
                     Transform.Perspective => UniformType.TransformPerspective,
@@ -311,15 +288,35 @@ namespace Castaway.OpenGL
                     Transform.Model => UniformType.TransformModel,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-            }
-            
+
             var program = new Shader(shaders.Cast<SeparatedShaderObject>().ToArray());
-            foreach(var (n, v) in inputs) program.RegisterInput(n, v);
-            foreach(var (n, c) in outputs) program.RegisterOutput(n, c);
-            foreach(var (n, u) in uniforms) program.RegisterUniform(n, u);
+            foreach (var (n, v) in inputs) program.RegisterInput(n, v);
+            foreach (var (n, c) in outputs) program.RegisterOutput(n, c);
+            foreach (var (n, u) in uniforms) program.RegisterUniform(n, u);
             program.Link();
 
             return program;
+        }
+
+        private enum Ordering
+        {
+            Version,
+            Start,
+            End,
+            Structs,
+            VarConsts,
+            VarInputs,
+            VarOutputs,
+            VarUniforms,
+            Variables,
+            Functions
+        }
+
+        private enum Transform
+        {
+            Perspective,
+            View,
+            Model
         }
     }
 }

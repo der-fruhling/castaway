@@ -26,14 +26,15 @@ namespace Castaway.Level
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited = false)]
     public class ControllerBaseAttribute : Attribute
-    { }
+    {
+    }
 
     public static class ControllerFinder
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
         private static Dictionary<string, Type> _controllers;
         private static List<Type> _controllerBases;
-        
+
         static ControllerFinder()
         {
             var types = AppDomain.CurrentDomain
@@ -66,8 +67,11 @@ namespace Castaway.Level
             Logger.Debug("Running with controller set: {Controllers}", _controllers);
         }
 
-        public static Type Get(string name) => _controllers.ContainsKey(name) 
-            ? _controllers[name] 
-            : throw new InvalidOperationException($"{name} does not exist as a controller");
+        public static Type Get(string name)
+        {
+            return _controllers.ContainsKey(name)
+                ? _controllers[name]
+                : throw new InvalidOperationException($"{name} does not exist as a controller");
+        }
     }
 }

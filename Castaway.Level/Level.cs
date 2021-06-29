@@ -15,8 +15,10 @@ namespace Castaway.Level
         private readonly List<LevelObject> _objects = new();
 
         public uint ActiveCamera = 0;
-        
-        public Level() {}
+
+        public Level()
+        {
+        }
 
         public Level(Asset asset)
         {
@@ -28,7 +30,7 @@ namespace Castaway.Level
             var node = root!.FirstChild;
             do
             {
-                if(node == null) break;
+                if (node == null) break;
 
                 switch (node.Name)
                 {
@@ -38,9 +40,10 @@ namespace Castaway.Level
                         break;
                     }
                 }
-            }
-            while ((node = node!.NextSibling) != null);
+            } while ((node = node!.NextSibling) != null);
         }
+
+        public LevelObject this[string i] => Get(i);
 
         private LevelObject ParseObject(XmlElement e, string? api, LevelObject? parent = null)
         {
@@ -55,7 +58,7 @@ namespace Castaway.Level
             o.Position = (Vector3) Load(typeof(Vector3), e["Position"]?.InnerText ?? "0,0,0");
             o.Scale = (Vector3) Load(typeof(Vector3), e["Scale"]?.InnerText ?? "1,1,1");
             o.Parent = parent;
-            for (var i = 0; i < subs.Count; i++) 
+            for (var i = 0; i < subs.Count; i++)
                 o.Subobjects.Add(ParseObject((subs[i] as XmlElement)!, api, o));
             return o;
         }
@@ -83,7 +86,7 @@ namespace Castaway.Level
                     throw new InvalidOperationException($"Cannot find option {n!.Name} for controller {e.Name}", exc);
                 }
             }
-            
+
             return (inst as Controller)!;
         }
 
@@ -104,45 +107,48 @@ namespace Castaway.Level
             {
                 var p = v.Split(',');
                 return new Vector2(
-                    float.Parse(p[0]), 
+                    float.Parse(p[0]),
                     float.Parse(p[1]));
             }
+
             if (t == typeof(Vector3))
             {
                 var p = v.Split(',');
                 return new Vector3(
-                    float.Parse(p[0]), 
+                    float.Parse(p[0]),
                     float.Parse(p[1]),
                     float.Parse(p[2]));
             }
+
             if (t == typeof(Vector4))
             {
                 var p = v.Split(',');
                 return new Vector4(
-                    float.Parse(p[0]), 
+                    float.Parse(p[0]),
                     float.Parse(p[1]),
                     float.Parse(p[2]),
                     float.Parse(p[3]));
             }
+
             if (t == typeof(Asset)) return AssetLoader.Loader!.GetAssetByName(v);
             if (t.IsSubclassOf(typeof(Enum))) return Enum.Parse(t, v);
-            
+
             throw new InvalidOperationException($"Cannot load {t.FullName} from levels.");
         }
 
         public void Start()
         {
-            if(!_objects.Any()) return;
-            foreach(var o in _objects) o.OnInit();
+            if (!_objects.Any()) return;
+            foreach (var o in _objects) o.OnInit();
         }
 
         public void Render()
         {
-            if(!_objects.Any()) return;
+            if (!_objects.Any()) return;
             foreach (var obj in _objects)
             {
                 var cams = obj.GetAll<CameraController>();
-                if(!cams.Any()) continue;
+                if (!cams.Any()) continue;
                 foreach (var cam in cams)
                 {
                     LightResolver.Ambient(cam.AmbientLight, cam.AmbientLightColor);
@@ -158,18 +164,24 @@ namespace Castaway.Level
 
         public void Update()
         {
-            if(!_objects.Any()) return;
-            foreach(var o in _objects) o.OnUpdate().Wait();
+            if (!_objects.Any()) return;
+            foreach (var o in _objects) o.OnUpdate().Wait();
         }
 
         public void End()
         {
-            if(!_objects.Any()) return;
-            foreach(var o in _objects) o.OnDestroy();
+            if (!_objects.Any()) return;
+            foreach (var o in _objects) o.OnDestroy();
         }
 
-        public void Add(LevelObject obj) => _objects.Add(obj);
-        public LevelObject Get(string name) => _objects.Single(o => o.Name == name);
-        public LevelObject this[string i] => Get(i);
+        public void Add(LevelObject obj)
+        {
+            _objects.Add(obj);
+        }
+
+        public LevelObject Get(string name)
+        {
+            return _objects.Single(o => o.Name == name);
+        }
     }
 }

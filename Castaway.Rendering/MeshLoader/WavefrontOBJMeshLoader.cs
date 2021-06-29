@@ -13,7 +13,7 @@ namespace Castaway.Rendering.MeshLoader
     public static class WavefrontOBJ
     {
         private static ILogger Logger = CastawayGlobal.GetLogger();
-        
+
         public static async Task<Mesh> ReadMesh(string[] lines)
         {
             return await Task.Run(delegate
@@ -69,9 +69,18 @@ namespace Castaway.Rendering.MeshLoader
                             {
                                 vertices.AddRange(new Mesh.Vertex[]
                                 {
-                                    new() {Position = positions[int.Parse(parts[1]) - 1], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[int.Parse(parts[2]) - 1], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[int.Parse(parts[3]) - 1], Color = new Vector4(1, 1, 1, 1)},
+                                    new()
+                                    {
+                                        Position = positions[int.Parse(parts[1]) - 1], Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[int.Parse(parts[2]) - 1], Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[int.Parse(parts[3]) - 1], Color = new Vector4(1, 1, 1, 1)
+                                    }
                                 });
                                 break;
                             }
@@ -83,9 +92,21 @@ namespace Castaway.Rendering.MeshLoader
 
                                 vertices.AddRange(new Mesh.Vertex[]
                                 {
-                                    new() {Position = positions[p[0]], Texture = textureCoords[t[0]], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[p[1]], Texture = textureCoords[t[1]], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[p[2]], Texture = textureCoords[t[2]], Color = new Vector4(1, 1, 1, 1)},
+                                    new()
+                                    {
+                                        Position = positions[p[0]], Texture = textureCoords[t[0]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[p[1]], Texture = textureCoords[t[1]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[p[2]], Texture = textureCoords[t[2]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    }
                                 });
                                 break;
                             }
@@ -112,7 +133,7 @@ namespace Castaway.Rendering.MeshLoader
                                     {
                                         Position = positions[p[2]], Texture = textureCoords[t[2]],
                                         Normal = normals[n[2]], Color = new Vector4(1, 1, 1, 1)
-                                    },
+                                    }
                                 });
                                 break;
                             }
@@ -124,9 +145,21 @@ namespace Castaway.Rendering.MeshLoader
 
                                 vertices.AddRange(new Mesh.Vertex[]
                                 {
-                                    new() {Position = positions[p[0]], Normal = normals[n[0]], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[p[1]], Normal = normals[n[1]], Color = new Vector4(1, 1, 1, 1)},
-                                    new() {Position = positions[p[2]], Normal = normals[n[2]], Color = new Vector4(1, 1, 1, 1)},
+                                    new()
+                                    {
+                                        Position = positions[p[0]], Normal = normals[n[0]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[p[1]], Normal = normals[n[1]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    },
+                                    new()
+                                    {
+                                        Position = positions[p[2]], Normal = normals[n[2]],
+                                        Color = new Vector4(1, 1, 1, 1)
+                                    }
                                 });
                                 break;
                             }
@@ -142,7 +175,7 @@ namespace Castaway.Rendering.MeshLoader
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                        throw new AggregateException($"Not enough data on line {i+1}", e);
+                        throw new AggregateException($"Not enough data on line {i + 1}", e);
                     }
                 }
 
@@ -153,16 +186,17 @@ namespace Castaway.Rendering.MeshLoader
                     var vertex = vertices[(int) i];
                     if (!realVertices.Contains(vertex))
                     {
-                        elements.Add((uint)realVertices.Count);
+                        elements.Add((uint) realVertices.Count);
                         realVertices.Add(vertex);
                     }
                     else
                     {
-                        elements.Add((uint)realVertices.IndexOf(vertex));
+                        elements.Add((uint) realVertices.IndexOf(vertex));
                     }
                 }
 
-                Logger.Debug("Finished mesh construction; {ElementCount} elements, {VertexCount} vertices", elements.Count, realVertices.Count);
+                Logger.Debug("Finished mesh construction; {ElementCount} elements, {VertexCount} vertices",
+                    elements.Count, realVertices.Count);
                 return new Mesh(realVertices.ToArray(), elements.ToArray());
             });
         }

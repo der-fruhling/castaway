@@ -13,7 +13,7 @@ namespace Castaway.Rendering
     {
         private static Dictionary<string, Type>? _implementations;
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-        
+
         public static async Task<Graphics?> Find(string name)
         {
             _implementations ??= await FindImplementations();
@@ -32,15 +32,18 @@ namespace Castaway.Rendering
                 Logger.Debug("Searching for implementations");
                 var types = AppDomain.CurrentDomain
                     .GetAssemblies()
-                    .Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies().Select(n => AppDomain.CurrentDomain.Load(n)))
-                    .Concat(new []{Assembly.GetEntryAssembly()})
+                    .Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies()
+                        .Select(n => AppDomain.CurrentDomain.Load(n)))
+                    .Concat(new[] {Assembly.GetEntryAssembly()})
                     .Distinct()
                     .SelectMany(a => a!.GetTypes())
                     .Distinct()
                     .Where(t => t.GetCustomAttribute<ImplementsAttribute>() != null);
                 var implList = types as Type[] ?? types.ToArray();
                 Logger.Debug("Found {Count} implementations", implList.Length);
-                foreach(var i in implList) Logger.Verbose("Implementation {Name} {Type}", i.GetCustomAttribute<ImplementsAttribute>()!.Name, i);
+                foreach (var i in implList)
+                    Logger.Verbose("Implementation {Name} {Type}", i.GetCustomAttribute<ImplementsAttribute>()!.Name,
+                        i);
                 var impls = new Dictionary<string, Type>();
                 foreach (var type in implList)
                 {
@@ -67,7 +70,9 @@ namespace Castaway.Rendering
             throw new GraphicsException($"Minimum OpenGL requirement is 3.2, found {major}.{minor}");
         }
 
-        private static bool Supports(int maj1, int min1, int maj2, int min2) =>
-            min1 >= min2 && maj1 == maj2 || maj1 > maj2;
+        private static bool Supports(int maj1, int min1, int maj2, int min2)
+        {
+            return min1 >= min2 && maj1 == maj2 || maj1 > maj2;
+        }
     }
 }

@@ -5,18 +5,19 @@ using Castaway.Rendering.Structures;
 
 namespace Castaway.Level.OpenGL
 {
-    [ControllerName("PyramidMesh"), Imports(typeof(OpenGLImpl))]
+    [ControllerName("PyramidMesh")]
+    [Imports(typeof(OpenGLImpl))]
     public class PyramidMeshController : MeshController
     {
-        [LevelSerialized("Size")] public Vector3 Size;
         [LevelSerialized("Color")] public Vector4 Color;
-        
+        [LevelSerialized("Size")] public Vector3 Size;
+
         public override void OnInit(LevelObject parent)
         {
             var right = Size.X / 2f;
             var up = Size.Y / 2f;
             var forward = Size.Z / 2f;
-            
+
             Mesh = new Mesh(new Mesh.Vertex[]
             {
                 new(new Vector3(-right, -up, -forward), Color),
