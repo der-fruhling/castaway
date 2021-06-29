@@ -12,6 +12,8 @@ namespace Castaway.Assets
 
         private Dictionary<string, (string, IAssetType)> Assets;
 
+        public AssetCache Cache = new();
+
         public AssetLoader()
         {
             Assets = new Dictionary<string, (string, IAssetType)>();

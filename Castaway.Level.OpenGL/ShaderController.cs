@@ -17,8 +17,8 @@ namespace Castaway.Level.OpenGL
         private ShaderObject? _previous;
 
         [LevelSerialized("Asset")] public string AssetName = string.Empty;
-
         [LevelSerialized("Builtin")] public string BuiltinShaderName = string.Empty;
+        [LevelSerialized("DisableCache")] public bool CacheDisabled = false;
         public ShaderObject? Shader;
 
         public override void OnInit(LevelObject parent)
@@ -26,8 +26,9 @@ namespace Castaway.Level.OpenGL
             base.OnInit(parent);
             if (AssetName.Any())
             {
-                Shader = AssetLoader.Loader!.GetAssetByName(AssetName).To<ShaderObject>();
-                Logger.Debug("Initialized shader controller with asset at {Path}", AssetName);
+                if (CacheDisabled) ResolveNormally();
+                else if (AssetLoader.Loader!.Cache.IsCached<ShaderObject>(AssetName)) ResolveFromCache();
+                else ResolveNormallyAndCache();
             }
             else
             {
@@ -57,6 +58,24 @@ namespace Castaway.Level.OpenGL
         {
             base.PostRender(camera, parent);
             _previous?.Bind();
+        }
+
+        private void ResolveNormally()
+        {
+            Shader = AssetLoader.Loader!.GetAssetByName(AssetName).To<ShaderObject>();
+            Logger.Debug("Resolved shader with asset at {Path}", AssetName);
+        }
+
+        private void ResolveNormallyAndCache()
+        {
+            ResolveNormally();
+            AssetLoader.Loader!.Cache.Cache(AssetName, Shader!);
+        }
+
+        private void ResolveFromCache()
+        {
+            Shader = AssetLoader.Loader!.Cache.Get<ShaderObject>(AssetName);
+            Logger.Debug("Resolved shader with cache from {ID} of {Type}", AssetName, typeof(ShaderObject));
         }
     }
 }
