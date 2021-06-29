@@ -14,14 +14,15 @@ namespace Test
     [Imports(typeof(OpenGLImpl), typeof(ShaderController))]
     internal class Program : IApplication
     {
-        private Level _level;
+        private Level? _level;
 
-        private Window _window;
+        private Window? _window;
 #pragma warning disable 649
-        private Graphics g;
+        // ReSharper disable once InconsistentNaming
+        private Graphics g = null!;
 #pragma warning restore 649
 
-        public bool ShouldStop => _window.ShouldClose;
+        public bool ShouldStop => _window?.ShouldClose ?? true;
 
         public void Init()
         {
@@ -51,16 +52,17 @@ namespace Test
 
         public void Render()
         {
-            _level.Render();
+            _level?.Render();
         }
 
         public void Update()
         {
-            _level.Update();
+            _level?.Update();
         }
 
         public void EndFrame()
         {
+            if (_window is null) return;
             g.FinishFrame(_window);
             if (InputSystem.Gamepad.Valid && InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
                 _window.ShouldClose = true;
@@ -69,13 +71,14 @@ namespace Test
         public void Recover(RecoverableException e)
         {
             g.Clear();
-            g.FinishFrame(_window);
+            if (_window is not null) g.FinishFrame(_window);
         }
 
         public void Dispose()
         {
+            if (_window is null) return;
             _window.Visible = false;
-            _level.End();
+            _level?.End();
             _window.Dispose();
         }
 

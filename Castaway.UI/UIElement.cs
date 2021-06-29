@@ -19,7 +19,7 @@ namespace Castaway.UI
         private int _x;
         private int _y;
         public (int X, int Y) Area;
-        public List<UIElement> Children;
+        public List<UIElement> Children = new();
         public UIElement? Parent;
         public Corner Relative;
 
@@ -135,7 +135,7 @@ namespace Castaway.UI
             return ConstructMesh(_ => color);
         }
 
-        public event EventHandler LeftClicked, RightClick, MiddleClick;
+        public event EventHandler? LeftClicked, RightClick, MiddleClick;
 
         public void RenderElement()
         {
@@ -193,17 +193,17 @@ namespace Castaway.UI
 
         protected virtual void ReactLeftClick()
         {
-            LeftClicked(this, EventArgs.Empty);
+            LeftClicked?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void ReactRightClick()
         {
-            RightClick(this, EventArgs.Empty);
+            RightClick?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void ReactMiddleClick()
         {
-            MiddleClick(this, EventArgs.Empty);
+            MiddleClick?.Invoke(this, EventArgs.Empty);
         }
     }
 }
