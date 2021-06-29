@@ -185,6 +185,7 @@ namespace Castaway.OpenGL
                 BindVAO(vaoDraw.VAO);
                 if (!vaoDraw.SetUp)
                 {
+                    buffer.VertexArray.Bind();
                     s.Binder!.Apply(v);
                     vaoDraw.SetUp = true;
                 }
