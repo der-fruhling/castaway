@@ -116,10 +116,9 @@ namespace Castaway.OpenGL
             };
         }
 
+        [Obsolete("Use " + nameof(ConstructFor) + " instead")]
         public static Drawable ConstructUnoptimisedFor(this Mesh mesh, ShaderObject shader)
         {
-            Logger.Warning("Refrain from using {FunctionName}; use {Replacement}", nameof(ConstructUnoptimisedFor),
-                nameof(ConstructFor));
             var vertexBuffer = new Buffer(BufferTarget.VertexArray, mesh.ConstructVertexArray(shader));
             var elementBuffer = new Buffer(BufferTarget.ElementArray, mesh.Elements);
 

@@ -32,8 +32,7 @@ namespace Castaway.Level.OpenGL
                 new(new Vector3(1, -1, 0), texture: new Vector3(1, 0, 0)),
                 new(new Vector3(-1, 1, 0), texture: new Vector3(0, 1, 0)),
                 new(new Vector3(1, 1, 0), texture: new Vector3(1, 1, 0))
-            }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructUnoptimisedFor(BuiltinShaders.DirectTextured);
-            // TODO Work around unoptimised fullscreen buffer.
+            }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructFor(BuiltinShaders.DirectTextured);
 
             Logger.Debug("Created new camera {Type} filling {ID}", GetType(), CameraID);
         }
