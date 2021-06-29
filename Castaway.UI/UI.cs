@@ -1,4 +1,6 @@
-namespace Castaway.Rendering.UI
+using Castaway.Rendering;
+
+namespace Castaway.UI
 {
     public static class UI
     {

@@ -14,16 +14,16 @@ namespace Castaway.OpenGL
     public static class BuiltinShaders
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-        
+
         // ReSharper disable InconsistentNaming
-        public static ShaderObject? Default;
-        public static ShaderObject? DefaultTextured;
-        public static ShaderObject? Direct;
-        public static ShaderObject? DirectTextured;
-        public static ShaderObject? UIUnscaled;
-        public static ShaderObject? UIScaled;
-        public static ShaderObject? UIUnscaledTextured;
-        public static ShaderObject? UIScaledTextured;
+        public static ShaderObject Default = null!;
+        public static ShaderObject DefaultTextured = null!;
+        public static ShaderObject Direct = null!;
+        public static ShaderObject DirectTextured = null!;
+        public static ShaderObject UIUnscaled = null!;
+        public static ShaderObject UIScaled = null!;
+        public static ShaderObject UIUnscaledTextured = null!;
+        public static ShaderObject UIScaledTextured = null!;
         // ReSharper restore InconsistentNaming
 
         public static void Init()
@@ -57,16 +57,16 @@ namespace Castaway.OpenGL
 
         public static void Destroy()
         {
-            Logger.Information("Disposing of builtin shaders");
-            Default?.Dispose();
-            DefaultTextured?.Dispose();
-            Direct?.Dispose();
-            DirectTextured?.Dispose();
-            UIScaled?.Dispose();
-            UIUnscaled?.Dispose();
-            UIScaledTextured?.Dispose();
-            UIUnscaledTextured?.Dispose();
-            Logger.Information("Finished disposing of builtin shaders");
+            Logger.Debug("Disposing of builtin shaders");
+            Default.Dispose();
+            DefaultTextured.Dispose();
+            Direct.Dispose();
+            DirectTextured.Dispose();
+            UIScaled.Dispose();
+            UIUnscaled.Dispose();
+            UIScaledTextured.Dispose();
+            UIUnscaledTextured.Dispose();
+            Logger.Information("Disposed builtin shaders");
         }
 
         private static async Task<string> ReadShader(string path)

@@ -1,6 +1,6 @@
 using System;
 
-namespace Castaway.Rendering.Input
+namespace Castaway.Input
 {
     [Flags]
     public enum ButtonState

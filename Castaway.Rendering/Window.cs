@@ -80,8 +80,8 @@ namespace Castaway.Rendering
         public void Dispose()
         {
             Logger.Information("Destroyed window {Window}", Title);
-            Glfw.DestroyWindow(Native);
             GL.Dispose();
+            Glfw.DestroyWindow(Native);
         }
 
         internal void IBind()

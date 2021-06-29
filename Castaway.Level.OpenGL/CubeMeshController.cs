@@ -1,10 +1,11 @@
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("CubeMesh")]
+    [ControllerName("CubeMesh"), Imports(typeof(OpenGLImpl))]
     public class CubeMeshController : MeshController
     {
         [LevelSerialized("Size")] public Vector3 Size = new(.5f, .5f, .5f);

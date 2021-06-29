@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Castaway.Rendering.Input
+namespace Castaway.Input
 {
     public static class InputSystem
     {

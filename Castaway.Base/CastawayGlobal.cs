@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Serilog;
 using Serilog.Core;
 using Serilog.Enrichers;
@@ -32,22 +33,10 @@ namespace Castaway.Base
             var returnCode = 0;
             var logger = GetLogger();
 
-            try
-            {
-                LoadConfig(logger);
-            }
-            catch (MessageException e)
-            {
-                e.Log(logger);
-                if(e.IsFatal) return 1;
-            }
-            catch (Exception e)
-            {
-                logger.Fatal(e, "An error occurred while loading the configuration");
-                return 1;
-            }
+            LoadConfig(logger);
 
             var application = new T();
+            application.Init();
             logger.Information("Started application {@App}", application);
             try
             {
@@ -94,13 +83,12 @@ namespace Castaway.Base
                                  ?? Enum.GetName(LogEventLevel.Information)!;
                 var eLogLevel = TryParseEnum<LogEventLevel>(eLogLevelS, true);
                 LevelSwitch.MinimumLevel = eLogLevel 
-                    ?? throw new EnumParseException(
-                        "/log/level", eLogLevelS, typeof(LogEventLevel),
-                        () => LevelSwitch.MinimumLevel = LogEventLevel.Information,
-                        LogEventLevel.Information);
+                                           ?? throw new EnumParseException(
+                                               "/log/level", eLogLevelS, typeof(LogEventLevel),
+                                               () => LevelSwitch.MinimumLevel = LogEventLevel.Information,
+                                               LogEventLevel.Information);
                 logger.Verbose("LogLevel = {Value}", eLogLevel);
             });
-            
             
             logger.Debug("Loaded config from config.json");
         }
@@ -137,5 +125,7 @@ namespace Castaway.Base
                 throw;
             }
         }
+
+        private static Task TryAsync(ILogger logger, Action a) => Task.Run(() => Try(logger, a));
     }
 }

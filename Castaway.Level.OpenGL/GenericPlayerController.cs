@@ -1,14 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using Castaway.Level;
+using Castaway.Base;
+using Castaway.Input;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
-using Castaway.Rendering.Input;
 using GLFW;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("GenericPlayer")]
+    [ControllerName("GenericPlayer"), Imports(typeof(OpenGLImpl))]
     public class GenericPlayerController : Controller
     {
         private float _rx, _ry;

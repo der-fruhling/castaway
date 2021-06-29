@@ -1,4 +1,4 @@
-namespace Castaway.Rendering.UI
+namespace Castaway.UI
 {
     public enum Corner
     {

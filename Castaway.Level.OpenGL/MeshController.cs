@@ -1,10 +1,11 @@
 using Castaway.Assets;
-using Castaway.Level;
+using Castaway.Base;
+using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("LoadedMesh")]
+    [ControllerName("LoadedMesh"), Imports(typeof(OpenGLImpl))]
     public class MeshController : Controller
     {
         [LevelSerialized("AssetPath")] public Asset? Asset;

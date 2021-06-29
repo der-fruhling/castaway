@@ -1,15 +1,17 @@
 ﻿using Castaway.Assets;
 using Castaway.Base;
+using Castaway.Input;
 using Castaway.Level;
+using Castaway.Level.OpenGL;
 using Castaway.OpenGL;
 using Castaway.Rendering;
-using Castaway.Rendering.Input;
 using GLFW;
+using Serilog;
 using Window = Castaway.Rendering.Window;
 
 namespace Test
 {
-    [Imports(typeof(OpenGLImpl))]
+    [Imports(typeof(OpenGLImpl), typeof(ShaderController))]
     internal class Program : IApplication
     {
         private static int Main() => CastawayGlobal.Run<Program>();
@@ -22,13 +24,15 @@ namespace Test
 
         public bool ShouldStop => _window.ShouldClose;
 
-        public Program()
+        public void Init()
         {
             // Perform global initialization
             AssetLoader.Init();
             
             _window = new Window(800, 600, "name", false);
             _window.Bind();
+            
+            Log.Information("{@Shader}", BuiltinShaders.DirectTextured);
 
             g = _window.GL;
             g.ExpectedFrameTime = 1f / 144f;

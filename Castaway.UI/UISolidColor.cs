@@ -1,6 +1,7 @@
 using Castaway.Math;
+using Castaway.Rendering;
 
-namespace Castaway.Rendering.UI
+namespace Castaway.UI
 {
     // ReSharper disable once InconsistentNaming
     public class UISolidColor : UIElement

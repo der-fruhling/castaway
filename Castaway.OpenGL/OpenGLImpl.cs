@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Drawing;
 using Castaway.Base;
+using Castaway.Input;
 using Castaway.Math;
 using Castaway.OpenGL.Native;
 using Castaway.Rendering;
-using Castaway.Rendering.Input;
 using Castaway.Rendering.Structures;
 using GLFW;
 using Serilog;
@@ -23,14 +23,13 @@ namespace Castaway.OpenGL
         public OpenGLImpl()
         {
             GL.Init();
-            Glfw.Init();
         }
 
         ~OpenGLImpl() => DisposeGL();
 
         private void DisposeGL()
         {
-            Glfw.Terminate();
+            BuiltinShaders.Destroy();
         }
 
         public override void Dispose()

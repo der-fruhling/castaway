@@ -1,6 +1,6 @@
 using System;
 
-namespace Castaway.Rendering.Input
+namespace Castaway.Input
 {
     public class InputSystemLockedException : Exception { }
 }

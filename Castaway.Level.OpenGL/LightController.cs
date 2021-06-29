@@ -1,11 +1,12 @@
 using System;
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("Light")]
+    [ControllerName("Light"), Imports(typeof(OpenGLImpl))]
     public class LightController : Controller
     {
         [LevelSerialized("Type")] public LightType Type;

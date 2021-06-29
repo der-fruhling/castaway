@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Castaway.Base;
+using Castaway.Rendering;
 using GLFW;
 using Serilog;
 
-namespace Castaway.Rendering.Input
+namespace Castaway.Input
 {
     public class KeyboardInputSystem
     {

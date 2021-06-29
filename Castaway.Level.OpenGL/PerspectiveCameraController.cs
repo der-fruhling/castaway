@@ -1,10 +1,11 @@
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("PerspCamera")]
+    [ControllerName("PerspCamera"), Imports(typeof(OpenGLImpl))]
     public class PerspectiveCameraController : CameraController
     {
         [LevelSerialized("VerticalFOV")] public float FOV;

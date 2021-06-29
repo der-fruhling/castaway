@@ -1,14 +1,14 @@
 using System;
 using Castaway.Base;
-using Castaway.Level;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
 using Serilog;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerBase]
+    [ControllerBase, Imports(typeof(OpenGLImpl))]
     public abstract class CameraController : Castaway.Level.CameraController
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
@@ -31,7 +31,7 @@ namespace Castaway.OpenGL.Controllers
                 new(new Vector3(1, -1, 0),  texture: new Vector3(1, 0, 0)),
                 new(new Vector3(-1, 1, 0),  texture: new Vector3(0, 1, 0)),
                 new(new Vector3(1, 1, 0),   texture: new Vector3(1, 1, 0)),
-            }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructUnoptimisedFor(BuiltinShaders.DirectTextured!);
+            }, new uint[] {0, 1, 2, 1, 3, 2}).ConstructUnoptimisedFor(BuiltinShaders.DirectTextured);
             // TODO Work around unoptimised fullscreen buffer.
             
             Logger.Debug("Created new camera {Type} filling {ID}", GetType(), CameraID);

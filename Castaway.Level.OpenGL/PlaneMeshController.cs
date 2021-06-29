@@ -1,10 +1,11 @@
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("PlaneMesh")]
+    [ControllerName("PlaneMesh"), Imports(typeof(OpenGLImpl))]
     public class PlaneMeshController : MeshController
     {
         [LevelSerialized("Size")] public Vector2 Size = new(1, 1);

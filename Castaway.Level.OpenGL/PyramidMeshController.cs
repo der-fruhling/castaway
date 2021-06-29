@@ -1,10 +1,11 @@
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("PyramidMesh")]
+    [ControllerName("PyramidMesh"), Imports(typeof(OpenGLImpl))]
     public class PyramidMeshController : MeshController
     {
         [LevelSerialized("Size")] public Vector3 Size;

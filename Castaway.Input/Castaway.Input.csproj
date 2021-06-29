@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Title>Castaway OpenGL Implementation</Title>
-        <PackageId>Castaway.OpenGL</PackageId>
-        <RootNamespace>Castaway.OpenGL</RootNamespace>
+        <Title>Castaway Inputs</Title>
+        <PackageId>Castaway.Input</PackageId>
+        <RootNamespace>Castaway.Input</RootNamespace>
 
         <!-- Common -->
         <PackageVersion>0.0.20210619-pg.2</PackageVersion>
@@ -20,20 +20,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="_shaders\**\*" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
-      <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj" />
+      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
-      <ProjectReference Include="..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj" />
       <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.5.21301.5" />
+      <PackageReference Include="glfw-net" Version="3.3.1" />
     </ItemGroup>
 
 </Project>

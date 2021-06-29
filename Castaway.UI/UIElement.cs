@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Castaway.Base;
+using Castaway.Input;
 using Castaway.Math;
-using Castaway.Rendering.Input;
+using Castaway.Rendering;
 using Castaway.Rendering.Structures;
 using GLFW;
 using Serilog;
 
-namespace Castaway.Rendering.UI
+namespace Castaway.UI
 {
     // ReSharper disable once InconsistentNaming
     public abstract class UIElement

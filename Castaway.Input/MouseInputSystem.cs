@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Castaway.Base;
 using Castaway.Math;
+using Castaway.Rendering;
 using GLFW;
 using Serilog;
 
-namespace Castaway.Rendering.Input
+namespace Castaway.Input
 {
     public class MouseInputSystem
     {

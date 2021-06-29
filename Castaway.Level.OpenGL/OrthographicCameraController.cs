@@ -1,10 +1,11 @@
-using Castaway.Level;
+using Castaway.Base;
 using Castaway.Math;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("OrthoCamera")]
+    [ControllerName("OrthoCamera"), Imports(typeof(OpenGLImpl))]
     public class OrthographicCameraController : CameraController
     {
 

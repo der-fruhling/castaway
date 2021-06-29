@@ -2,13 +2,13 @@ using System;
 using System.Linq;
 using Castaway.Assets;
 using Castaway.Base;
-using Castaway.Level;
+using Castaway.OpenGL;
 using Castaway.Rendering;
 using Serilog;
 
-namespace Castaway.OpenGL.Controllers
+namespace Castaway.Level.OpenGL
 {
-    [ControllerName("Shader")]
+    [ControllerName("Shader"), Imports(typeof(OpenGLImpl))]
     public class ShaderController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Castaway.Rendering.UI
+namespace Castaway.UI
 {
     // ReSharper disable once InconsistentNaming
     public sealed class UIRenderer
