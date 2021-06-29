@@ -6,7 +6,6 @@ using Castaway.Level.OpenGL;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using GLFW;
-using Serilog;
 using Window = Castaway.Rendering.Window;
 
 namespace Test
@@ -31,8 +30,6 @@ namespace Test
 
             _window = new Window(800, 600, "name", false);
             _window.Bind();
-
-            Log.Information("{@Shader}", BuiltinShaders.DirectTextured);
 
             g = _window.GL;
             g.ExpectedFrameTime = 1f / 144f;
