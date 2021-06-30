@@ -55,6 +55,7 @@ namespace Test
         public void Update()
         {
             _level?.Update();
+            if (_level is not null) _level["Object"].Rotation *= Quaternion.DegreesRotation(1, 1, 1);
         }
 
         public void EndFrame()
