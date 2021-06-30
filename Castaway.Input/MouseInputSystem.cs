@@ -17,6 +17,8 @@ namespace Castaway.Input
         private readonly MouseButtonCallback _mouseButtonCallback;
         private readonly MouseEnterCallback _mouseEnterCallback;
 
+        private Vector2 _lastCursorPos;
+
         private bool _rawInput;
 
         public float PositionScale = 1.0f;
@@ -34,12 +36,17 @@ namespace Castaway.Input
             {
                 _rawInput = value;
                 var w = Graphics.Current.Window!.Native;
+
+                Glfw.GetWindowSize(w, out var wid, out var hei);
+                CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
+                _lastCursorPos = CursorPosition;
+
                 Glfw.SetInputMode(w, InputMode.RawMouseMotion, 1);
                 Glfw.SetInputMode(w, InputMode.Cursor, (int) (value ? CursorMode.Disabled : CursorMode.Normal));
             }
         }
 
-        public Vector2 CursorMovement => CursorPosition;
+        public Vector2 CursorMovement => CursorPosition - _lastCursorPos;
 
         public Vector2 CursorPosition
         {
@@ -68,6 +75,7 @@ namespace Castaway.Input
             var w = Graphics.Current.Window!.Native;
             Glfw.SetMouseButtonCallback(w, _mouseButtonCallback);
             Glfw.SetCursorEnterCallback(w, _mouseEnterCallback);
+            _lastCursorPos = CursorPosition;
         }
 
         public void Clear()
@@ -78,7 +86,7 @@ namespace Castaway.Input
                 if (_buttons[button].HasFlag(ButtonState.JustReleased)) _buttons[button] &= ~ButtonState.JustReleased;
             }
 
-            if (RawInput) CursorPosition = new Vector2(0, 0);
+            _lastCursorPos = CursorPosition;
         }
 
         public bool IsDown(MouseButton button)
