@@ -51,10 +51,9 @@ namespace Castaway.Rendering
             Logger.Debug("Applied API {ApiType} to window", GL.GetType());
             GL.Window = this;
             GL.WindowInit(this);
-            Glfw.SwapInterval(1);
             _title = title;
             _visible = visible;
-            VSync = true;
+            VSync = false;
             Glfw.SetWindowSizeCallback(Native, _sizeCallback = (_, w, h) =>
             {
                 WindowResize(w, h);

@@ -3,6 +3,7 @@ using Castaway.Base;
 using Castaway.Input;
 using Castaway.Level;
 using Castaway.Level.OpenGL;
+using Castaway.Math;
 using Castaway.OpenGL;
 using Castaway.Rendering;
 using GLFW;
@@ -32,7 +33,6 @@ namespace Test
             _window.Bind();
 
             g = _window.GL;
-            g.ExpectedFrameTime = 1f / 144f;
 
             _level = new Level(AssetLoader.Loader!.GetAssetByName("/test_level.xml"));
 
@@ -60,6 +60,13 @@ namespace Test
         public void EndFrame()
         {
             if (_window is null) return;
+            if (InputSystem.Keyboard.WasJustPressed(Keys.J))
+                CastawayGlobal.GetLogger().Debug(
+                    "(Last Frame) {Time}, {FrameTime}, {Change} @ {Rate}fps",
+                    CastawayGlobal.RealFrameTime,
+                    CastawayGlobal.FrameTime,
+                    g.FrameChange,
+                    CastawayGlobal.Framerate);
             g.FinishFrame(_window);
             if (InputSystem.Gamepad.Valid && InputSystem.Gamepad.Start || InputSystem.Keyboard.IsDown(Keys.Escape))
                 _window.ShouldClose = true;

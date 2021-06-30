@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using Castaway.Base;
 using Castaway.Math;
 using Castaway.Rendering.Structures;
 
@@ -22,14 +23,13 @@ namespace Castaway.Rendering
         };
 
         public readonly TextureObject?[] BoundTextures = new TextureObject?[32];
-        public float ExpectedFrameTime = 1f / 60f;
+        public double ExpectedFramerate = 60.0;
 
         public List<float> FrameTimes = new();
         public Window? Window;
 
         public static Window[] BoundWindows => CurrentlyBound.Values.Where(w => w != null).ToArray()!;
-        public float FrameTime => FrameTimes.Any() ? FrameTimes.Sum() / FrameTimes.Count : 0;
-        public float FrameChange => FrameTime / ExpectedFrameTime;
+        public double FrameChange => CastawayGlobal.Framerate / ExpectedFramerate;
 
         public static Graphics Current => CurrentlyBound.Value!.GL;
 

@@ -13,17 +13,17 @@ namespace Castaway.Level.OpenGL
     [Imports(typeof(OpenGLImpl))]
     public class GenericPlayerController : Controller
     {
-        private float _rx, _ry;
+        private double _rx, _ry;
         [LevelSerialized("Lock.Depth")] public bool DepthLocked = false;
-        [LevelSerialized("MouseSensitivity")] public float MouseSensitivity = 0.15f;
+        [LevelSerialized("MouseSensitivity")] public double MouseSensitivity = 0.075;
         [LevelSerialized("Lock.Movement")] public bool MovementLocked = false;
 
-        [LevelSerialized("MovementSpeed")] public float MovementSpeed = 0.125f;
+        [LevelSerialized("MovementSpeed")] public double MovementSpeed = 0.35;
         [LevelSerialized("Lock.X")] public bool MovementXLocked = false;
         [LevelSerialized("Lock.Y")] public bool MovementYLocked = false;
         [LevelSerialized("Lock.Z")] public bool MovementZLocked = false;
         [LevelSerialized("Lock.Rotation")] public bool RotationLocked = false;
-        [LevelSerialized("RotationSpeed")] public float RotationSpeed = 2f;
+        [LevelSerialized("RotationSpeed")] public double RotationSpeed = 5;
 
         public override async Task OnUpdate(LevelObject parent)
         {
@@ -74,8 +74,8 @@ namespace Castaway.Level.OpenGL
             {
                 if (!InputSystem.Mouse.RawInput) return;
                 var pos = InputSystem.Mouse.CursorMovement;
-                var x = MathEx.ToRadians((float) pos.X * MouseSensitivity * g.FrameChange);
-                var y = MathEx.ToRadians((float) pos.Y * MouseSensitivity * g.FrameChange);
+                var x = MathEx.ToRadians(pos.X * MouseSensitivity * g.FrameChange);
+                var y = MathEx.ToRadians(pos.Y * MouseSensitivity * g.FrameChange);
                 _rx -= x;
                 _ry -= y;
             });

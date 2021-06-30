@@ -17,6 +17,13 @@ namespace Castaway.Base
     {
         public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
 
+        private static volatile object _lock = new();
+        private static volatile bool _ok = true;
+        private static volatile bool _continue = true;
+        public static double FrameTime { get; private set; } = 1.0 / 60.0;
+        public static double Framerate => 1 / FrameTime;
+        public static double RealFrameTime { get; private set; }
+
         public static ILogger GetLogger(Type type)
         {
             return Log.Logger.ForContext(type);
@@ -41,20 +48,35 @@ namespace Castaway.Base
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .CreateLogger();
             Thread.CurrentThread.Name = "MainThread";
-            var returnCode = 0;
             var logger = GetLogger();
+            logger.Information("Hello");
+
+            var returnCode = 0;
+            var timeKill = new Thread(TimeKill) {Name = "TimeKill"};
+            timeKill.Start();
 
             LoadConfig(logger);
 
             var application = new T();
             application.Init();
+            var stopwatch = new Stopwatch();
             logger.Information("Started application {@App}", application);
+            _ok = true;
+
             try
             {
                 while (!application.ShouldStop)
                     try
                     {
-                        ProcessFrame(application);
+                        application.StartFrame();
+                        stopwatch.Restart();
+                        application.Render();
+                        application.Update();
+                        var r = stopwatch.Elapsed.TotalSeconds;
+                        application.EndFrame();
+                        Thread.Sleep((int) Math.Max(16 - stopwatch.ElapsedMilliseconds, 0));
+                        RealFrameTime = r;
+                        FrameTime = stopwatch.Elapsed.TotalSeconds;
                     }
                     catch (RecoverableException e)
                     {
@@ -76,8 +98,11 @@ namespace Castaway.Base
             {
                 logger.Information("Application terminating");
                 application.Dispose();
+                lock (_lock) _continue = false;
+                timeKill.Interrupt();
             }
 
+            logger.Information("Goodbye");
             return returnCode;
         }
 
@@ -101,14 +126,6 @@ namespace Castaway.Base
             });
 
             logger.Debug("Loaded config from config.json");
-        }
-
-        private static void ProcessFrame(IApplication application)
-        {
-            application.StartFrame();
-            application.Render();
-            application.Update();
-            application.EndFrame();
         }
 
         private static JsonElement? OptionalProperty(this JsonElement e, string name)
@@ -143,6 +160,60 @@ namespace Castaway.Base
         private static Task TryAsync(ILogger logger, Action a)
         {
             return Task.Run(() => Try(logger, a));
+        }
+
+        private static void TimeKill()
+        {
+            var logger = GetLogger();
+            try
+            {
+                while (_continue)
+                {
+                    Thread.Sleep(50);
+                    if (!_continue) return;
+                    if (_ok)
+                    {
+                        lock (_lock) _ok = false;
+                        continue;
+                    }
+
+                    Thread.Sleep(9950);
+                    if (!_continue) return;
+                    if (_ok)
+                    {
+                        lock (_lock) _ok = false;
+                        continue;
+                    }
+
+                    logger.Warning("Haven't heard from Main Thread in 10 seconds!");
+
+                    Thread.Sleep(20000);
+                    if (!_continue) return;
+                    if (_ok)
+                    {
+                        logger.Information("Recovered from silence");
+                        lock (_lock) _ok = false;
+                        continue;
+                    }
+
+                    logger.Warning("Haven't heard from Main Thread in 30 seconds!");
+
+                    Thread.Sleep(30000);
+                    if (!_continue) return;
+                    if (_ok)
+                    {
+                        logger.Information("Recovered from silence");
+                        lock (_lock) _ok = false;
+                        continue;
+                    }
+
+                    logger.Error("Timeout!");
+                    Environment.Exit(2);
+                }
+            }
+            catch (ThreadInterruptedException)
+            {
+            }
         }
     }
 }

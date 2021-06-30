@@ -102,7 +102,7 @@ namespace Castaway.Math
             return Rotation(vector.X, vector.Y, vector.Z);
         }
 
-        public static Quaternion DegreesRotation(float x, float y, float z)
+        public static Quaternion DegreesRotation(double x, double y, double z)
         {
             return Rotation(MathEx.ToRadians(x), MathEx.ToRadians(y), MathEx.ToRadians(z));
         }
@@ -132,16 +132,16 @@ namespace Castaway.Math
             return vector;
         }
 
-        public static Quaternion Rotation(Vector3 axis, float angle)
+        public static Quaternion Rotation(Vector3 axis, double angle)
         {
             return new(
-                w: MathF.Cos(angle / 2),
-                x: MathF.Sin(angle / 2) * axis.X,
-                y: MathF.Sin(angle / 2) * axis.Y,
-                z: MathF.Sin(angle / 2) * axis.Z);
+                w: System.Math.Cos(angle / 2),
+                x: System.Math.Sin(angle / 2) * axis.X,
+                y: System.Math.Sin(angle / 2) * axis.Y,
+                z: System.Math.Sin(angle / 2) * axis.Z);
         }
 
-        public static Quaternion DegreesRotation(Vector3 axis, float angle)
+        public static Quaternion DegreesRotation(Vector3 axis, double angle)
         {
             return Rotation(axis, MathEx.ToRadians(angle));
         }
