@@ -1,8 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <Title>Castaway Data</Title>
+        <PackageId>Castaway.Data</PackageId>
+        <RootNamespace>Castaway.Data</RootNamespace>
+
+        <!-- Common -->
+        <PackageVersion>0.0.20210630-pg.1</PackageVersion>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>Liam Cole</Authors>
+        <RepositoryUrl>https://github.com/LiamCoalStudio/castaway</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <Nullable>enable</Nullable>
+        <Copyright>[c] LiamCoalStudio 2021</Copyright>
+        <PackageProjectUrl>https://github.com/LiamCoalStudio/castaway</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
