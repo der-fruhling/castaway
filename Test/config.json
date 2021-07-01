@@ -3,6 +3,6 @@
     "discover": ["Assets"]
   },
   "log": {
-    "level": "verbose"
+    "level": "debug"
   }
 }
