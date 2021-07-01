@@ -85,6 +85,7 @@ namespace Castaway.Base
                         Thread.Sleep((int) Math.Max(16 - stopwatch.ElapsedMilliseconds, 0));
                         RealFrameTime = r;
                         FrameTime = stopwatch.Elapsed.TotalSeconds;
+                        _ok = true;
                     }
                     catch (RecoverableException e)
                     {
