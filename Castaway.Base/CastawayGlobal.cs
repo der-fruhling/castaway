@@ -40,15 +40,23 @@ namespace Castaway.Base
                 .Enrich.With(new ThreadNameEnricher(), new ExceptionEnricher(), new ThreadIdEnricher())
                 .WriteTo.Console(
                     outputTemplate:
-                    "[{Level:u4} {Timestamp:HH:mm:ss.ffffff} {SourceContext}]: {Message:lj}{NewLine}{Exception}")
+                    "[{Level:u3} @ {Timestamp:HH:mm:ss.ffffff}; {SourceContext}]: {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File("castaway.log",
                     outputTemplate:
-                    "{Level:w4} {Timestamp:HH:mm:ss.ffffff} [{ThreadName} {ThreadId}] : {SourceContext}; {Message:lj}{NewLine}{Exception}")
+                    "{Level:w} {Timestamp:HH:mm:ss.ffffff} [{ThreadName}|{ThreadId}] : {SourceContext}; {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(new CompactJsonFormatter(), "castaway.log.jsonl", LogEventLevel.Debug)
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .CreateLogger();
             Thread.CurrentThread.Name = "MainThread";
             var logger = GetLogger();
+
+            logger.Verbose("a");
+            logger.Debug("b");
+            logger.Information("c");
+            logger.Warning("d");
+            logger.Error("e");
+            logger.Fatal("f");
+
             logger.Information("Hello");
 
             var returnCode = 0;
