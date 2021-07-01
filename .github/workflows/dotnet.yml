@@ -40,10 +40,20 @@ jobs:
       run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:NoSummary
     - name: Upload Binaries
       uses: actions/upload-artifact@v2
-      if: github.event.inputs.allow-publish == 'true'
       with:
         name: packages
-        path: ./Castaway.*/bin/Debug/*.nupkg
+        path: |
+          Castaway.Assets/bin/Debug/Castaway.Assets.*.nupkg
+          Castaway.Base/bin/Debug/Castaway.Base.*.nupkg
+          Castaway.Data/bin/Debug/Castaway.Data.*.nupkg
+          Castaway.Input/bin/Debug/Castaway.Input.*.nupkg
+          Castaway.Level/bin/Debug/Castaway.Level.*.nupkg
+          Castaway.Level.OpenGL/bin/Debug/Castaway.Level.OpenGL.*.nupkg
+          Castaway.Math/bin/Debug/Castaway.Math.*.nupkg
+          Castaway.OpenGL/bin/Debug/Castaway.OpenGL.*.nupkg
+          Castaway.OpenGL.Native/bin/Debug/Castaway.OpenGL.Native.*.nupkg
+          Castaway.Rendering/bin/Debug/Castaway.Rendering.*.nupkg
+          Castaway.UI/bin/Debug/Castaway.UI.*.nupkg
   build-mac:
     name: Mac Build and Test
     runs-on: macos-latest
@@ -77,19 +87,22 @@ jobs:
     - name: Test
       run: dotnet test Castaway.Base.Tests -c Debug --verbosity normal --no-build --nologo -clp:"NoSummary;ErrorsOnly"
   publish:
-    name: Publish
+    name: Publish or List
     runs-on: ubuntu-latest
     needs: [build, build-mac, build-windows]
-    if: ${{ github.event.inputs.allow-publish == 'true' && github.event.inputs.disable-ubuntu != 'true' && github.event.inputs.disable-mac != 'true' && github.event.inputs.disable-windows != 'true' }}
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
+        if: github.event.inputs.allow-publish == 'true'
         with:
           dotnet-version: 5.0.x
       - name: Download
         uses: actions/download-artifact@v2
         with:
           name: packages
+      - name: List
+        if: github.event.inputs.allow-publish != 'true'
+        run: ls -Rla
       - name: Publish
         if: github.event.inputs.allow-publish == 'true'
         run: |
