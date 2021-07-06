@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.OpenGL.FunctionListGenerator", "Castaway.OpenGL.FunctionListGenerator\Castaway.OpenGL.FunctionListGenerator.csproj", "{2E28263F-8F82-4E70-AA9C-883AF6FA30F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Base.Tests", "Castaway.Base.Tests\Castaway.Base.Tests.csproj", "{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Math.Tests", "Castaway.Math.Tests\Castaway.Math.Tests.csproj", "{3B1311D0-A460-43BB-B106-3CB33B9A5BF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Castaway", "Castaway", "{18F0C133-7D5D-4E3A-B8E2-A190D0DF80F3}"
 EndProject
