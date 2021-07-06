@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Input", "Castaway.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.UI", "Castaway.UI\Castaway.UI.csproj", "{7573D949-9070-45AD-8E58-FE081E6BFAB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.Level.OpenGL", "Castaway.Level.OpenGL\Castaway.Level.OpenGL.csproj", "{405BE028-E34B-4C78-8DFD-8A0CDD9CF904}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castaway.OpenGL.Controllers", "Castaway.OpenGL.Controllers\Castaway.OpenGL.Controllers.csproj", "{405BE028-E34B-4C78-8DFD-8A0CDD9CF904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

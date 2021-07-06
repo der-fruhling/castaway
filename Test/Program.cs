@@ -2,9 +2,9 @@
 using Castaway.Base;
 using Castaway.Input;
 using Castaway.Level;
-using Castaway.Level.OpenGL;
 using Castaway.Math;
 using Castaway.OpenGL;
+using Castaway.OpenGL.Controllers;
 using Castaway.Rendering;
 using GLFW;
 using Window = Castaway.Rendering.Window;

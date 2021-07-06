@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using Castaway.Assets;
 using Castaway.Base;
-using Castaway.OpenGL;
+using Castaway.Level;
 using Castaway.Rendering;
 using Serilog;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("Shader")]
     [Imports(typeof(OpenGLImpl))]

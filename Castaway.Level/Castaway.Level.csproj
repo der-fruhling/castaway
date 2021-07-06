@@ -21,6 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj"/>
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
     </ItemGroup>

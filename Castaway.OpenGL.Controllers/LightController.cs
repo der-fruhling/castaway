@@ -1,10 +1,10 @@
 using System;
 using Castaway.Base;
+using Castaway.Level;
 using Castaway.Math;
-using Castaway.OpenGL;
 using Castaway.Rendering;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("Light")]
     [Imports(typeof(OpenGLImpl))]

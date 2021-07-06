@@ -1,13 +1,11 @@
 using Castaway.Assets;
 using Castaway.Base;
-using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 using Serilog;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.Level
 {
     [ControllerName("LoadedMesh")]
-    [Imports(typeof(OpenGLImpl))]
     public class MeshController : Controller
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();

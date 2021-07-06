@@ -11,7 +11,7 @@
       <ProjectReference Include="..\Castaway.Base.Tests\Castaway.Base.Tests.csproj" />
       <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
       <ProjectReference Include="..\Castaway.Data\Castaway.Data.csproj" />
-      <ProjectReference Include="..\Castaway.Level.OpenGL\Castaway.Level.OpenGL.csproj" />
+      <ProjectReference Include="..\Castaway.OpenGL.Controllers\Castaway.OpenGL.Controllers.csproj"/>
       <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
       <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj" />

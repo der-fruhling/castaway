@@ -1,12 +1,9 @@
-using Castaway.Base;
 using Castaway.Math;
-using Castaway.OpenGL;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.Level
 {
     [ControllerName("PlaneMesh")]
-    [Imports(typeof(OpenGLImpl))]
     public class PlaneMeshController : MeshController
     {
         [LevelSerialized("Color")] public Vector4 Color = new(1, 1, 1, 1);

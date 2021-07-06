@@ -12,7 +12,7 @@ namespace Castaway.Level
 
         public Controller()
         {
-            _inheritorLogger = CastawayGlobal.GetLogger(GetType());
+            _inheritorLogger = CastawayGlobal.GetLogger();
         }
 
         public virtual void OnInit(LevelObject parent)

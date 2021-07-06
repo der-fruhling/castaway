@@ -1,11 +1,11 @@
 using System;
 using Castaway.Base;
+using Castaway.Level;
 using Castaway.Math;
-using Castaway.OpenGL;
 using Castaway.Rendering;
 using Serilog;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.OpenGL.Controllers
 {
     [ControllerName("MeshRenderer")]
     [Imports(typeof(OpenGLImpl))]

@@ -1,12 +1,12 @@
 using System;
 using Castaway.Base;
+using Castaway.Level;
 using Castaway.Math;
-using Castaway.OpenGL;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
 using Serilog;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.OpenGL.Controllers
 {
     [ControllerBase]
     [Imports(typeof(OpenGLImpl))]

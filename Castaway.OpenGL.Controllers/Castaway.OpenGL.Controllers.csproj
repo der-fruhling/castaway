@@ -2,8 +2,7 @@
 
     <PropertyGroup>
         <Title>Castaway Levels (OpenGL)</Title>
-        <PackageId>Castaway.Level.OpenGL</PackageId>
-        <RootNamespace>Castaway.Level.OpenGL</RootNamespace>
+        <PackageId>Castaway.OpenGL.Controllers</PackageId>
 
         <!-- Common -->
         <PackageVersion>0.0.20210630-pg.1</PackageVersion>
@@ -21,7 +20,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj" />
       <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
       <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj" />
     </ItemGroup>
