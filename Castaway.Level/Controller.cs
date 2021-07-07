@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Castaway.Base;
 using Serilog;
 
@@ -45,15 +44,15 @@ namespace Castaway.Level
         {
         }
 #pragma warning disable 1998
-        public virtual async Task PreUpdate(LevelObject parent)
+        public virtual void PreUpdate(LevelObject parent)
         {
         }
 
-        public virtual async Task OnUpdate(LevelObject parent)
+        public virtual void OnUpdate(LevelObject parent)
         {
         }
 
-        public virtual async Task PostUpdate(LevelObject parent)
+        public virtual void PostUpdate(LevelObject parent)
         {
         }
 #pragma warning restore 1998
