@@ -116,6 +116,6 @@ jobs:
           dotnet nuget push Castaway.Math/bin/Debug/Castaway.Math.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.OpenGL/bin/Debug/Castaway.OpenGL.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.OpenGL.Native/bin/Debug/Castaway.OpenGL.Native.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
-          dotnet nuget push Castaway.Castaway.OpenGL.Controllers/bin/Debug/Castaway.OpenGL.Controllers.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+          dotnet nuget push Castaway.OpenGL.Controllers/bin/Debug/Castaway.OpenGL.Controllers.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.Rendering/bin/Debug/Castaway.Rendering.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.UI/bin/Debug/Castaway.UI.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
