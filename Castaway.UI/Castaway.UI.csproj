@@ -6,7 +6,9 @@
         <RootNamespace>Castaway.UI</RootNamespace>
 
         <!-- Common -->
-        <PackageVersion>0.0.20210630-pg.1</PackageVersion>
+        <PackageVersion>2022.1-pg202107101</PackageVersion>
+        <AssemblyVersion>2022.1</AssemblyVersion>
+        <FileVersion>2022.1</FileVersion>
         <TargetFramework>net5.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

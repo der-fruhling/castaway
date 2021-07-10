@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using Serilog;
@@ -29,6 +30,15 @@ namespace Castaway.Base
         public static double FrameTime { get; private set; } = 1.0 / 60.0;
         public static double Framerate => 1 / FrameTime;
         public static double RealFrameTime { get; private set; }
+
+        public static string Version => "2022.1 (pg 2021.07.10.1)";
+        public static string Name => "Castaway";
+        public static bool IsPrerelease => true;
+
+        public static string[] VisibleModules => AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => a.GetName().Name!.StartsWith("Castaway"))
+            .Select(a => a.GetName().Name)
+            .ToArray()!;
 
         [Obsolete("Weird; use " + nameof(GetLogger) + "() instead")]
         public static ILogger GetLogger(Type type)
@@ -70,7 +80,15 @@ namespace Castaway.Base
             Thread.CurrentThread.Name = "MainThread";
             var logger = GetLogger();
 
-            logger.Information("Starting at {StartDateTime}", DateTime.Now);
+            logger.Information("{Name} version {Version}", Name, Version);
+
+            if (IsPrerelease)
+            {
+                logger.Warning("This version is a pre-release version!");
+                logger.Warning("It may contain bugs or incomplete features");
+            }
+
+            logger.Information("Visible Modules: {Modules}", VisibleModules);
 
             var returnCode = 0;
             var timeKill = new Thread(TimeKill) {Name = "TimeKill"};
@@ -116,13 +134,13 @@ namespace Castaway.Base
             }
             finally
             {
-                logger.Information("Application terminating");
+                logger.Debug("Application terminating");
                 application.Dispose();
                 lock (_lock) _continue = false;
                 timeKill.Interrupt();
+                logger.Information("Goodbye");
             }
 
-            logger.Information("Goodbye");
             return returnCode;
         }
 
