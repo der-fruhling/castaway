@@ -379,14 +379,14 @@ namespace Castaway.OpenGL
         {
             BindWindow();
             if (t is not Texture tex) throw new InvalidOperationException("Need to use OpenGL objects only");
-            SetUIntUniform(p, name, tex.BindingPoint);
+            SetIntUniform(p, name, (int) tex.BindingPoint);
         }
 
         public override void SetSamplerUniform(ShaderObject p, string name, FramebufferObject t)
         {
             BindWindow();
             if (t.Color is not Texture tex) throw new InvalidOperationException("Need to use OpenGL objects only");
-            SetUIntUniform(p, name, tex.BindingPoint);
+            SetIntUniform(p, name, (int) tex.BindingPoint);
         }
 
         /// <summary>
