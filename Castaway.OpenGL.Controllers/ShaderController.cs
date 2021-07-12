@@ -32,7 +32,7 @@ namespace Castaway.OpenGL.Controllers
             }
             else
             {
-                Shader = typeof(BuiltinShaders).GetField(BuiltinShaderName)?.GetValue(null) as ShaderObject;
+                Shader = typeof(GlobalShader).GetField(BuiltinShaderName)?.GetValue(null) as ShaderObject;
                 if (Shader == null)
                     throw new InvalidOperationException(
                         $"Invalid builtin shader name encountered: {BuiltinShaderName}");

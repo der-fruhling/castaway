@@ -29,25 +29,13 @@ namespace Castaway.OpenGL
 
         public override string Name => "OpenGL-3.2";
 
-        ~OpenGLImpl()
-        {
-            DisposeGL();
-        }
-
-        private void DisposeGL()
-        {
-            BuiltinShaders.Destroy();
-        }
-
         public override void Dispose()
         {
             GC.SuppressFinalize(this);
-            DisposeGL();
         }
 
         public override void WindowInit(Window window)
         {
-            BuiltinShaders.Init();
             InputSystem.Init();
             GL.Enable(GLC.GL_DEPTH_TEST);
             GL.Enable(GLC.GL_CULL_FACE);
