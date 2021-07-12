@@ -25,8 +25,6 @@ namespace Castaway.Level
             var doc = asset.Type.To<XmlDocument>(asset);
             var root = doc.DocumentElement;
 
-            const string api = "OpenGL"; // TODO
-
             var node = root!.FirstChild;
             do
             {
@@ -36,7 +34,7 @@ namespace Castaway.Level
                 {
                     case "Object":
                     {
-                        _objects.Add(ParseObject((node as XmlElement)!, api));
+                        _objects.Add(ParseObject((node as XmlElement)!));
                         break;
                     }
                 }
@@ -45,13 +43,13 @@ namespace Castaway.Level
 
         public LevelObject this[string i] => Get(i);
 
-        private LevelObject ParseObject(XmlElement e, string? api, LevelObject? parent = null)
+        private LevelObject ParseObject(XmlElement e, LevelObject? parent = null)
         {
             var o = new LevelObject(this);
             var subs = e.GetElementsByTagName("Object");
             var conts = e["Controllers"]?.ChildNodes;
             for (var i = 0; i < (conts?.Count ?? 0); i++)
-                o.Controllers.Add(ParseController((conts![i] as XmlElement)!, api));
+                o.Controllers.Add(ParseController((conts![i] as XmlElement)!));
             o.Name = e["Name"]?.InnerText ?? throw new InvalidOperationException("All objects need unique names.");
             if (_objects.Any(obj => obj.Name == o.Name))
                 throw new InvalidOperationException("All objects need *unique* names.");
@@ -59,11 +57,11 @@ namespace Castaway.Level
             o.Scale = (Vector3) Load(typeof(Vector3), e["Scale"]?.InnerText ?? "1,1,1");
             o.Parent = parent;
             for (var i = 0; i < subs.Count; i++)
-                o.Subobjects.Add(ParseObject((subs[i] as XmlElement)!, api, o));
+                o.Subobjects.Add(ParseObject((subs[i] as XmlElement)!, o));
             return o;
         }
 
-        private Controller ParseController(XmlElement e, string? api)
+        private Controller ParseController(XmlElement e)
         {
             var t = ControllerFinder.Get(e.Name);
             var inst = Activator.CreateInstance(t);
