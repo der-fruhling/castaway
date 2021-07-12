@@ -3,7 +3,7 @@ using Castaway.Base;
 using Castaway.Rendering.Structures;
 using Serilog;
 
-namespace Castaway.Level
+namespace Castaway.Level.Controllers
 {
     [ControllerName("LoadedMesh")]
     public class MeshController : Controller

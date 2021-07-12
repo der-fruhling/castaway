@@ -10,7 +10,7 @@ namespace Castaway.OpenGL.Controllers
 {
     [ControllerBase]
     [Imports(typeof(OpenGLImpl))]
-    public abstract class CameraController : Castaway.Level.CameraController
+    public abstract class CameraController : Level.Controllers.CameraController
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 

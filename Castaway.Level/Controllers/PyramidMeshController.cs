@@ -1,7 +1,7 @@
 using Castaway.Math;
 using Castaway.Rendering.Structures;
 
-namespace Castaway.Level
+namespace Castaway.Level.Controllers
 {
     [ControllerName("PyramidMesh")]
     public class PyramidMeshController : MeshController

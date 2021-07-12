@@ -1,6 +1,7 @@
 using System;
 using Castaway.Base;
 using Castaway.Level;
+using Castaway.Level.Controllers;
 using Castaway.Math;
 using Castaway.Rendering;
 using Serilog;

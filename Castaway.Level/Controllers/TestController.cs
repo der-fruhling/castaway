@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Castaway.Level
+namespace Castaway.Level.Controllers
 {
     [DebuggerDisplay("Test1={" + nameof(Test1) + "}, Test2={" + nameof(Test2) + "}")]
     [ControllerName("Test")]

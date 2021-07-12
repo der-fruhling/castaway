@@ -4,7 +4,7 @@ using Castaway.Math;
 using Castaway.Rendering;
 using GLFW;
 
-namespace Castaway.Level.OpenGL
+namespace Castaway.Level.Controllers
 {
     [ControllerName("GenericPlayer")]
     public class GenericPlayerController : Controller

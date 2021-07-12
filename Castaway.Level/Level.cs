@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Castaway.Assets;
+using Castaway.Level.Controllers;
 using Castaway.Math;
 using Castaway.Rendering;
 
