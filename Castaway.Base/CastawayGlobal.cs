@@ -91,8 +91,10 @@ namespace Castaway.Base
             logger.Information("Visible Modules: {Modules}", VisibleModules);
 
             var returnCode = 0;
+#if RELEASE
             var timeKill = new Thread(TimeKill) {Name = "TimeKill"};
             timeKill.Start();
+#endif
 
             var application = new T();
             application.Init();
@@ -137,7 +139,9 @@ namespace Castaway.Base
                 logger.Debug("Application terminating");
                 application.Dispose();
                 lock (_lock) _continue = false;
+#if RELEASE
                 timeKill.Interrupt();
+#endif
                 logger.Information("Goodbye");
             }
 
@@ -168,6 +172,7 @@ namespace Castaway.Base
             return Enum.TryParse<T>(name, ignoreCase, out var t) ? t : null;
         }
 
+#if RELEASE
         private static void TimeKill()
         {
             var logger = GetLogger();
@@ -221,5 +226,6 @@ namespace Castaway.Base
             {
             }
         }
+#endif
     }
 }
