@@ -1,4 +1,6 @@
-﻿using Castaway.Assets;
+﻿using System;
+using System.Diagnostics;
+using Castaway.Assets;
 using Castaway.Base;
 using Castaway.Input;
 using Castaway.Level;
@@ -15,6 +17,8 @@ namespace Test
     internal class Program : IApplication
     {
         private Level? _level;
+
+        private Stopwatch _stopwatch = new();
 
         private Window? _window;
 #pragma warning disable 649
@@ -40,6 +44,8 @@ namespace Test
             _window.Visible = true;
 
             InputSystem.Mouse.RawInput = true;
+
+            _stopwatch.Start();
         }
 
         public void StartFrame()
@@ -55,7 +61,22 @@ namespace Test
         public void Update()
         {
             _level?.Update();
-            if (_level is not null) _level["Object"].Rotation *= Quaternion.DegreesRotation(1, 1, 1);
+            if (_level is null) return;
+            var s = _stopwatch.Elapsed.TotalSeconds * Math.PI * 2;
+            const double hpi = Math.PI / 2;
+            _level["Object"].Position.Y = Math.Sin(s);
+            _level["Object Also"].Position.Y = Math.Sin(s + hpi);
+            _level["Object Also Also"].Position.Y = Math.Sin(s + hpi * 2);
+            _level["Object Also Also Also"].Position.Y = Math.Sin(s + hpi * 3);
+            var rot = Quaternion.DegreesRotation(0, .75, 0);
+            _level["Object"].Position = rot * _level["Object"].Position;
+            _level["Object Also"].Position = rot * _level["Object Also"].Position;
+            _level["Object Also Also"].Position = rot * _level["Object Also Also"].Position;
+            _level["Object Also Also Also"].Position = rot * _level["Object Also Also Also"].Position;
+            _level["Object"].Rotation = (_level["Object"].Rotation * rot).Normalize();
+            _level["Object Also"].Rotation = (_level["Object Also"].Rotation * rot).Normalize();
+            _level["Object Also Also"].Rotation = (_level["Object Also Also"].Rotation * rot).Normalize();
+            _level["Object Also Also Also"].Rotation = (_level["Object Also Also Also"].Rotation * rot).Normalize();
         }
 
         public void EndFrame()
