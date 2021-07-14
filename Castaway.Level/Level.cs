@@ -44,10 +44,9 @@ namespace Castaway.Level
 
         public LevelObject this[string i] => Get(i);
 
-        private LevelObject ParseObject(XmlElement e, LevelObject? parent = null)
+        private LevelObject ParseObject(XmlElement e)
         {
             var o = new LevelObject(this);
-            var subs = e.GetElementsByTagName("Object");
             var conts = e["Controllers"]?.ChildNodes;
             for (var i = 0; i < (conts?.Count ?? 0); i++)
                 o.Controllers.Add(ParseController((conts![i] as XmlElement)!));
@@ -56,9 +55,6 @@ namespace Castaway.Level
                 throw new InvalidOperationException("All objects need *unique* names.");
             o.Position = (Vector3) Load(typeof(Vector3), e["Position"]?.InnerText ?? "0,0,0");
             o.Scale = (Vector3) Load(typeof(Vector3), e["Scale"]?.InnerText ?? "1,1,1");
-            o.Parent = parent;
-            for (var i = 0; i < subs.Count; i++)
-                o.Subobjects.Add(ParseObject((subs[i] as XmlElement)!, o));
             return o;
         }
 

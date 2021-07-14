@@ -64,10 +64,14 @@ namespace Test
             if (_level is null) return;
             var s = _stopwatch.Elapsed.TotalSeconds * Math.PI * 2;
             const double hpi = Math.PI / 2;
-            _level["Object"].Position.Y = Math.Sin(s);
-            _level["Object Also"].Position.Y = Math.Sin(s + hpi);
-            _level["Object Also Also"].Position.Y = Math.Sin(s + hpi * 2);
-            _level["Object Also Also Also"].Position.Y = Math.Sin(s + hpi * 3);
+            _level["Object"].Position =
+                ProcessDance(_level["Object"].Position, Math.Sin(s));
+            _level["Object Also"].Position =
+                ProcessDance(_level["Object Also"].Position, Math.Sin(s + hpi));
+            _level["Object Also Also"].Position =
+                ProcessDance(_level["Object Also Also"].Position, Math.Sin(s + hpi * 2));
+            _level["Object Also Also Also"].Position =
+                ProcessDance(_level["Object Also Also Also"].Position, Math.Sin(s + hpi * 3));
             var rot = Quaternion.DegreesRotation(0, .75, 0);
             _level["Object"].Position = rot * _level["Object"].Position;
             _level["Object Also"].Position = rot * _level["Object Also"].Position;
@@ -112,5 +116,7 @@ namespace Test
         {
             return CastawayGlobal.Run<Program>();
         }
+
+        private Vector3 ProcessDance(Vector3 orig, double value) => new(orig.X, value, orig.Z);
     }
 }

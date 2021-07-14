@@ -34,7 +34,7 @@ namespace Castaway.OpenGL.Controllers
         {
             base.PreRenderFrame(camera, parent);
             var w = Graphics.Current.Window!;
-            ViewTransform = Matrix4.Translate(-camera.RealPosition);
+            ViewTransform = Matrix4.Translate(-camera.Position);
         }
     }
 }

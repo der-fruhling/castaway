@@ -75,8 +75,10 @@ namespace Castaway.Level.Controllers
             var rotate = new Quaternion(1, 0, 0, 0);
             rotate *= Quaternion.Rotation(Vector3.Up, _rx);
             rotate *= Quaternion.Rotation(Vector3.Right, _ry);
-            parent.Position += rotate * new Vector3(move.X, 0, move.Z);
-            parent.Position.Y += move.Y;
+            var parentPos = parent.Position;
+            parentPos += rotate * new Vector3(move.X, 0, move.Z);
+            parentPos.Y += move.Y;
+            parent.Position = parentPos;
             parent.Rotation = rotate;
         }
     }

@@ -9,20 +9,16 @@ namespace Castaway.Level
     {
         public List<Controller> Controllers = new();
         public Level Level;
-        public string? Name;
-        public LevelObject? Parent;
-        public Vector3 Position = new(0, 0, 0), Scale = new(1, 1, 1);
-        public Quaternion Rotation = Quaternion.Rotation(0, 0, 0).Normalize();
-        public List<LevelObject> Subobjects = new();
 
         internal LevelObject(Level level)
         {
             Level = level;
         }
 
-        public Vector3 RealPosition => Position + (Parent?.RealPosition ?? new Vector3(0, 0, 0));
-
-        public LevelObject this[string i] => Get(i);
+        public virtual string? Name { get; set; }
+        public virtual Vector3 Position { get; set; } = new(0, 0, 0);
+        public virtual Vector3 Scale { get; set; } = new(1, 1, 1);
+        public virtual Quaternion Rotation { get; set; } = Quaternion.Rotation(0, 0, 0).Normalize();
 
         public void OnInit()
         {
@@ -48,16 +44,6 @@ namespace Castaway.Level
         public void OnDestroy()
         {
             foreach (var c in Controllers) c.OnDestroy(this);
-        }
-
-        public void Add(LevelObject obj)
-        {
-            Subobjects.Add(obj);
-        }
-
-        public LevelObject Get(string name)
-        {
-            return Subobjects.Single(o => o.Name == name);
         }
 
         public T? Get<T>() where T : Controller

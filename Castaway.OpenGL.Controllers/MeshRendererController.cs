@@ -30,7 +30,7 @@ namespace Castaway.OpenGL.Controllers
             base.OnRender(camera, parent);
             var g = Graphics.Current;
             g.SetFloatUniform(g.BoundShader!, UniformType.TransformModel,
-                Matrix4.Translate(parent.RealPosition) *
+                Matrix4.Translate(parent.Position) *
                 parent.Rotation.ToMatrix4() *
                 Matrix4.Scale(parent.Scale));
             if (_lastBound != g.BoundShader || _drawable == null)
