@@ -15,16 +15,16 @@ namespace Castaway.OpenGL
     {
         private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
-        public ShaderObject CreateDefault(Graphics g) => ReadShader("default.normal.shdr");
-        public ShaderObject CreateDefaultTextured(Graphics g) => ReadShader("default.textured.shdr");
-        public ShaderObject CreateDirect(Graphics g) => ReadShader("direct.normal.shdr");
-        public ShaderObject CreateDirectTextured(Graphics g) => ReadShader("direct.textured.shdr");
-        public ShaderObject CreateUIScaled(Graphics g) => ReadShader("ui.scaled.normal.shdr");
-        public ShaderObject CreateUIScaledTextured(Graphics g) => ReadShader("ui.scaled.textured.shdr");
-        public ShaderObject CreateUIUnscaled(Graphics g) => ReadShader("ui.unscaled.normal.shdr");
-        public ShaderObject CreateUIUnscaledTextured(Graphics g) => ReadShader("ui.unscaled.textured.shdr");
+        public virtual ShaderObject CreateDefault(Graphics g) => ReadShader("default.normal.shdr");
+        public virtual ShaderObject CreateDefaultTextured(Graphics g) => ReadShader("default.textured.shdr");
+        public virtual ShaderObject CreateDirect(Graphics g) => ReadShader("direct.normal.shdr");
+        public virtual ShaderObject CreateDirectTextured(Graphics g) => ReadShader("direct.textured.shdr");
+        public virtual ShaderObject CreateUIScaled(Graphics g) => ReadShader("ui.scaled.normal.shdr");
+        public virtual ShaderObject CreateUIScaledTextured(Graphics g) => ReadShader("ui.scaled.textured.shdr");
+        public virtual ShaderObject CreateUIUnscaled(Graphics g) => ReadShader("ui.unscaled.normal.shdr");
+        public virtual ShaderObject CreateUIUnscaledTextured(Graphics g) => ReadShader("ui.unscaled.textured.shdr");
 
-        private static ShaderObject ReadShader(string path)
+        protected static ShaderObject ReadShader(string path)
         {
             Logger.Verbose("Searching manifest for {Path}", path);
             var asm = Assembly.GetExecutingAssembly();
