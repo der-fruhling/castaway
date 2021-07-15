@@ -23,9 +23,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj"/>
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+        <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj"/>
+        <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj"/>
+        <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepuPhysics" Version="2.4.0-beta6"/>
     </ItemGroup>
 
 </Project>

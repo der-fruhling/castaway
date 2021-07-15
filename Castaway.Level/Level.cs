@@ -4,24 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using BepuPhysics;
+using BepuUtilities.Memory;
 using Castaway.Assets;
 using Castaway.Level.Controllers;
+using Castaway.Level.Physics;
 using Castaway.Math;
 using Castaway.Rendering;
 
 namespace Castaway.Level
 {
-    public class Level
+    public class Level : IDisposable
     {
         private readonly List<LevelObject> _objects = new();
 
         public uint ActiveCamera = 0;
+        public Simulation PhysicsSimulation;
 
         public Level()
         {
+            PhysicsSimulation = Simulation.Create(
+                new BufferPool(),
+                new NarrowPhase(),
+                new PoseIntegrator(new System.Numerics.Vector3(0, -10, 0)),
+                new PositionLastTimestepper());
         }
 
-        public Level(Asset asset)
+        public Level(Asset asset) : this()
         {
             var doc = asset.Type.To<XmlDocument>(asset);
             var root = doc.DocumentElement;
@@ -43,6 +52,13 @@ namespace Castaway.Level
         }
 
         public LevelObject this[string i] => Get(i);
+
+        public void Dispose()
+        {
+            var buf = PhysicsSimulation.BufferPool;
+            PhysicsSimulation.Dispose();
+            buf?.Clear();
+        }
 
         private LevelObject ParseObject(XmlElement e)
         {
@@ -160,6 +176,7 @@ namespace Castaway.Level
         public void Update()
         {
             if (!_objects.Any()) return;
+            PhysicsSimulation.Timestep(1f / 60f);
             foreach (var o in _objects) o.OnUpdate();
         }
 

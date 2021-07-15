@@ -1,4 +1,5 @@
 using Castaway.Base;
+using Castaway.Math;
 using Serilog;
 
 namespace Castaway.Level
@@ -12,6 +13,24 @@ namespace Castaway.Level
         public Controller()
         {
             _inheritorLogger = CastawayGlobal.GetLogger();
+        }
+
+        public virtual Vector3 Position
+        {
+            // ReSharper disable once ValueParameterNotUsed
+            set { }
+        }
+
+        public virtual Quaternion Rotation
+        {
+            // ReSharper disable once ValueParameterNotUsed
+            set { }
+        }
+
+        public virtual Vector3 Scale
+        {
+            // ReSharper disable once ValueParameterNotUsed
+            set { }
         }
 
         public virtual void OnInit(LevelObject parent)
@@ -43,7 +62,7 @@ namespace Castaway.Level
         public virtual void PostRenderFrame(LevelObject camera, LevelObject? parent)
         {
         }
-#pragma warning disable 1998
+
         public virtual void PreUpdate(LevelObject parent)
         {
         }
@@ -55,6 +74,5 @@ namespace Castaway.Level
         public virtual void PostUpdate(LevelObject parent)
         {
         }
-#pragma warning restore 1998
     }
 }

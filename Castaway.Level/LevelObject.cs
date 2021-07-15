@@ -7,6 +7,9 @@ namespace Castaway.Level
 {
     public class LevelObject
     {
+        private Vector3 _position = new(0, 0, 0);
+        private Quaternion _rotation = Quaternion.Rotation(0, 0, 0).Normalize();
+        private Vector3 _scale = new(1, 1, 1);
         public List<Controller> Controllers = new();
         public Level Level;
 
@@ -16,9 +19,36 @@ namespace Castaway.Level
         }
 
         public virtual string? Name { get; set; }
-        public virtual Vector3 Position { get; set; } = new(0, 0, 0);
-        public virtual Vector3 Scale { get; set; } = new(1, 1, 1);
-        public virtual Quaternion Rotation { get; set; } = Quaternion.Rotation(0, 0, 0).Normalize();
+
+        public virtual Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                Controllers.ForEach(c => c.Position = value);
+            }
+        }
+
+        public virtual Vector3 Scale
+        {
+            get => _scale;
+            set
+            {
+                _scale = value;
+                Controllers.ForEach(c => c.Scale = value);
+            }
+        }
+
+        public virtual Quaternion Rotation
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = value;
+                Controllers.ForEach(c => c.Rotation = value);
+            }
+        }
 
         public void OnInit()
         {
