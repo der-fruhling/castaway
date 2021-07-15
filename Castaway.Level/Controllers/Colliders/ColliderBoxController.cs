@@ -93,17 +93,33 @@ namespace Castaway.Level.Controllers.Colliders
             switch (PhysicsMode)
             {
                 case PhysicsMode.Dynamic:
-                    Body = sim.Bodies.Add(BodyDescription.CreateDynamic(
+                {
+                    var desc = BodyDescription.CreateDynamic(
                         new System.Numerics.Vector3((float) pos.X, (float) pos.Y, (float) pos.Z),
                         inertia,
                         new CollidableDescription(Shape, 0.1f),
-                        new BodyActivityDescription(0.01f)));
+                        new BodyActivityDescription(0.01f));
+                    desc.Pose.Orientation = new System.Numerics.Quaternion(
+                        (float) parent.Rotation.X,
+                        (float) parent.Rotation.Y,
+                        (float) parent.Rotation.Z,
+                        (float) parent.Rotation.W);
+                    Body = sim.Bodies.Add(desc);
                     break;
+                }
                 case PhysicsMode.Static:
-                    Static = sim.Statics.Add(new StaticDescription(
+                {
+                    var desc = new StaticDescription(
                         new System.Numerics.Vector3((float) pos.X, (float) pos.Y, (float) pos.Z),
-                        new CollidableDescription(Shape, 0.1f)));
+                        new CollidableDescription(Shape, 0.1f));
+                    desc.Pose.Orientation = new System.Numerics.Quaternion(
+                        (float) parent.Rotation.X,
+                        (float) parent.Rotation.Y,
+                        (float) parent.Rotation.Z,
+                        (float) parent.Rotation.W);
+                    Static = sim.Statics.Add(desc);
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
