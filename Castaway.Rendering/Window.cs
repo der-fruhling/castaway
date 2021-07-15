@@ -32,6 +32,10 @@ namespace Castaway.Rendering
             Logger.Debug("Starting window creation");
             Glfw.DefaultWindowHints();
             Glfw.WindowHint(Hint.CocoaRetinaFrameBuffer, true);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+            Glfw.WindowHint(Hint.OpenglForwardCompatible, true);
             Logger.Debug("Window Hint {Hint} = {Value}", Hint.CocoaRetinaFrameBuffer, true);
             Glfw.WindowHint(Hint.Visible, visible);
             Logger.Debug("Window Hint {Hint} = {Value}", Hint.Visible, visible);
