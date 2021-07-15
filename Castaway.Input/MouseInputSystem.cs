@@ -19,7 +19,7 @@ namespace Castaway.Input
 
         private Vector2 _lastCursorPos;
 
-        private bool _rawInput;
+        private bool _rawInput, _fakeRaw;
 
         public float PositionScale = 1.0f;
 
@@ -41,12 +41,28 @@ namespace Castaway.Input
                 CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
                 _lastCursorPos = CursorPosition;
 
-                Glfw.SetInputMode(w, InputMode.RawMouseMotion, 1);
+                if (Glfw.RawMouseMotionSupported()) 
+                    Glfw.SetInputMode(w, InputMode.RawMouseMotion, 1);
+                else 
+                    _fakeRaw = true;
+
                 Glfw.SetInputMode(w, InputMode.Cursor, (int) (value ? CursorMode.Disabled : CursorMode.Normal));
             }
         }
 
-        public Vector2 CursorMovement => CursorPosition - _lastCursorPos;
+        public Vector2 CursorMovement
+        {
+            get
+            {
+                var v = CursorPosition - _lastCursorPos;
+
+                if (!_fakeRaw) return v;
+                Glfw.GetWindowSize(Glfw.CurrentContext, out var wid, out var hei);
+                CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
+
+                return v;
+            }
+        }
 
         public Vector2 CursorPosition
         {
