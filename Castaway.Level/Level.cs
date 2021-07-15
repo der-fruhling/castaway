@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 using BepuPhysics;
 using BepuUtilities.Memory;
@@ -71,6 +72,11 @@ namespace Castaway.Level
                 throw new InvalidOperationException("All objects need *unique* names.");
             o.Position = (Vector3) Load(typeof(Vector3), e["Position"]?.InnerText ?? "0,0,0");
             o.Scale = (Vector3) Load(typeof(Vector3), e["Scale"]?.InnerText ?? "1,1,1");
+            if (e["Rotation.Quaternion"] != null)
+                o.Rotation = (Quaternion) Load(typeof(Quaternion), e["Rotation.Quaternion"]?.InnerText ?? "1;0,0,0");
+            else
+                o.Rotation =
+                    Quaternion.DegreesRotation((Vector3) Load(typeof(Vector3), e["Rotation"]?.InnerText ?? "0,0,0"));
             return o;
         }
 
@@ -135,6 +141,16 @@ namespace Castaway.Level
             {
                 var p = v.Split(',');
                 return new Vector4(
+                    float.Parse(p[0]),
+                    float.Parse(p[1]),
+                    float.Parse(p[2]),
+                    float.Parse(p[3]));
+            }
+
+            if (t == typeof(Quaternion))
+            {
+                var p = Regex.Split(v, "[;,]");
+                return new Quaternion(
                     float.Parse(p[0]),
                     float.Parse(p[1]),
                     float.Parse(p[2]),
