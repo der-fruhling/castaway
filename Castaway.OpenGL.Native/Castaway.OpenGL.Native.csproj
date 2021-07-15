@@ -7,7 +7,7 @@
         <RootNamespace>Castaway.OpenGL.Native</RootNamespace>
 
         <!-- Common -->
-        <PackageVersion>2022.1-pg202107101</PackageVersion>
+        <PackageVersion>2022.1-pg202107141</PackageVersion>
         <AssemblyVersion>2022.1</AssemblyVersion>
         <FileVersion>2022.1</FileVersion>
         <TargetFramework>net5.0</TargetFramework>
