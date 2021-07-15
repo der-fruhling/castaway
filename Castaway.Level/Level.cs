@@ -17,6 +17,7 @@ namespace Castaway.Level
 {
     public class Level : IDisposable
     {
+        private readonly SimpleThreadDispatcher _dispatcher = new(Environment.ProcessorCount);
         private readonly List<LevelObject> _objects = new();
 
         public uint ActiveCamera = 0;
@@ -58,6 +59,7 @@ namespace Castaway.Level
         {
             var buf = PhysicsSimulation.BufferPool;
             PhysicsSimulation.Dispose();
+            _dispatcher.Dispose();
             buf?.Clear();
         }
 
@@ -192,7 +194,7 @@ namespace Castaway.Level
         public void Update()
         {
             if (!_objects.Any()) return;
-            PhysicsSimulation.Timestep(1f / 60f);
+            PhysicsSimulation.Timestep(1f / 60f, _dispatcher);
             foreach (var o in _objects) o.OnUpdate();
         }
 
