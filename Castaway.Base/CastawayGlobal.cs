@@ -19,8 +19,10 @@ namespace Castaway.Base
         public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
 
         private static volatile object _lock = new();
+#if RELEASE
         private static volatile bool _ok;
         private static volatile bool _continue = true;
+#endif
 
         private static LogEventLevel _logLevel = LogEventLevel.Information;
 
@@ -100,7 +102,9 @@ namespace Castaway.Base
             application.Init();
             var stopwatch = new Stopwatch();
             logger.Information("Started application {@App}", application);
+#if RELEASE
             _ok = true;
+#endif
 
             try
             {
@@ -116,7 +120,9 @@ namespace Castaway.Base
                         Thread.Sleep((int) Math.Max(16 - stopwatch.ElapsedMilliseconds, 0));
                         RealFrameTime = r;
                         FrameTime = stopwatch.Elapsed.TotalSeconds;
+#if RELEASE
                         _ok = true;
+#endif
                     }
                     catch (RecoverableException e)
                     {
@@ -138,8 +144,8 @@ namespace Castaway.Base
             {
                 logger.Debug("Application terminating");
                 application.Dispose();
-                lock (_lock) _continue = false;
 #if RELEASE
+                lock (_lock) _continue = false;
                 timeKill.Interrupt();
 #endif
                 logger.Information("Goodbye");
