@@ -20,7 +20,7 @@ namespace Castaway.Data
     public abstract class SaveFormat
     {
         private static readonly byte[] Magic = {54, 46, 12, 0x1a};
-        private FieldInfo[] _fields;
+        private FieldInfo[] _fields = Array.Empty<FieldInfo>();
         private bool _init;
 
         private void Init()
@@ -33,10 +33,9 @@ namespace Castaway.Data
 
         public async Task Save(string path)
         {
+            var logger = CastawayGlobal.GetLogger();
             await Task.Run(async () =>
             {
-                var logger = CastawayGlobal.GetLogger(typeof(SaveFormat));
-
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
@@ -63,6 +62,7 @@ namespace Castaway.Data
                     var size = f.GetValue(this) switch
                     {
                         string s => s.Length,
+                        null => 0,
                         { } v => Marshal.SizeOf(v)
                     };
                     d[f.Name] = (i, size);
@@ -103,10 +103,9 @@ namespace Castaway.Data
 
         public async Task Load(string path)
         {
+            var logger = CastawayGlobal.GetLogger();
             await Task.Run(async () =>
             {
-                var logger = CastawayGlobal.GetLogger(typeof(SaveFormat));
-
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
