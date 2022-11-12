@@ -1,11 +1,10 @@
-namespace Castaway.Components
+namespace Castaway.Components;
+
+public class Events : IContainer
 {
-    public class Events : IContainer
-    {
-        public delegate void TestDelegate();
+    public delegate void TestDelegate();
 
-        [Publish("test")] public event TestDelegate TestEvent;
+    [Publish("test")] public event TestDelegate TestEvent;
 
-        public virtual void InvokeTest() => TestEvent?.Invoke();
-    }
+    public virtual void InvokeTest() => TestEvent?.Invoke();
 }

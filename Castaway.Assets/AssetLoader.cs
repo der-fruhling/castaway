@@ -4,68 +4,67 @@ using System.IO;
 using System.Text.Json;
 
 #nullable enable
-namespace Castaway.Assets
+namespace Castaway.Assets;
+
+public class AssetLoader
 {
-    public class AssetLoader
+    public static AssetLoader? Loader;
+
+    private Dictionary<string, (string, IAssetType)> Assets;
+
+    public AssetCache Cache = new();
+
+    public AssetLoader()
     {
-        public static AssetLoader? Loader;
+        Assets = new Dictionary<string, (string, IAssetType)>();
+    }
 
-        private Dictionary<string, (string, IAssetType)> Assets;
+    public Asset GetAssetByName(string name)
+    {
+        return new(name, this, Assets[name].Item2);
+    }
 
-        public AssetCache Cache = new();
+    internal byte[] GetBytes(Asset asset)
+    {
+        return File.ReadAllBytes(Assets[asset.Index].Item1);
+    }
 
-        public AssetLoader()
+    private void Discover(string assetPath, string basePath)
+    {
+        var fullAssetPath = Path.GetFullPath(assetPath);
+        var fullBasePath = Path.GetFullPath(basePath);
+
+        foreach (var file in Directory.EnumerateFiles(fullAssetPath))
         {
-            Assets = new Dictionary<string, (string, IAssetType)>();
+            var name = file
+                .Remove(file.IndexOf(fullBasePath, StringComparison.Ordinal), fullBasePath.Length)
+                .Replace('\\', '/');
+            Assets[name] = (file, GetAssetType(file));
         }
 
-        public Asset GetAssetByName(string name)
-        {
-            return new(name, this, Assets[name].Item2);
-        }
+        foreach (var p in Directory.EnumerateDirectories(fullAssetPath)) Discover(p, basePath);
+    }
 
-        internal byte[] GetBytes(Asset asset)
-        {
-            return File.ReadAllBytes(Assets[asset.Index].Item1);
-        }
+    private static IAssetType GetAssetType(string file)
+    {
+        return AssetLoaderFinder.Get(file.Split('.')[^1]);
+    }
 
-        private void Discover(string assetPath, string basePath)
-        {
-            var fullAssetPath = Path.GetFullPath(assetPath);
-            var fullBasePath = Path.GetFullPath(basePath);
+    public void Discover(string assetPath)
+    {
+        Discover(assetPath, assetPath);
+    }
 
-            foreach (var file in Directory.EnumerateFiles(fullAssetPath))
-            {
-                var name = file
-                    .Remove(file.IndexOf(fullBasePath, StringComparison.Ordinal), fullBasePath.Length)
-                    .Replace('\\', '/');
-                Assets[name] = (file, GetAssetType(file));
-            }
+    public static void Init()
+    {
+        Loader = new AssetLoader();
+        using var json = JsonDocument.Parse(File.ReadAllText("config.json"));
+        var root = json.RootElement;
+        var assets = root.GetProperty("assets");
+        var discover = assets.GetProperty("discover");
 
-            foreach (var p in Directory.EnumerateDirectories(fullAssetPath)) Discover(p, basePath);
-        }
-
-        private static IAssetType GetAssetType(string file)
-        {
-            return AssetLoaderFinder.Get(file.Split('.')[^1]);
-        }
-
-        public void Discover(string assetPath)
-        {
-            Discover(assetPath, assetPath);
-        }
-
-        public static void Init()
-        {
-            Loader = new AssetLoader();
-            using var json = JsonDocument.Parse(File.ReadAllText("config.json"));
-            var root = json.RootElement;
-            var assets = root.GetProperty("assets");
-            var discover = assets.GetProperty("discover");
-
-            for (var i = 0; i < discover.GetArrayLength(); i++)
-                Loader.Discover(discover[i].GetString()
-                                ?? throw new InvalidOperationException("Discovery paths must be strings."));
-        }
+        for (var i = 0; i < discover.GetArrayLength(); i++)
+            Loader.Discover(discover[i].GetString()
+                            ?? throw new InvalidOperationException("Discovery paths must be strings."));
     }
 }

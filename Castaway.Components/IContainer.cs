@@ -1,6 +1,5 @@
-namespace Castaway.Components
+namespace Castaway.Components;
+
+public interface IContainer
 {
-    public interface IContainer
-    {
-    }
 }
