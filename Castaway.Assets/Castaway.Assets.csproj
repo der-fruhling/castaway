@@ -22,11 +22,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3"/>
     </ItemGroup>
 
 </Project>

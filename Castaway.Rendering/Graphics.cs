@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Castaway.Base;
@@ -10,6 +9,8 @@ using Castaway.Math;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Shaders;
 using Castaway.Rendering.Structures;
+using SixLabors.ImageSharp;
+using Color = System.Drawing.Color;
 
 namespace Castaway.Rendering;
 
@@ -70,7 +71,7 @@ public abstract class Graphics : RenderObject
 		throw new NotSupportedException();
 	}
 
-	public virtual TextureObject NewTexture(Bitmap bitmap)
+	public virtual TextureObject NewTexture(Image image)
 	{
 		throw new NotSupportedException();
 	}

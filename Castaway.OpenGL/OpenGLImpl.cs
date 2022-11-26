@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Drawing;
 using Castaway.Base;
 using Castaway.Input;
 using Castaway.Math;
@@ -13,9 +12,11 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
+using SixLabors.ImageSharp.PixelFormats;
 using BufferTarget = OpenTK.Graphics.OpenGL.BufferTarget;
 using CBufferTarget = Castaway.Rendering.BufferTarget;
-using Graphics = Castaway.Rendering.Graphics;
+using Color = System.Drawing.Color;
+using Image = SixLabors.ImageSharp.Image;
 using Window = Castaway.Rendering.Window;
 
 namespace Castaway.OpenGL;
@@ -81,22 +82,23 @@ public class OpenGLImpl : Graphics
 		return new Texture(width, height, data);
 	}
 
-	public override TextureObject NewTexture(Bitmap bitmap)
+	public override TextureObject NewTexture(Image image)
 	{
 		BindWindow();
-		var data = new float[bitmap.Width * bitmap.Height * 3];
+		var img = image.CloneAs<Rgb24>();
+		var data = new float[image.Width * image.Height * 3];
 
-		for (var i = 0; i < bitmap.Width; i++)
-		for (var j = 0; j < bitmap.Height; j++)
+		for (var i = 0; i < image.Width; i++)
+		for (var j = 0; j < image.Height; j++)
 		{
 			var k = i * j * 3;
-			var p = bitmap.GetPixel(i, j);
+			var p = img[i, j];
 			data[k + 0] = p.R / (float)byte.MaxValue;
 			data[k + 1] = p.G / (float)byte.MaxValue;
 			data[k + 2] = p.B / (float)byte.MaxValue;
 		}
 
-		return new Texture(bitmap.Width, bitmap.Height, data);
+		return new Texture(image.Width, image.Height, data);
 	}
 
 	public override SeparatedShaderObject NewSepShader(ShaderStage stage, string source)
