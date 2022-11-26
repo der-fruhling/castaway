@@ -27,7 +27,7 @@
     <Object>
         <Name>Object 1</Name>
 
-        <Position>0,100,-3</Position>
+        <Position>0,10,-3</Position>
         <Scale>1,1,1</Scale>
         <Rotation>45,45,45</Rotation>
 
@@ -39,7 +39,7 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Box/>
+            <Collider.Sphere/>
             <Physics>
                 <Mode>Dynamic</Mode>
             </Physics>
@@ -51,6 +51,7 @@
 
         <Position>0,0,-3</Position>
         <Scale>1,1,1</Scale>
+        <Rotation>5,0,0</Rotation>
 
         <Controllers>
             <Shader>
