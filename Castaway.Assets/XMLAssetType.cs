@@ -5,7 +5,7 @@ using System.Xml;
 namespace Castaway.Assets;
 
 [Loads("xml")]
-public class XMLAssetType : IAssetType
+public class XmlAssetType : IAssetType
 {
 	public virtual T To<T>(Asset a)
 	{

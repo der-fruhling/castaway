@@ -10,42 +10,42 @@ namespace Castaway.Level.Physics;
 
 public class SimpleThreadDispatcher : IThreadDispatcher, IDisposable
 {
-	private readonly BufferPool[] bufferPools;
-	private int completedWorkerCounter;
+	private readonly BufferPool[] _bufferPools;
+	private readonly AutoResetEvent _finished;
 
-	private volatile bool disposed;
-	private readonly AutoResetEvent finished;
+	private readonly Worker[] _workers;
+	private int _completedWorkerCounter;
 
-	private volatile Action<int> workerBody;
-	private int workerIndex;
+	private volatile bool _disposed;
 
-	private readonly Worker[] workers;
+	private volatile Action<int>? _workerBody;
+	private int _workerIndex;
 
 	public SimpleThreadDispatcher(int threadCount)
 	{
 		ThreadCount = threadCount;
-		workers = new Worker[threadCount - 1];
-		for (var i = 0; i < workers.Length; ++i)
+		_workers = new Worker[threadCount - 1];
+		for (var i = 0; i < _workers.Length; ++i)
 		{
-			workers[i] = new Worker { Thread = new Thread(WorkerLoop), Signal = new AutoResetEvent(false) };
-			workers[i].Thread.IsBackground = true;
-			workers[i].Thread.Start(workers[i].Signal);
+			_workers[i] = new Worker { Thread = new Thread(WorkerLoop), Signal = new AutoResetEvent(false) };
+			_workers[i].Thread.IsBackground = true;
+			_workers[i].Thread.Start(_workers[i].Signal);
 		}
 
-		finished = new AutoResetEvent(false);
-		bufferPools = new BufferPool[threadCount];
-		for (var i = 0; i < bufferPools.Length; ++i) bufferPools[i] = new BufferPool();
+		_finished = new AutoResetEvent(false);
+		_bufferPools = new BufferPool[threadCount];
+		for (var i = 0; i < _bufferPools.Length; ++i) _bufferPools[i] = new BufferPool();
 	}
 
 	public void Dispose()
 	{
-		if (!disposed)
+		if (!_disposed)
 		{
-			disposed = true;
+			_disposed = true;
 			SignalThreads();
-			for (var i = 0; i < bufferPools.Length; ++i) bufferPools[i].Clear();
+			for (var i = 0; i < _bufferPools.Length; ++i) _bufferPools[i].Clear();
 
-			foreach (var worker in workers)
+			foreach (var worker in _workers)
 			{
 				worker.Thread.Join();
 				worker.Signal.Dispose();
@@ -57,29 +57,29 @@ public class SimpleThreadDispatcher : IThreadDispatcher, IDisposable
 
 	public void DispatchWorkers(Action<int> workerBody)
 	{
-		Debug.Assert(this.workerBody == null);
-		workerIndex =
+		Debug.Assert(_workerBody == null);
+		_workerIndex =
 			1; //Just make the inline thread worker 0. While the other threads might start executing first, the user should never rely on the dispatch order.
-		completedWorkerCounter = 0;
-		this.workerBody = workerBody;
+		_completedWorkerCounter = 0;
+		this._workerBody = workerBody;
 		SignalThreads();
 		//Calling thread does work. No reason to spin up another worker and block this one!
 		DispatchThread(0);
-		finished.WaitOne();
-		this.workerBody = null;
+		_finished.WaitOne();
+		this._workerBody = null;
 	}
 
 	public BufferPool GetThreadMemoryPool(int workerIndex)
 	{
-		return bufferPools[workerIndex];
+		return _bufferPools[workerIndex];
 	}
 
 	private void DispatchThread(int workerIndex)
 	{
-		Debug.Assert(workerBody != null);
-		workerBody(workerIndex);
+		Debug.Assert(_workerBody != null);
+		_workerBody(workerIndex);
 
-		if (Interlocked.Increment(ref completedWorkerCounter) == ThreadCount) finished.Set();
+		if (Interlocked.Increment(ref _completedWorkerCounter) == ThreadCount) _finished.Set();
 	}
 
 	private void WorkerLoop(object untypedSignal)
@@ -88,15 +88,15 @@ public class SimpleThreadDispatcher : IThreadDispatcher, IDisposable
 		while (true)
 		{
 			signal.WaitOne();
-			if (disposed)
+			if (_disposed)
 				return;
-			DispatchThread(Interlocked.Increment(ref workerIndex) - 1);
+			DispatchThread(Interlocked.Increment(ref _workerIndex) - 1);
 		}
 	}
 
 	private void SignalThreads()
 	{
-		for (var i = 0; i < workers.Length; ++i) workers[i].Signal.Set();
+		for (var i = 0; i < _workers.Length; ++i) _workers[i].Signal.Set();
 	}
 
 	private struct Worker

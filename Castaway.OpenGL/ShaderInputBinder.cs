@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castaway.OpenGL.Native;
 using Castaway.Rendering.Shaders;
+using OpenTK.Graphics.OpenGL;
 
 namespace Castaway.OpenGL;
 
 public class ShaderInputBinder
 {
 	private readonly (int Location, int Index, int Size, VertexInputType Type)[] _bindings;
-	private readonly uint _number;
+	private readonly int _number;
 	private readonly int _stride;
 
 	internal ShaderInputBinder(Shader program)
@@ -49,9 +49,9 @@ public class ShaderInputBinder
 	internal void Apply(Buffer buffer)
 	{
 		foreach (var (loc, index, size, _) in _bindings)
-			GL.VertexAttribPointer(
-				loc, size, GLC.GL_FLOAT, false, _stride * sizeof(float), index * sizeof(float));
-		foreach (var (loc, _, _, _) in _bindings) GL.EnableVertexAttrib(loc);
+			GL.VertexAttribPointer(loc, size, VertexAttribPointerType.Float, false, _stride * sizeof(float),
+				index * sizeof(float));
+		foreach (var (loc, _, _, _) in _bindings) GL.EnableVertexAttribArray(loc);
 		buffer.SetupProgram = _number;
 	}
 }

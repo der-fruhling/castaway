@@ -1,61 +1,70 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castaway.OpenGL.Native;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
+using OpenTK.Graphics.OpenGL;
+using BufferTarget = OpenTK.Graphics.OpenGL.BufferTarget;
+using CBufferTarget = Castaway.Rendering.BufferTarget;
 
 namespace Castaway.OpenGL;
 
 internal sealed class Buffer : BufferObject
 {
-	public uint SetupProgram;
-	public BufferTarget Target;
+	public int SetupProgram;
+	public CBufferTarget Target;
 
-	public Buffer(BufferTarget target, uint number)
+	public Buffer(CBufferTarget target, uint number)
 	{
 		Target = target;
 		Number = number;
 	}
 
-	public Buffer(BufferTarget target, uint number, IEnumerable<float> data) : this(target, number)
+	public Buffer(CBufferTarget target, uint number, IEnumerable<float> data) : this(target, number)
 	{
 		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, uint number, IEnumerable<uint> data) : this(target, number)
+	public Buffer(CBufferTarget target, uint number, IEnumerable<uint> data) : this(target, number)
 	{
 		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, uint number, IEnumerable<int> data) : this(target, number)
+	public Buffer(CBufferTarget target, uint number, IEnumerable<int> data) : this(target, number)
 	{
 		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, uint number, IEnumerable<double> data) : this(target, number)
+	public Buffer(CBufferTarget target, uint number, IEnumerable<double> data) : this(target, number)
 	{
 		Upload(data);
 	}
 
-	public Buffer(BufferTarget target) : this(target, GL.CreateBuffer())
+	public Buffer(CBufferTarget target)
 	{
+		Target = target;
+		GL.CreateBuffers(1, out uint n);
+		Number = n;
 	}
 
-	public Buffer(BufferTarget target, IEnumerable<float> data) : this(target, GL.CreateBuffer(), data)
+	public Buffer(CBufferTarget target, IEnumerable<float> data) : this(target)
 	{
+		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, IEnumerable<uint> data) : this(target, GL.CreateBuffer(), data)
+	public Buffer(CBufferTarget target, IEnumerable<uint> data) : this(target)
 	{
+		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, IEnumerable<int> data) : this(target, GL.CreateBuffer(), data)
+	public Buffer(CBufferTarget target, IEnumerable<int> data) : this(target)
 	{
+		Upload(data);
 	}
 
-	public Buffer(BufferTarget target, IEnumerable<double> data) : this(target, GL.CreateBuffer(), data)
+	public Buffer(CBufferTarget target, IEnumerable<double> data) : this(target)
 	{
+		Upload(data);
 	}
 
 	public bool Destroyed { get; set; }
@@ -66,14 +75,24 @@ internal sealed class Buffer : BufferObject
 	public override void Bind()
 	{
 		if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
-		gl.BindBuffer(Target, Number);
+		GL.BindBuffer(Target switch
+		{
+			CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
+			CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
+			_ => throw new ArgumentOutOfRangeException()
+		}, Number);
 		gl.BoundBuffers[Target] = this;
 	}
 
 	public override void Unbind()
 	{
 		if (Graphics.Current is not OpenGLImpl gl) throw new InvalidOperationException("Need OpenGL >= 3.2");
-		gl.UnbindBuffer(Target);
+		GL.BindBuffer(Target switch
+		{
+			CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
+			CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
+			_ => throw new ArgumentOutOfRangeException()
+		}, 0);
 		gl.BoundBuffers[Target] = null;
 	}
 
@@ -112,18 +131,18 @@ internal sealed class Buffer : BufferObject
 	{
 		var target = Target switch
 		{
-			BufferTarget.VertexArray => GL.BufferTarget.ArrayBuffer,
-			BufferTarget.ElementArray => GL.BufferTarget.ElementArrayBuffer,
+			CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
+			CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
 			_ => throw new ArgumentOutOfRangeException()
 		};
-		GL.GetInt(Target switch
+		GL.GetInteger(Target switch
 		{
-			BufferTarget.VertexArray => GLC.GL_ARRAY_BUFFER_BINDING,
-			BufferTarget.ElementArray => GLC.GL_ELEMENT_ARRAY_BUFFER_BINDING,
+			CBufferTarget.VertexArray => GetPName.ArrayBufferBinding,
+			CBufferTarget.ElementArray => GetPName.ElementArrayBufferBinding,
 			_ => throw new ArgumentOutOfRangeException()
 		});
 		GL.BindBuffer(target, Number);
 		var b = bytes.ToArray();
-		GL.BufferData(target, b.Length, b, GLC.GL_STATIC_DRAW);
+		GL.BufferData(target, b.Length, b, BufferUsageHint.StaticDraw);
 	}
 }

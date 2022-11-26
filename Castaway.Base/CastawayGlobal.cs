@@ -18,7 +18,6 @@ public static class CastawayGlobal
 {
 	public static readonly LoggingLevelSwitch LevelSwitch = new(LogEventLevel.Debug);
 
-	private static volatile object _lock = new();
 #if RELEASE
         private static volatile bool _ok;
         private static volatile bool _continue = true;
@@ -48,22 +47,22 @@ public static class CastawayGlobal
 		return Log.Logger.ForContext(type);
 	}
 
-    /// <summary>
-    ///     Creates a logger based on the calling type.
-    /// </summary>
-    /// <returns>The logger that was created.</returns>
-    public static ILogger GetLogger()
+	/// <summary>
+	///     Creates a logger based on the calling type.
+	/// </summary>
+	/// <returns>The logger that was created.</returns>
+	public static ILogger GetLogger()
 	{
 		return Log.Logger.ForContext(new StackTrace().GetFrame(1)!.GetMethod()!.DeclaringType!);
 	}
 
-    /// <summary>
-    ///     Runs the specified application. Should be called on the main
-    ///     thread.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public static int Run<T>() where T : class, IApplication, new()
+	/// <summary>
+	///     Runs the specified application. Should be called on the main
+	///     thread.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	public static int Run<T>() where T : class, IApplication, new()
 	{
 		LoadConfig();
 		Log.Logger = new LoggerConfiguration()
@@ -166,11 +165,6 @@ public static class CastawayGlobal
 
 		if (eLog.TryGetProperty("template", out e))
 			_consoleLogTemplate = e.GetString()!;
-	}
-
-	private static JsonElement? OptionalProperty(this JsonElement e, string name)
-	{
-		return e.TryGetProperty(name, out var r) ? r : null;
 	}
 
 	private static T? TryParseEnum<T>(string name, bool ignoreCase = false) where T : struct

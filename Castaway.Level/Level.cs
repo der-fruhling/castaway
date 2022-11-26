@@ -53,7 +53,7 @@ public class Level : IDisposable
 					break;
 				}
 			}
-		} while ((node = node!.NextSibling) != null);
+		} while ((node = node.NextSibling) != null);
 	}
 
 	public LevelObject this[string i] => Get(i);

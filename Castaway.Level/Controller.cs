@@ -8,11 +8,10 @@ namespace Castaway.Level;
 public class Controller
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-	private readonly ILogger _inheritorLogger;
 
 	public Controller()
 	{
-		_inheritorLogger = CastawayGlobal.GetLogger();
+		CastawayGlobal.GetLogger();
 	}
 
 	public virtual Vector3 Position

@@ -181,8 +181,6 @@ public class MouseInputSystem
 				}
 
 				break;
-			case InputState.Repeat:
-				break;
 			default:
 				throw new ArgumentOutOfRangeException(nameof(state), state, null);
 		}

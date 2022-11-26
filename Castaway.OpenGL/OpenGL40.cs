@@ -1,8 +1,8 @@
 using System;
 using Castaway.Math;
-using Castaway.OpenGL.Native;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
+using OpenTK.Graphics.OpenGL;
 
 namespace Castaway.OpenGL;
 
@@ -16,7 +16,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] { i });
+		GL.Uniform1(GL.GetUniformLocation(s.Number, name), 1, new[] { i });
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, double x, double y)
@@ -24,7 +24,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y });
+		GL.Uniform2(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y });
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z)
@@ -32,7 +32,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z });
+		GL.Uniform3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z });
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, double x, double y, double z, double w)
@@ -40,7 +40,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z, w });
+		GL.Uniform3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z, w });
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, Matrix2 m)
@@ -48,7 +48,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+		GL.UniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, Matrix3 m)
@@ -56,7 +56,7 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+		GL.UniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
 	}
 
 	public override void SetDoubleUniform(ShaderObject p, string name, Matrix4 m)
@@ -64,6 +64,6 @@ public class OpenGL40 : OpenGL33
 		BindWindow();
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
+		GL.UniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.Array);
 	}
 }

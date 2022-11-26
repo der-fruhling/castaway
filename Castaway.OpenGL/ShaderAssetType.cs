@@ -15,7 +15,7 @@ using Serilog;
 namespace Castaway.OpenGL;
 
 [Loads("shdr")]
-public class ShaderAssetType : XMLAssetType
+public class ShaderAssetType : XmlAssetType
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 

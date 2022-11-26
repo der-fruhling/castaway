@@ -5,13 +5,16 @@ using System.Drawing;
 using Castaway.Base;
 using Castaway.Input;
 using Castaway.Math;
-using Castaway.OpenGL.Native;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Shaders;
 using Castaway.Rendering.Structures;
 using GLFW;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using Serilog;
+using BufferTarget = OpenTK.Graphics.OpenGL.BufferTarget;
+using CBufferTarget = Castaway.Rendering.BufferTarget;
 using Graphics = Castaway.Rendering.Graphics;
 using Window = Castaway.Rendering.Window;
 
@@ -26,7 +29,10 @@ public class OpenGLImpl : Graphics
 
 	public OpenGLImpl()
 	{
-		GL.Init();
+		// just in case
+#pragma warning disable CS0612
+		Native.GL.Init();
+#pragma warning restore CS0612
 	}
 
 	public override string Name => "OpenGL-3.2";
@@ -38,13 +44,14 @@ public class OpenGLImpl : Graphics
 
 	public override void WindowInit(Window window)
 	{
+		GL.LoadBindings(new BindingsContext());
 		InputSystem.Init();
-		GL.Enable(GLC.GL_DEPTH_TEST);
-		GL.Enable(GLC.GL_CULL_FACE);
+		GL.Enable(EnableCap.DepthTest);
+		GL.Enable(EnableCap.CullFace);
 		window.WindowResize += (w, h) => GL.Viewport(0, 0, w, h);
 	}
 
-	public override BufferObject NewBuffer(BufferTarget target, float[]? data = null)
+	public override BufferObject NewBuffer(CBufferTarget target, float[]? data = null)
 	{
 		BindWindow();
 		return new Buffer(target, data ?? Array.Empty<float>());
@@ -142,14 +149,14 @@ public class OpenGLImpl : Graphics
 		InputSystem.Clear();
 		_stopwatch.Stop();
 		FrameTimes.Insert(0, (float)_stopwatch.Elapsed.TotalSeconds);
-		const int MaxTimes = 60;
-		if (FrameTimes.Count > MaxTimes) FrameTimes.RemoveRange(MaxTimes, FrameTimes.Count - MaxTimes);
+		const int maxTimes = 60;
+		if (FrameTimes.Count > maxTimes) FrameTimes.RemoveRange(maxTimes, FrameTimes.Count - maxTimes);
 	}
 
-    /// <summary>
-    ///     Should be called at the start of the frame.
-    /// </summary>
-    public override void StartFrame()
+	/// <summary>
+	///     Should be called at the start of the frame.
+	/// </summary>
+	public override void StartFrame()
 	{
 		BindWindow();
 		_stopwatch.Restart();
@@ -172,7 +179,7 @@ public class OpenGLImpl : Graphics
 
 		if (buffer is VertexArrayDrawable vaoDraw)
 		{
-			BindVAO(vaoDraw.VAO);
+			GL.BindVertexArray(vaoDraw.VAO);
 			if (!vaoDraw.SetUp)
 			{
 				buffer.VertexArray.Bind();
@@ -181,15 +188,15 @@ public class OpenGLImpl : Graphics
 			}
 
 			if (vaoDraw.ElementArray != null)
-				GL.DrawElements(GLC.GL_TRIANGLES, buffer.VertexCount, GLC.GL_UNSIGNED_INT, 0);
+				GL.DrawElements(PrimitiveType.Triangles, buffer.VertexCount, DrawElementsType.UnsignedInt, 0);
 			else
-				GL.DrawArrays(GLC.GL_TRIANGLES, 0, buffer.VertexCount);
-			UnbindVAO();
+				GL.DrawArrays(PrimitiveType.Triangles, 0, buffer.VertexCount);
+			GL.BindVertexArray(vaoDraw.VAO);
 		}
 		else
 		{
-			var vao = CreateVAO();
-			BindVAO(vao);
+			GL.CreateVertexArrays(1, out uint vao);
+			GL.BindVertexArray(vao);
 			buffer.VertexArray.Bind();
 			s.Binder!.Apply(v);
 			if (buffer.ElementArray != null)
@@ -198,14 +205,14 @@ public class OpenGLImpl : Graphics
 					throw new InvalidOperationException(
 						$"Cannot use element buffer of type {buffer.ElementArray?.GetType()}");
 				buffer.ElementArray.Bind();
-				GL.DrawElements(GLC.GL_TRIANGLES, buffer.VertexCount, GLC.GL_UNSIGNED_INT, 0);
+				GL.DrawElements(PrimitiveType.Triangles, buffer.VertexCount, DrawElementsType.UnsignedInt, 0);
 			}
 			else
 			{
-				GL.DrawArrays(GLC.GL_TRIANGLES, 0, buffer.VertexCount);
+				GL.DrawArrays(PrimitiveType.Triangles, 0, buffer.VertexCount);
 			}
 
-			DeleteVAOs(vao);
+			GL.DeleteVertexArray(vao);
 		}
 	}
 
@@ -215,7 +222,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] { f });
+		GL.Uniform1(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { f });
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, float x, float y)
@@ -224,7 +231,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y });
+		GL.Uniform2(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y });
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z)
@@ -233,7 +240,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z });
+		GL.Uniform3(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z });
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, float x, float y, float z, float w)
@@ -242,7 +249,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z, w });
+		GL.Uniform4(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z, w });
 	}
 
 	public override void SetIntUniform(ShaderObject p, string name, int i)
@@ -251,7 +258,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] { i });
+		GL.Uniform1(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { i });
 	}
 
 	public override void SetIntUniform(ShaderObject p, string name, int x, int y)
@@ -260,7 +267,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y });
+		GL.Uniform2(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y });
 	}
 
 	public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z)
@@ -269,7 +276,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z });
+		GL.Uniform3(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z });
 	}
 
 	public override void SetIntUniform(ShaderObject p, string name, int x, int y, int z, int w)
@@ -278,7 +285,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z, w });
+		GL.Uniform4(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z, w });
 	}
 
 	public override void SetUIntUniform(ShaderObject p, string name, uint i)
@@ -287,7 +294,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniform(GL.GetUniformLocation(s.Number, name), 1, new[] { i });
+		GL.Uniform1(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { i });
 	}
 
 	public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y)
@@ -296,7 +303,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector2(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y });
+		GL.Uniform2(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y });
 	}
 
 	public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z)
@@ -305,7 +312,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector3(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z });
+		GL.Uniform3(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z });
 	}
 
 	public override void SetUIntUniform(ShaderObject p, string name, uint x, uint y, uint z, uint w)
@@ -314,7 +321,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformVector4(GL.GetUniformLocation(s.Number, name), 1, new[] { x, y, z, w });
+		GL.Uniform4(GL.GetUniformLocation((uint)s.Number, name), 1, new[] { x, y, z, w });
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, Vector2 v)
@@ -344,7 +351,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix2(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+		GL.UniformMatrix2(GL.GetUniformLocation((uint)s.Number, name), 1, false, m.ArrayF);
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, Matrix3 m)
@@ -353,7 +360,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix3(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+		GL.UniformMatrix3(GL.GetUniformLocation((uint)s.Number, name), 1, false, m.ArrayF);
 	}
 
 	public override void SetFloatUniform(ShaderObject p, string name, Matrix4 m)
@@ -362,7 +369,7 @@ public class OpenGLImpl : Graphics
 		if (name.Length == 0) return;
 		if (p is not Shader s)
 			throw new InvalidOperationException($"Need OpenGL object types only, not {p.GetType()}");
-		GL.SetUniformMatrix4(GL.GetUniformLocation(s.Number, name), 1, false, m.ArrayF);
+		GL.UniformMatrix4(GL.GetUniformLocation((uint)s.Number, name), 1, false, m.ArrayF);
 	}
 
 	public override void SetSamplerUniform(ShaderObject p, string name, TextureObject t)
@@ -379,122 +386,51 @@ public class OpenGLImpl : Graphics
 		SetIntUniform(p, name, (int)tex.BindingPoint);
 	}
 
-    /// <summary>
-    ///     Clears the color, depth, and stencil buffers in the current render
-    ///     target.
-    /// </summary>
-    public override void Clear()
+	/// <summary>
+	///     Clears the color, depth, and stencil buffers in the current render
+	///     target.
+	/// </summary>
+	// TODO Maybe don't clear the stencil buffer unless the caller actually wants that?
+	public override void Clear()
 	{
 		BindWindow();
-		GL.Clear();
+		GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 	}
 
-    /// <summary>
-    ///     Sets the color that <see cref="Color" /> clears to.
-    /// </summary>
-    /// <param name="r">Red</param>
-    /// <param name="g">Green</param>
-    /// <param name="b">Blue</param>
-    public override void SetClearColor(float r, float g, float b)
+	/// <summary>
+	///     Sets the color that <see cref="Color" /> clears to.
+	/// </summary>
+	/// <param name="r">Red</param>
+	/// <param name="g">Green</param>
+	/// <param name="b">Blue</param>
+	public override void SetClearColor(float r, float g, float b)
 	{
 		BindWindow();
 		GL.ClearColor(r, g, b, 1);
 	}
 
-	internal virtual uint[] NewBuffers(int count)
-	{
-		BindWindow();
-		GL.GenBuffers(count, out var a);
-		return a;
-	}
-
-	internal virtual uint[] NewTextures(int count)
-	{
-		BindWindow();
-		GL.GenTextures(count, out var a);
-		return a;
-	}
-
-	internal virtual uint NewShader(ShaderStage stage)
-	{
-		BindWindow();
-		return GL.CreateShader(stage switch
-		{
-			ShaderStage.Vertex => GL.ShaderStage.VertexShader,
-			ShaderStage.Fragment => GL.ShaderStage.FragmentShader,
-			_ => throw new ArgumentOutOfRangeException(nameof(stage), stage, null)
-		});
-	}
-
-	internal virtual uint NewProgram()
-	{
-		BindWindow();
-		return GL.CreateProgram();
-	}
-
-	internal virtual void BindBuffer(BufferTarget target, uint b)
+	public override void UnbindBuffer(CBufferTarget target)
 	{
 		BindWindow();
 		GL.BindBuffer(target switch
 		{
-			BufferTarget.VertexArray => GL.BufferTarget.ArrayBuffer,
-			BufferTarget.ElementArray => GL.BufferTarget.ElementArrayBuffer,
+			CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
+			CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
 			_ => throw new ArgumentOutOfRangeException(nameof(target), target, null)
-		}, b);
+		}, 0);
 	}
 
-	public override void UnbindBuffer(BufferTarget target)
+	public override void UnbindTexture([Range(0, 31)] int number)
 	{
 		BindWindow();
-		BindBuffer(target, 0);
-	}
-
-	internal virtual void MakeActiveTexture([Range(0, 31)] int number)
-	{
-		BindWindow();
-		GL.ActiveTexture(GLC.GL_TEXTURE0 + number);
-	}
-
-	internal virtual void BindTexture(uint t)
-	{
-		BindWindow();
-		GL.BindTexture(GLC.GL_TEXTURE_2D, t);
-	}
-
-	internal virtual void UnbindTexture()
-	{
-		BindWindow();
-		GL.BindTexture(GLC.GL_TEXTURE_2D, 0);
-	}
-
-	internal virtual void BindTexture(int number, uint t)
-	{
-		MakeActiveTexture(number);
-		BindTexture(t);
-	}
-
-	public override void UnbindTexture(int number)
-	{
-		MakeActiveTexture(number);
-		UnbindTexture();
-	}
-
-	internal virtual void BindShader(uint p)
-	{
-		BindWindow();
-		GL.UseProgram(p);
-	}
-
-	internal virtual void BindFramebuffer(uint number)
-	{
-		BindWindow();
-		GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, number);
+		GL.ActiveTexture(TextureUnit.Texture0 + number);
+		GL.BindTexture(TextureTarget.Texture2D, 0);
 	}
 
 	public override void UnbindFramebuffer()
 	{
 		BindWindow();
-		GL.BindFramebuffer(GLC.GL_FRAMEBUFFER, 0);
+		GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
 	public override void UnbindShader()
@@ -503,35 +439,11 @@ public class OpenGLImpl : Graphics
 		GL.UseProgram(0);
 	}
 
-	internal virtual uint CreateVAO()
+	private class BindingsContext : IBindingsContext
 	{
-		BindWindow();
-		GL.GenVertexArrays(1, out var a);
-		return a[0];
-	}
-
-	internal virtual uint[] CreateVAOs(int count)
-	{
-		BindWindow();
-		GL.GenVertexArrays(count, out var a);
-		return a;
-	}
-
-	internal virtual void BindVAO(uint n)
-	{
-		BindWindow();
-		GL.BindVertexArray(n);
-	}
-
-	internal virtual void UnbindVAO()
-	{
-		BindWindow();
-		GL.BindVertexArray(0);
-	}
-
-	internal virtual void DeleteVAOs(params uint[] vaos)
-	{
-		BindWindow();
-		GL.DeleteVertexArrays(vaos);
+		public IntPtr GetProcAddress(string procName)
+		{
+			return Glfw.GetProcAddress(procName);
+		}
 	}
 }

@@ -661,7 +661,7 @@ public abstract class Graphics : RenderObject
 		throw new NotSupportedException();
 	}
 
-	public virtual void PutImage(uint image, TextureObject texture)
+	public virtual void PutImage(int i, TextureObject texture)
 	{
 		throw new NotSupportedException();
 	}

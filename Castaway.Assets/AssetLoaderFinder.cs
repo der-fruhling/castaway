@@ -7,11 +7,11 @@ namespace Castaway.Assets;
 
 public static class AssetLoaderFinder
 {
-	private static readonly Dictionary<string, Type> _loaders;
+	private static readonly Dictionary<string, Type> Loaders;
 
 	static AssetLoaderFinder()
 	{
-		_loaders = AppDomain.CurrentDomain
+		Loaders = AppDomain.CurrentDomain
 			.GetAssemblies()
 			.Concat(Assembly.GetEntryAssembly()!.GetReferencedAssemblies()
 				.Select(n => AppDomain.CurrentDomain.Load(n)))
@@ -28,8 +28,8 @@ public static class AssetLoaderFinder
 
 	public static IAssetType Get(string extension)
 	{
-		return (_loaders.ContainsKey(extension)
-			? Activator.CreateInstance(_loaders[extension]) as IAssetType
+		return (Loaders.ContainsKey(extension)
+			? Activator.CreateInstance(Loaders[extension]) as IAssetType
 			: new TextAssetType()) ?? throw new InvalidOperationException($"Bad asset loader for {extension}");
 	}
 }

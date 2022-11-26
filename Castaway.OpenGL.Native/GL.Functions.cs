@@ -11,13 +11,13 @@ namespace Castaway.OpenGL.Native;
 
 public static unsafe partial class GL
 {
-	private static readonly Dictionary<GLF, IntPtr> fn = new();
+	private static readonly Dictionary<GLF, IntPtr> Fn = new();
 
 	private static IntPtr Load(GLF f)
 	{
-		return !fn.ContainsKey(f) || fn[f] == IntPtr.Zero
-			? fn[f] = Glfw.GetProcAddress(Enum.GetName(f))
-			: fn[f];
+		return !Fn.ContainsKey(f) || Fn[f] == IntPtr.Zero
+			? Fn[f] = Glfw.GetProcAddress(Enum.GetName(f))
+			: Fn[f];
 	}
 
 	public static void GenBuffers(int count, out uint[] output)

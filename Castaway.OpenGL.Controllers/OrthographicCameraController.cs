@@ -33,7 +33,6 @@ public class OrthographicCameraController : CameraController
 	public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
 	{
 		base.PreRenderFrame(camera, parent);
-		var w = Graphics.Current.Window!;
 		ViewTransform = Matrix4.Translate(-camera.Position);
 	}
 }

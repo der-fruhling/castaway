@@ -35,7 +35,7 @@ public abstract class CameraController : Level.Controllers.CameraController
 			new(new Vector3(1, 1, 0), texture: new Vector3(1, 1, 0))
 		}, new uint[] { 0, 1, 2, 1, 3, 2 }).ConstructFor(GlobalShader.DirectTextured);
 
-		Logger.Debug("Created new camera {Type} filling {ID}", GetType(), CameraID);
+		Logger.Debug("Created new camera {Type} filling {ID}", GetType(), CameraId);
 	}
 
 	public override void OnDestroy(LevelObject parent)
@@ -44,7 +44,7 @@ public abstract class CameraController : Level.Controllers.CameraController
 		Framebuffer?.Dispose();
 		_fullscreenDrawable?.Dispose();
 		_fullscreenDrawable = null;
-		Logger.Debug("Removed camera filling {ID}", CameraID);
+		Logger.Debug("Removed camera filling {ID}", CameraId);
 	}
 
 	public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
@@ -59,12 +59,12 @@ public abstract class CameraController : Level.Controllers.CameraController
 		var g = Graphics.Current;
 		g.UnbindFramebuffer();
 
-		if (camera.Level.ActiveCamera != CameraID) return;
+		if (camera.Level.ActiveCamera != CameraId) return;
 		var bp = g.BoundShader;
 		if (bp != GlobalShader.DirectTextured)
-			GlobalShader.DirectTextured!.Bind();
-		g.Draw(GlobalShader.DirectTextured!,
+			GlobalShader.DirectTextured.Bind();
+		g.Draw(GlobalShader.DirectTextured,
 			_fullscreenDrawable ?? throw new InvalidOperationException("Must initialize before draw."));
-		if (bp != null && bp != GlobalShader.DirectTextured) bp!.Bind();
+		if (bp != null && bp != GlobalShader.DirectTextured) bp.Bind();
 	}
 }

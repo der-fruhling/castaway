@@ -8,8 +8,6 @@ namespace Castaway.Level.Controllers.Colliders;
 [ControllerName("Collider.Box")]
 public class ColliderBoxController : Controller
 {
-	private bool _running;
-
 	private Simulation? _simulation;
 
 	public BodyHandle Body;
@@ -77,11 +75,6 @@ public class ColliderBoxController : Controller
 		}
 	}
 
-	public override Vector3 Scale
-	{
-		set => base.Scale = value;
-	}
-
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
@@ -125,12 +118,10 @@ public class ColliderBoxController : Controller
 		}
 
 		_simulation = sim;
-		_running = true;
 	}
 
 	public override void OnDestroy(LevelObject parent)
 	{
-		_running = false;
 		base.OnDestroy(parent);
 		switch (PhysicsMode)
 		{

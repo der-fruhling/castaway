@@ -9,7 +9,7 @@ namespace Castaway.OpenGL.Controllers;
 [Imports(typeof(OpenGLImpl))]
 public class PerspectiveCameraController : CameraController
 {
-	[LevelSerialized("VerticalFOV")] public float FOV;
+	[LevelSerialized("VerticalFOV")] public float FieldOfView;
 
 	public override void OnInit(LevelObject parent)
 	{
@@ -29,7 +29,7 @@ public class PerspectiveCameraController : CameraController
 	private void OnWindowResize(int w, int h)
 	{
 		var win = Graphics.Current.Window!;
-		PerspectiveTransform = CameraMath.Persp(win, FarCutoff, NearCutoff, MathEx.ToRadians(FOV), Size);
+		PerspectiveTransform = CameraMath.Persp(win, FarCutoff, NearCutoff, MathEx.ToRadians(FieldOfView), Size);
 	}
 
 	public override void PreRenderFrame(LevelObject camera, LevelObject? parent)

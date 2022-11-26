@@ -1,7 +1,7 @@
 using System;
-using Castaway.OpenGL.Native;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
+using OpenTK.Graphics.OpenGL;
 
 namespace Castaway.OpenGL;
 
@@ -10,10 +10,10 @@ public class OpenGL42 : OpenGL41
 {
 	public override string Name => "OpenGL-4.2";
 
-	public override void PutImage(uint image, TextureObject texture)
+	public override void PutImage(int image, TextureObject texture)
 	{
 		BindWindow();
 		if (texture is not Texture t) throw new InvalidOperationException("Must only use OpenGL types.");
-		GL.BindImageTexture(image, t.Number, 0, false, 0, GLC.GL_READ_WRITE, GLC.GL_RGBA32F);
+		GL.BindImageTexture(image, t.Number, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
 	}
 }

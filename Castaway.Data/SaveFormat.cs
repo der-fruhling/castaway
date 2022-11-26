@@ -52,8 +52,6 @@ public abstract class SaveFormat
 
 			foreach (var f in toSave)
 			{
-				var c = f.GetCustomAttribute<UnitAttribute>();
-
 				var size = f.GetValue(this) switch
 				{
 					string s => s.Length,
@@ -110,11 +108,11 @@ public abstract class SaveFormat
 			await using var file = File.OpenRead(path);
 
 			var readMagic = new byte[Magic.Length];
-			await file.ReadAsync(readMagic.AsMemory());
+			readMagic = readMagic[..await file.ReadAsync(readMagic.AsMemory())];
 			if (!readMagic.SequenceEqual(Magic)) throw new InvalidOperationException("Cannot read non save file.");
 
 			var countBytes = new byte[sizeof(int)];
-			await file.ReadAsync(countBytes.AsMemory());
+			countBytes = countBytes[..await file.ReadAsync(countBytes.AsMemory())];
 			var count = BitConverter.ToInt32(countBytes);
 
 			var d = new Dictionary<FieldInfo, (int Index, int Size)?>();
@@ -124,19 +122,19 @@ public abstract class SaveFormat
 			logger.Verbose("Searching for {Count} units...", count);
 			for (var i = 0; i < count; i++)
 			{
-				await file.ReadAsync(countBytes.AsMemory());
+				countBytes = countBytes[..await file.ReadAsync(countBytes.AsMemory())];
 				var unitNameSize = BitConverter.ToInt32(countBytes);
 
 				var unitNameBytes = new byte[unitNameSize];
-				await file.ReadAsync(unitNameBytes.AsMemory());
+				unitNameBytes = unitNameBytes[..await file.ReadAsync(unitNameBytes.AsMemory())];
 				var unitName = Encoding.UTF8.GetString(unitNameBytes);
 
 				var indexBytes = new byte[sizeof(int)];
-				await file.ReadAsync(indexBytes.AsMemory());
+				indexBytes = indexBytes[..await file.ReadAsync(indexBytes.AsMemory())];
 				var index = BitConverter.ToInt32(indexBytes);
 
 				var sizeBytes = new byte[sizeof(int)];
-				await file.ReadAsync(sizeBytes.AsMemory());
+				sizeBytes = sizeBytes[..await file.ReadAsync(sizeBytes.AsMemory())];
 				var size = BitConverter.ToInt32(sizeBytes);
 
 				var f = GetType().GetField(unitName);
@@ -168,7 +166,7 @@ public abstract class SaveFormat
 				var (index, size) = ((int, int))tup;
 				file.Position = basePos + index;
 				var bytes = new byte[size];
-				await file.ReadAsync(bytes.AsMemory());
+				bytes = bytes[..await file.ReadAsync(bytes.AsMemory())];
 
 				logger.Verbose("Reading {Name}({Type}) containing {Count} bytes from {Index}",
 					f.Name, f.FieldType, size, index);

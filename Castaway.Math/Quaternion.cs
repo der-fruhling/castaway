@@ -8,7 +8,7 @@ public readonly struct Quaternion
 {
 	public readonly double W, X, Y, Z;
 
-	public Vector3 XYZ => new(X, Y, Z);
+	public Vector3 Xyz => new(X, Y, Z);
 
 	public Quaternion(double w, double x, double y, double z)
 	{
@@ -148,8 +148,8 @@ public readonly struct Quaternion
 
 	public static Vector3 operator *(Quaternion a, Vector3 b)
 	{
-		var t = Vector3.Cross(a.XYZ * 2, b);
-		var v = b + t * a.W + Vector3.Cross(a.XYZ, t);
+		var t = Vector3.Cross(a.Xyz * 2, b);
+		var v = b + t * a.W + Vector3.Cross(a.Xyz, t);
 		return v;
 	}
 }

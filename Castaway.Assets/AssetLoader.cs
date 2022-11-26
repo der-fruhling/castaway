@@ -10,23 +10,23 @@ public class AssetLoader
 {
 	public static AssetLoader? Loader;
 
-	private readonly Dictionary<string, (string, IAssetType)> Assets;
+	private readonly Dictionary<string, (string, IAssetType)> _assets;
 
 	public AssetCache Cache = new();
 
 	public AssetLoader()
 	{
-		Assets = new Dictionary<string, (string, IAssetType)>();
+		_assets = new Dictionary<string, (string, IAssetType)>();
 	}
 
 	public Asset GetAssetByName(string name)
 	{
-		return new Asset(name, this, Assets[name].Item2);
+		return new Asset(name, this, _assets[name].Item2);
 	}
 
 	internal byte[] GetBytes(Asset asset)
 	{
-		return File.ReadAllBytes(Assets[asset.Index].Item1);
+		return File.ReadAllBytes(_assets[asset.Index].Item1);
 	}
 
 	private void Discover(string assetPath, string basePath)
@@ -39,7 +39,7 @@ public class AssetLoader
 			var name = file
 				.Remove(file.IndexOf(fullBasePath, StringComparison.Ordinal), fullBasePath.Length)
 				.Replace('\\', '/');
-			Assets[name] = (file, GetAssetType(file));
+			_assets[name] = (file, GetAssetType(file));
 		}
 
 		foreach (var p in Directory.EnumerateDirectories(fullAssetPath)) Discover(p, basePath);

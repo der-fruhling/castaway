@@ -12,20 +12,20 @@ internal static class Program
 {
 	private const string Url = "https://raw.githubusercontent.com/KhronosGroup/OpenGL-Registry/master/xml/gl.xml";
 
-	private static string ExtractNameFromCommand(ILogger log, XmlElement e)
+	private static string ExtractNameFromCommand(XmlElement e)
 	{
 		var proto = e.GetElementsByTagName("proto").Item(0) as XmlElement;
 		var name = proto!.GetElementsByTagName("name").Item(0) as XmlElement;
 		return name!.InnerText;
 	}
 
-	private static void Search(ILogger log, ICollection<string> commands, IDictionary<string, string> constants,
+	private static void Search(ICollection<string> commands, IDictionary<string, string> constants,
 		XmlElement e)
 	{
 		switch (e.Name)
 		{
 			case "command" when e.HasChildNodes:
-				commands.Add(ExtractNameFromCommand(log, e));
+				commands.Add(ExtractNameFromCommand(e));
 				return;
 			case "enum" when e.HasAttribute("value"):
 				var v = e.GetAttribute("value");
@@ -44,7 +44,7 @@ internal static class Program
 		foreach (var n in e.GetElementsByTagName("*"))
 		{
 			var element = n as XmlElement;
-			Search(log, commands, constants, element!);
+			Search(commands, constants, element!);
 		}
 	}
 
@@ -67,7 +67,7 @@ internal static class Program
 		var root = doc.GetElementsByTagName("registry").Item(0) as XmlElement;
 		var commands = new List<string>();
 		var constants = new Dictionary<string, string>();
-		Search(log, commands, constants, root!);
+		Search(commands, constants, root!);
 		log.Debug("Found {Count} commands before filtering", commands.Count);
 		log.Debug("Found {Count} constants before filtering", constants.Count);
 		commands = commands.Distinct().ToList();
