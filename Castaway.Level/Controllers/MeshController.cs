@@ -27,7 +27,7 @@ public class MeshController : Controller
 
 	private Mesh ResolveNormally()
 	{
-		return Asset!.Type.To<Mesh>(Asset);
+		return Asset!.Type.Read<Mesh>(Asset);
 	}
 
 	private Mesh ResolveNormallyAndCache()
