@@ -32,9 +32,9 @@ public static class CastawayGlobal
 	public static double Framerate => 1 / FrameTime;
 	public static double RealFrameTime { get; private set; }
 
-	public static string Version => "2022.1 (pg 2021.07.10.1)";
+	public static string Version => "1.0.0-pre1";
 	public static string Name => "Castaway";
-	public static bool IsPrerelease => true;
+	public static bool IsPrerelease => Version.Contains("-pre");
 
 	public static string[] VisibleModules => AppDomain.CurrentDomain.GetAssemblies()
 		.Where(a => a.GetName().Name!.StartsWith("Castaway"))

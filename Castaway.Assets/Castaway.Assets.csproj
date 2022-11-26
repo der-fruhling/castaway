@@ -6,8 +6,8 @@
         <RootNamespace>Castaway.Assets</RootNamespace>
 
         <!-- Common -->
-        <PackageVersion>2022.1-pg202107141</PackageVersion>
-        <AssemblyVersion>2022.1</AssemblyVersion>
+        <PackageVersion>1.0.0-pre1</PackageVersion>
+        <AssemblyVersion>1.0.0.1</AssemblyVersion>
         <FileVersion>2022.1</FileVersion>
         <TargetFramework>net6.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
