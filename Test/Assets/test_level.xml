@@ -39,9 +39,10 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Box>
+            <Collider.Box/>
+            <Physics>
                 <Mode>Dynamic</Mode>
-            </Collider.Box>
+            </Physics>
         </Controllers>
     </Object>
 
@@ -59,9 +60,10 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Box>
+            <Collider.Box/>
+            <Physics>
                 <Mode>Static</Mode>
-            </Collider.Box>
+            </Physics>
         </Controllers>
     </Object>
 </Level>
