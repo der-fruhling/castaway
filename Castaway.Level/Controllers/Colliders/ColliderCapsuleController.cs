@@ -10,7 +10,7 @@ public class ColliderCapsuleController : Controller, ICollider
 	[LevelSerialized("Mass")] public float Mass = 1f;
 	[LevelSerialized("Radius")] public float Radius = 0.5f;
 
-	private BepuPhysics.Collidables.Capsule Sphere => new(Radius, Length);
+	private Capsule Sphere => new(Radius, Length);
 	public TypedIndex Shape { get; private set; }
 	public BodyInertia Inertia => Sphere.ComputeInertia(Mass);
 
