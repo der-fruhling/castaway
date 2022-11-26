@@ -12,9 +12,7 @@ public class PhysicsController : Controller
 	private Simulation? _simulation;
 
 	public BodyHandle Body;
-	[LevelSerialized("Mass")] public float Mass = 1f;
 	[LevelSerialized("Mode")] public PhysicsMode PhysicsMode = PhysicsMode.Dynamic;
-	[LevelSerialized("Size")] public Vector3 Size = new(1, 1, 1);
 	public StaticHandle Static;
 
 	public override Vector3 Position
