@@ -32,7 +32,7 @@
         <input name="fTextureCoords" type="vec2"/>
 
         <output name="oColor" to="0"/>
-        
+
         <uniform name="uTexture" type="sampler2D"/>
 
         <function name="main"><![CDATA[

@@ -1,7 +1,6 @@
-namespace Castaway.Assets
+namespace Castaway.Assets;
+
+public interface IAssetType
 {
-    public interface IAssetType
-    {
-        T To<T>(Asset a);
-    }
+	T To<T>(Asset a);
 }

@@ -1,7 +1,6 @@
-namespace Castaway.Level.Controllers.Colliders
+namespace Castaway.Level.Controllers.Colliders;
+
+public class ColliderMeshController
 {
-    public class ColliderMeshController
-    {
-        // TODO
-    }
+	// TODO
 }

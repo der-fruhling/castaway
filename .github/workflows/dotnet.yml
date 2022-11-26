@@ -31,7 +31,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -63,7 +63,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -79,7 +79,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -95,14 +95,14 @@ jobs:
         uses: actions/setup-dotnet@v1
         if: github.event.inputs.allow-publish == 'true'
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
       - name: Download
         uses: actions/download-artifact@v2
         with:
           name: packages
       - name: List
         if: github.event.inputs.allow-publish != 'true'
-        run: ls -Rla
+        run: ls -Rla | grep .nupkg
       - name: Publish
         if: github.event.inputs.allow-publish == 'true'
         run: |

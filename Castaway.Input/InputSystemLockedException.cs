@@ -1,8 +1,7 @@
 using System;
 
-namespace Castaway.Input
+namespace Castaway.Input;
+
+public class InputSystemLockedException : Exception
 {
-    public class InputSystemLockedException : Exception
-    {
-    }
 }

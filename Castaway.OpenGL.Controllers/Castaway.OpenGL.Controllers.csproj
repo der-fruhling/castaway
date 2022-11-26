@@ -5,10 +5,10 @@
         <PackageId>Castaway.OpenGL.Controllers</PackageId>
 
         <!-- Common -->
-        <PackageVersion>2022.1-pg202107141</PackageVersion>
-        <AssemblyVersion>2022.1</AssemblyVersion>
+        <PackageVersion>1.0.0-pre1</PackageVersion>
+        <AssemblyVersion>1.0.0.1</AssemblyVersion>
         <FileVersion>2022.1</FileVersion>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Liam Cole</Authors>
@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
-      <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj" />
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj"/>
+        <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj"/>
     </ItemGroup>
 
 </Project>

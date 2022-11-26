@@ -6,10 +6,10 @@
         <RootNamespace>Castaway.Input</RootNamespace>
 
         <!-- Common -->
-        <PackageVersion>2022.1-pg202107141</PackageVersion>
-        <AssemblyVersion>2022.1</AssemblyVersion>
+        <PackageVersion>1.0.0-pre1</PackageVersion>
+        <AssemblyVersion>1.0.0.1</AssemblyVersion>
         <FileVersion>2022.1</FileVersion>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Liam Cole</Authors>
@@ -22,13 +22,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj"/>
+        <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="glfw-net" Version="3.3.1" />
+        <PackageReference Include="OpenTK.Windowing.GraphicsLibraryFramework" Version="4.7.5"/>
     </ItemGroup>
 
 </Project>

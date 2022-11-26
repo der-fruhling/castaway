@@ -1,8 +1,7 @@
-namespace Castaway.Level.Controllers.Colliders
+namespace Castaway.Level.Controllers.Colliders;
+
+public enum PhysicsMode
 {
-    public enum PhysicsMode
-    {
-        Dynamic,
-        Static
-    }
+	Dynamic,
+	Static
 }

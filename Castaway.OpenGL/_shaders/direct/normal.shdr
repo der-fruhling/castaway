@@ -6,12 +6,12 @@
 <shader>
     <vertex>
         <glsl order="Version">#version 150 core</glsl>
-        
+
         <input name="vPosition" from="PositionXYZ"/>
         <input name="vColor" from="ColorRGB"/>
-        
+
         <output name="fColor" type="vec3"/>
-        
+
         <function name="main"><![CDATA[
             void main() {
                 gl_Position = vec4(vPosition, 1);
@@ -19,14 +19,14 @@
             }
         ]]></function>
     </vertex>
-    
+
     <fragment>
         <glsl order="Version">#version 150 core</glsl>
-        
+
         <input name="fColor" type="vec3"/>
-        
+
         <output name="oColor" to="0"/>
-        
+
         <function name="main"><![CDATA[
             void main() {
                 oColor = vec4(fColor, 1);

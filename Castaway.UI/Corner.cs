@@ -1,10 +1,9 @@
-namespace Castaway.UI
+namespace Castaway.UI;
+
+public enum Corner
 {
-    public enum Corner
-    {
-        TopLeft,
-        BottomLeft,
-        TopRight,
-        BottomRight
-    }
+	TopLeft,
+	BottomLeft,
+	TopRight,
+	BottomRight
 }

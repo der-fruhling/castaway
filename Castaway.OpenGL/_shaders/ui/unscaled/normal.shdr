@@ -11,8 +11,8 @@
         <input name="vColor" from="ColorRGB"/>
 
         <output name="fColor" type="vec3"/>
-        
-        <uniform name="uFramebufferSize" type="ivec2" from="FramebufferSize"/> 
+
+        <uniform name="uFramebufferSize" type="ivec2" from="FramebufferSize"/>
 
         <function name="main"><![CDATA[
             void main() {
