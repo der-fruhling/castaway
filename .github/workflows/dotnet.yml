@@ -102,7 +102,7 @@ jobs:
           name: packages
       - name: List
         if: github.event.inputs.allow-publish != 'true'
-        run: ls -Rla
+        run: ls -Rla | grep .nupkg
       - name: Publish
         if: github.event.inputs.allow-publish == 'true'
         run: |
