@@ -4,8 +4,9 @@ using System.Linq;
 using Castaway.Base;
 using Castaway.Math;
 using Castaway.Rendering;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
+using Window = OpenTK.Windowing.GraphicsLibraryFramework.Window;
 
 namespace Castaway.Input;
 
@@ -14,19 +15,20 @@ public class MouseInputSystem
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
 	private readonly Dictionary<MouseButton, ButtonState> _buttons = new();
-	private readonly MouseButtonCallback _mouseButtonCallback;
-	private readonly MouseEnterCallback _mouseEnterCallback;
+	private readonly GLFWCallbacks.MouseButtonCallback _mouseButtonCallback;
+	private readonly GLFWCallbacks.CursorEnterCallback _mouseEnterCallback;
 
 	private Vector2 _lastCursorPos;
 
 	private bool _rawInput, _fakeRaw;
 
-	public float PositionScale = 1.0f;
-
 	public MouseInputSystem()
 	{
-		_mouseButtonCallback = MouseButtonCallback;
-		_mouseEnterCallback = MouseEnterCallback;
+		unsafe
+		{
+			_mouseButtonCallback = MouseButtonCallback;
+			_mouseEnterCallback = MouseEnterCallback;
+		}
 	}
 
 	public bool RawInput
@@ -34,19 +36,23 @@ public class MouseInputSystem
 		get => _rawInput;
 		set
 		{
-			_rawInput = value;
-			var w = Graphics.Current.Window!.Native;
+			unsafe
+			{
+				_rawInput = value;
+				var w = GLFW.GetCurrentContext();
 
-			Glfw.GetWindowSize(w, out var wid, out var hei);
-			CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
-			_lastCursorPos = CursorPosition;
+				GLFW.GetWindowSize(w, out var wid, out var hei);
+				CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
+				_lastCursorPos = CursorPosition;
 
-			if (Glfw.RawMouseMotionSupported())
-				Glfw.SetInputMode(w, InputMode.RawMouseMotion, 1);
-			else
-				_fakeRaw = true;
+				if (GLFW.RawMouseMotionSupported())
+					GLFW.SetInputMode(w, RawMouseMotionAttribute.RawMouseMotion, value);
+				else
+					_fakeRaw = value;
 
-			Glfw.SetInputMode(w, InputMode.Cursor, (int)(value ? CursorMode.Disabled : CursorMode.Normal));
+				GLFW.SetInputMode(w, CursorStateAttribute.Cursor,
+					value ? CursorModeValue.CursorDisabled : CursorModeValue.CursorNormal);
+			}
 		}
 	}
 
@@ -54,13 +60,16 @@ public class MouseInputSystem
 	{
 		get
 		{
-			var v = CursorPosition - _lastCursorPos;
+			unsafe
+			{
+				var v = CursorPosition - _lastCursorPos;
 
-			if (!_fakeRaw) return v;
-			Glfw.GetWindowSize(Glfw.CurrentContext, out var wid, out var hei);
-			CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
+				if (!_fakeRaw) return v;
+				GLFW.GetWindowSize(GLFW.GetCurrentContext(), out var wid, out var hei);
+				CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
 
-			return v;
+				return v;
+			}
 		}
 	}
 
@@ -68,14 +77,21 @@ public class MouseInputSystem
 	{
 		get
 		{
-			var window = Graphics.BoundWindows.Single().Native;
-			Glfw.GetCursorPosition(window, out var x, out var y);
-			return new Vector2(x, y) / PositionScale;
+			unsafe
+			{
+				var window = Graphics.BoundWindows.Single().Native;
+				GLFW.GetCursorPos(window, out var x, out var y);
+				return new Vector2(x, y);
+			}
 		}
+
 		set
 		{
-			var window = Graphics.BoundWindows.Single().Native;
-			Glfw.SetCursorPosition(window, value.X, value.Y);
+			unsafe
+			{
+				var window = Graphics.BoundWindows.Single().Native;
+				GLFW.SetCursorPos(window, value.X, value.Y);
+			}
 		}
 	}
 
@@ -88,10 +104,13 @@ public class MouseInputSystem
 
 	public void Init()
 	{
-		var w = Graphics.Current.Window!.Native;
-		Glfw.SetMouseButtonCallback(w, _mouseButtonCallback);
-		Glfw.SetCursorEnterCallback(w, _mouseEnterCallback);
-		_lastCursorPos = CursorPosition;
+		unsafe
+		{
+			var w = Graphics.Current.Window!.Native;
+			GLFW.SetMouseButtonCallback(w, _mouseButtonCallback);
+			GLFW.SetCursorEnterCallback(w, _mouseEnterCallback);
+			_lastCursorPos = CursorPosition;
+		}
 	}
 
 	public void Clear()
@@ -148,12 +167,12 @@ public class MouseInputSystem
 		return IsOver((float)a.X, (float)a.Y, (float)b.X, (float)b.Y);
 	}
 
-	private void MouseButtonCallback(IntPtr window, MouseButton button, InputState state, ModifierKeys modifiers)
+	private unsafe void MouseButtonCallback(Window* window, MouseButton button, InputAction state,
+		KeyModifiers modifiers)
 	{
-		if (state == InputState.Repeat) return;
 		switch (state)
 		{
-			case InputState.Press:
+			case InputAction.Press:
 				if (!_buttons.ContainsKey(button))
 				{
 					_buttons[button] = ButtonState.Down | ButtonState.JustPressed;
@@ -167,7 +186,7 @@ public class MouseInputSystem
 				}
 
 				break;
-			case InputState.Release:
+			case InputAction.Release:
 				if (!_buttons.ContainsKey(button))
 				{
 					_buttons[button] = ButtonState.Up | ButtonState.JustReleased;
@@ -181,6 +200,8 @@ public class MouseInputSystem
 				}
 
 				break;
+			case InputAction.Repeat:
+				return;
 			default:
 				throw new ArgumentOutOfRangeException(nameof(state), state, null);
 		}
@@ -189,7 +210,7 @@ public class MouseInputSystem
 			_buttons[button], CursorPosition);
 	}
 
-	private void MouseEnterCallback(IntPtr window, bool entering)
+	private unsafe void MouseEnterCallback(Window* window, bool entering)
 	{
 		IsOverWindow = entering;
 		Logger.Verbose("Mouse is over window = {Value}", entering);

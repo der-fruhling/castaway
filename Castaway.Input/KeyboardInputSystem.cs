@@ -2,20 +2,24 @@ using System;
 using System.Collections.Generic;
 using Castaway.Base;
 using Castaway.Rendering;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
+using Window = OpenTK.Windowing.GraphicsLibraryFramework.Window;
 
 namespace Castaway.Input;
 
 public class KeyboardInputSystem
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-	private readonly KeyCallback _callback;
+	private readonly GLFWCallbacks.KeyCallback _callback;
 	private readonly Dictionary<Keys, ButtonState> _keys = new();
 
 	internal KeyboardInputSystem()
 	{
-		_callback = ReactKeyCallback;
+		unsafe
+		{
+			_callback = ReactKeyCallback;
+		}
 	}
 
 	private ButtonState this[Keys key] => _keys.GetValueOrDefault(key, ButtonState.Up | ButtonState.NeverPressed);
@@ -23,8 +27,11 @@ public class KeyboardInputSystem
 
 	public void Init()
 	{
-		var window = Graphics.Current.Window!.Native;
-		Glfw.SetKeyCallback(window, _callback);
+		unsafe
+		{
+			var window = Graphics.Current.Window!.Native;
+			GLFW.SetKeyCallback(window, _callback);
+		}
 	}
 
 	public void Clear()
@@ -66,12 +73,11 @@ public class KeyboardInputSystem
 		_keys[key] |= ButtonState.NeverPressed;
 	}
 
-	private void ReactKeyCallback(IntPtr ptr, Keys key, int code, InputState state, ModifierKeys mods)
+	private unsafe void ReactKeyCallback(Window* ptr, Keys key, int code, InputAction state, KeyModifiers mods)
 	{
-		if (state == InputState.Repeat) return;
 		switch (state)
 		{
-			case InputState.Press:
+			case InputAction.Press:
 				if (!_keys.ContainsKey(key))
 				{
 					_keys[key] = ButtonState.Down | ButtonState.JustPressed;
@@ -85,7 +91,7 @@ public class KeyboardInputSystem
 				}
 
 				break;
-			case InputState.Release:
+			case InputAction.Release:
 				if (!_keys.ContainsKey(key))
 				{
 					_keys[key] = ButtonState.Up | ButtonState.JustReleased;
@@ -99,6 +105,8 @@ public class KeyboardInputSystem
 				}
 
 				break;
+			case InputAction.Repeat:
+				return;
 			default:
 				throw new ArgumentOutOfRangeException(nameof(state), state, null);
 		}

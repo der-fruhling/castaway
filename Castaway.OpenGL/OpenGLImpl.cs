@@ -9,9 +9,9 @@ using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Shaders;
 using Castaway.Rendering.Structures;
-using GLFW;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
 using BufferTarget = OpenTK.Graphics.OpenGL.BufferTarget;
 using CBufferTarget = Castaway.Rendering.BufferTarget;
@@ -160,7 +160,7 @@ public class OpenGLImpl : Graphics
 	{
 		BindWindow();
 		_stopwatch.Restart();
-		Glfw.PollEvents();
+		GLFW.PollEvents();
 		if (InputSystem.Keyboard.WasJustPressed(Keys.F11))
 			Window!.Fullscreen = !Window!.Fullscreen;
 		Clear();
@@ -443,7 +443,7 @@ public class OpenGLImpl : Graphics
 	{
 		public IntPtr GetProcAddress(string procName)
 		{
-			return Glfw.GetProcAddress(procName);
+			return GLFW.GetProcAddress(procName);
 		}
 	}
 }

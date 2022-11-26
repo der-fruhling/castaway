@@ -7,7 +7,7 @@ using Castaway.Math;
 using Castaway.OpenGL;
 using Castaway.OpenGL.Controllers;
 using Castaway.Rendering;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Window = Castaway.Rendering.Window;
 
 namespace Test;
@@ -15,9 +15,8 @@ namespace Test;
 [Imports(typeof(OpenGLImpl), typeof(ShaderController))]
 internal class Program : IApplication
 {
-	private Level? _level;
-
 	private readonly Stopwatch _stopwatch = new();
+	private Level? _level;
 
 	private Window? _window;
 #pragma warning disable 649

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Castaway.Base;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
 
 namespace Castaway.Rendering;
@@ -57,9 +57,13 @@ public class ImplFinder
 
 	public static async Task<Graphics?> FindOptimalImplementation(Window window)
 	{
-		var v = Glfw.GetContextVersion(window.Native);
-		var major = v.Major;
-		var minor = v.Minor;
+		int major, minor;
+
+		unsafe
+		{
+			major = GLFW.GetWindowAttrib(window.Native, WindowAttributeGetInt.ContextVersionMajor);
+			minor = GLFW.GetWindowAttrib(window.Native, WindowAttributeGetInt.ContextVersionMinor);
+		}
 
 		if (Supports(major, minor, 4, 2)) return await Find("OpenGL-4.2");
 		if (Supports(major, minor, 4, 1)) return await Find("OpenGL-4.1");

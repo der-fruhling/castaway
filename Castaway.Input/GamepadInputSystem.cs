@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Castaway.Base;
 using Castaway.Math;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
 
 namespace Castaway.Input;
@@ -11,7 +11,7 @@ namespace Castaway.Input;
 public class GamepadInputSystem
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-	private readonly JoystickCallback _joystickCallback;
+	private readonly GLFWCallbacks.JoystickCallback _joystickCallback;
 
 	private int _active;
 	private GamepadTypeImpl? _impl;
@@ -22,7 +22,7 @@ public class GamepadInputSystem
 		_joystickCallback = JoystickCallback;
 	}
 
-	public List<Joystick> Available { get; } = new();
+	public List<int> Available { get; } = new();
 	public bool Valid => _impl != null;
 
 	public int Active
@@ -43,8 +43,8 @@ public class GamepadInputSystem
 	{
 		get
 		{
-			var ptr = Glfw.GetJoystickUserPointer(Active);
-			return ptr == IntPtr.Zero ? null : (GamepadProperties*)ptr;
+			var ptr = GLFW.GetJoystickUserPointer(Active);
+			return ptr == null ? null : (GamepadProperties*)ptr;
 		}
 
 		set
@@ -82,15 +82,15 @@ public class GamepadInputSystem
 
 	public void Init()
 	{
-		Glfw.SetJoystickCallback(_joystickCallback);
-		if (!Glfw.JoystickIsGamepad(Active)) return;
+		GLFW.SetJoystickCallback(_joystickCallback);
+		if (!GLFW.JoystickIsGamepad(Active)) return;
 		unsafe
 		{
 			var data = Marshal.AllocHGlobal(sizeof(GamepadProperties));
 			var p = (GamepadProperties*)data;
 			p->Locked = false;
 			p->Type = GamepadType.Generic;
-			Glfw.SetJoystickUserPointer(Active, data);
+			GLFW.SetJoystickUserPointer(Active, p);
 			Refresh(Properties);
 		}
 	}
@@ -114,34 +114,36 @@ public class GamepadInputSystem
 		};
 	}
 
-	private void JoystickCallback(Joystick joystick, ConnectionStatus status)
+	private void JoystickCallback(int joystick, ConnectedState state)
 	{
-		switch (status)
+		switch (state)
 		{
-			case ConnectionStatus.Connected:
+			case ConnectedState.Connected:
 				unsafe
 				{
 					var data = Marshal.AllocHGlobal(sizeof(GamepadProperties));
 					var p = (GamepadProperties*)data;
 					p->Locked = false;
 					p->Type = GamepadType.Generic;
-					Glfw.SetJoystickUserPointer((int)joystick, data);
+					GLFW.SetJoystickUserPointer(joystick, p);
 				}
 
 				Available.Add(joystick);
-				Active = (int)joystick;
-				Logger.Information("Connected gamepad {ID}", (int)joystick);
+				Active = joystick;
+				Logger.Information("Connected gamepad {ID}", joystick);
 				break;
-			case ConnectionStatus.Disconnected:
-				Available.Remove(joystick);
-				var ptr = Glfw.GetJoystickUserPointer((int)joystick);
-				Marshal.FreeHGlobal(ptr);
-				Logger.Information("Disconnected gamepad {ID}", (int)joystick);
-				break;
-			case ConnectionStatus.Unknown:
-				break;
+			case ConnectedState.Disconnected:
+				unsafe
+				{
+					Available.Remove(joystick);
+					var ptr = GLFW.GetJoystickUserPointer(joystick);
+					Marshal.FreeHGlobal((IntPtr)ptr);
+					Logger.Information("Disconnected gamepad {ID}", joystick);
+					break;
+				}
+
 			default:
-				throw new ArgumentOutOfRangeException(nameof(status), status, null);
+				throw new ArgumentOutOfRangeException(nameof(state), state, null);
 		}
 	}
 

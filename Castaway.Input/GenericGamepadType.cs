@@ -1,12 +1,39 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Castaway.Math;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Castaway.Input;
 
 internal class GenericGamepadType : GamepadTypeImpl
 {
-	private GamePadState _state;
+	private const int
+		AxisLeftX = 0,
+		AxisLeftY = 1,
+		AxisRightX = 2,
+		AxisRightY = 3,
+		AxisLeftTrigger = 4,
+		AxisRightTrigger = 5;
+
+	private const int
+		ButtonA = 0,
+		ButtonB = 1,
+		ButtonX = 2,
+		ButtonY = 3,
+		ButtonLeftBumper = 4,
+		ButtonRightBumper = 5,
+		ButtonSelect = 6,
+		ButtonStart = 7,
+		ButtonGuide = 8,
+		ButtonLeftStick = 9,
+		ButtonRightStick = 10,
+		ButtonDUp = 11,
+		ButtonDRight = 12,
+		ButtonDDown = 13,
+		ButtonDLeft = 14;
+
+	private float[] _axes = new float[6];
+	private bool[] _buttons = new bool[15];
 
 	public GenericGamepadType(params int[] joysticks) : base(joysticks)
 	{
@@ -15,33 +42,39 @@ internal class GenericGamepadType : GamepadTypeImpl
 	protected override float DeadZone => 0.05f;
 
 	public override Vector2 LeftStick =>
-		new(ApplyDeadZone(_state.GetAxis(GamePadAxis.LeftX)), ApplyDeadZone(_state.GetAxis(GamePadAxis.LeftY)));
+		new(ApplyDeadZone(_axes[AxisLeftX]), ApplyDeadZone(_axes[AxisLeftY]));
 
 	public override Vector2 RightStick =>
-		new(ApplyDeadZone(_state.GetAxis(GamePadAxis.RightX)), ApplyDeadZone(_state.GetAxis(GamePadAxis.RightY)));
+		new(ApplyDeadZone(_axes[AxisRightX]), ApplyDeadZone(_axes[AxisRightY]));
 
-	public override float LeftTrigger => (_state.GetAxis(GamePadAxis.LeftTrigger) + 1f) / 2f;
-	public override float RightTrigger => (_state.GetAxis(GamePadAxis.RightTrigger) + 1f) / 2f;
-	public override bool LeftBumper => _state.GetButtonState(GamePadButton.LeftBumper) == InputState.Press;
-	public override bool RightBumper => _state.GetButtonState(GamePadButton.RightBumper) == InputState.Press;
-	public override bool LeftStickPress => _state.GetButtonState(GamePadButton.LeftThumb) == InputState.Press;
-	public override bool RightStickPress => _state.GetButtonState(GamePadButton.RightThumb) == InputState.Press;
-	public override bool A => _state.GetButtonState(GamePadButton.A) == InputState.Press;
-	public override bool B => _state.GetButtonState(GamePadButton.B) == InputState.Press;
-	public override bool X => _state.GetButtonState(GamePadButton.X) == InputState.Press;
-	public override bool Y => _state.GetButtonState(GamePadButton.Y) == InputState.Press;
-	public override bool Up => _state.GetButtonState(GamePadButton.DpadUp) == InputState.Press;
-	public override bool Down => _state.GetButtonState(GamePadButton.DpadDown) == InputState.Press;
-	public override bool Left => _state.GetButtonState(GamePadButton.DpadLeft) == InputState.Press;
-	public override bool Right => _state.GetButtonState(GamePadButton.DpadRight) == InputState.Press;
-	public override bool Select => _state.GetButtonState(GamePadButton.Back) == InputState.Press;
-	public override bool Start => _state.GetButtonState(GamePadButton.Start) == InputState.Press;
+	public override float LeftTrigger => (_axes[AxisLeftTrigger] + 1f) / 2f;
+	public override float RightTrigger => (_axes[AxisRightTrigger] + 1f) / 2f;
+	public override bool LeftBumper => _buttons[ButtonLeftBumper];
+	public override bool RightBumper => _buttons[ButtonRightBumper];
+	public override bool LeftStickPress => _buttons[ButtonLeftStick];
+	public override bool RightStickPress => _buttons[ButtonRightStick];
+	public override bool A => _buttons[ButtonA];
+	public override bool B => _buttons[ButtonB];
+	public override bool X => _buttons[ButtonX];
+	public override bool Y => _buttons[ButtonY];
+	public override bool Up => _buttons[ButtonDUp];
+	public override bool Down => _buttons[ButtonDDown];
+	public override bool Left => _buttons[ButtonDLeft];
+	public override bool Right => _buttons[ButtonDRight];
+	public override bool Select => _buttons[ButtonSelect];
+	public override bool Start => _buttons[ButtonStart];
 
 	internal override void Read()
 	{
-		if (!Glfw.JoystickIsGamepad(Joysticks[0]))
+		if (!GLFW.JoystickIsGamepad(Joysticks[0]))
 			throw new InvalidOperationException($"Joystick {Joysticks[0]} is not a gamepad.");
-		if (!Glfw.GetGamepadState(Joysticks[0], out _state))
+		if (!GLFW.GetGamepadState(Joysticks[0], out var state))
 			throw new InvalidOperationException("Failed to get gamepad state.");
+
+		unsafe
+		{
+			Marshal.Copy((IntPtr)state.Axes, _axes, 0, 6);
+			for (var i = 0; i < 15; i++) _buttons[i] = state.Buttons[i] > 0;
+		}
 	}
 }

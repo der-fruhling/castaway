@@ -5,7 +5,7 @@ using Castaway.Input;
 using Castaway.Math;
 using Castaway.Rendering;
 using Castaway.Rendering.Structures;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Serilog;
 
 namespace Castaway.UI;

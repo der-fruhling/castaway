@@ -2,7 +2,7 @@ using System;
 using Castaway.Input;
 using Castaway.Math;
 using Castaway.Rendering;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Castaway.Level.Controllers;
 

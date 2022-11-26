@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using GLFW;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Castaway.OpenGL.Native;
 
@@ -16,7 +16,7 @@ public static unsafe partial class GL
 	private static IntPtr Load(GLF f)
 	{
 		return !Fn.ContainsKey(f) || Fn[f] == IntPtr.Zero
-			? Fn[f] = Glfw.GetProcAddress(Enum.GetName(f))
+			? Fn[f] = GLFW.GetProcAddress(Enum.GetName(f))
 			: Fn[f];
 	}
 
