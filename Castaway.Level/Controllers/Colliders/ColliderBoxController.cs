@@ -80,7 +80,7 @@ public class ColliderBoxController : Controller
 		base.OnInit(parent);
 		var sim = parent.Level.PhysicsSimulation;
 		var shape = new Box((float)Size.X, (float)Size.Y, (float)Size.Z);
-		shape.ComputeInertia(Mass, out var inertia);
+		var inertia = shape.ComputeInertia(Mass);
 		Shape = sim.Shapes.Add(shape);
 		var pos = parent.Position;
 		switch (PhysicsMode)
@@ -104,12 +104,13 @@ public class ColliderBoxController : Controller
 			{
 				var desc = new StaticDescription(
 					new System.Numerics.Vector3((float)pos.X, (float)pos.Y, (float)pos.Z),
-					new CollidableDescription(Shape, 0.1f));
-				desc.Pose.Orientation = new System.Numerics.Quaternion(
-					(float)parent.Rotation.X,
-					(float)parent.Rotation.Y,
-					(float)parent.Rotation.Z,
-					(float)parent.Rotation.W);
+					new System.Numerics.Quaternion(
+						(float)parent.Rotation.X,
+						(float)parent.Rotation.Y,
+						(float)parent.Rotation.Z,
+						(float)parent.Rotation.W),
+					Shape,
+					ContinuousDetection.Passive);
 				Static = sim.Statics.Add(desc);
 				break;
 			}

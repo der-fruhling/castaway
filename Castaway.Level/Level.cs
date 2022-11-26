@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using BepuPhysics;
+using BepuUtilities;
 using BepuUtilities.Memory;
 using Castaway.Assets;
 using Castaway.Level.Controllers;
@@ -20,7 +21,8 @@ namespace Castaway.Level;
 
 public class Level : IDisposable
 {
-	private readonly SimpleThreadDispatcher _dispatcher = new(Environment.ProcessorCount);
+	private readonly BufferPool _bufferPool = new();
+	private readonly ThreadDispatcher _dispatcher = new(Environment.ProcessorCount);
 	private readonly List<LevelObject> _objects = new();
 
 	public uint ActiveCamera = 0;
@@ -29,10 +31,10 @@ public class Level : IDisposable
 	public Level()
 	{
 		PhysicsSimulation = Simulation.Create(
-			new BufferPool(),
+			_bufferPool,
 			new NarrowPhase(),
 			new PoseIntegrator(new Vector3(0, -10, 0)),
-			new PositionLastTimestepper());
+			new SolveDescription(8, 1));
 	}
 
 	public Level(Asset asset) : this()
@@ -60,10 +62,9 @@ public class Level : IDisposable
 
 	public void Dispose()
 	{
-		var buf = PhysicsSimulation.BufferPool;
 		PhysicsSimulation.Dispose();
 		_dispatcher.Dispose();
-		buf?.Clear();
+		_bufferPool.Clear();
 	}
 
 	private LevelObject ParseObject(XmlElement e)

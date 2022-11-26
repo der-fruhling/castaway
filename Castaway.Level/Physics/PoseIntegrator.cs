@@ -9,10 +9,13 @@ public struct PoseIntegrator : IPoseIntegratorCallbacks
 {
 	public Vector3 Gravity;
 	public float LinearDamping, AngularDamping;
-	public AngularIntegrationMode AngularIntegrationMode => AngularIntegrationMode.Nonconserving;
 
-	private Vector3 _gravityDt;
-	private float _linearDampingDt, _angularDampingDt;
+	public AngularIntegrationMode AngularIntegrationMode => AngularIntegrationMode.ConserveMomentum;
+	public bool AllowSubstepsForUnconstrainedBodies => false;
+	public bool IntegrateVelocityForKinematics => false;
+
+	private Vector3Wide _gravityDt;
+	private Vector<float> _linearDampingDt, _angularDampingDt;
 
 	public PoseIntegrator(Vector3 gravity, float linearDamping = .03f, float angularDamping = .03f) : this()
 	{
@@ -27,18 +30,16 @@ public struct PoseIntegrator : IPoseIntegratorCallbacks
 
 	public void PrepareForIntegration(float dt)
 	{
-		_gravityDt = Gravity * dt;
-		_linearDampingDt = MathF.Pow(MathHelper.Clamp(1 - LinearDamping, 0, 1), dt);
-		_angularDampingDt = MathF.Pow(MathHelper.Clamp(1 - AngularDamping, 0, 1), dt);
+		_gravityDt = Vector3Wide.Broadcast(Gravity * dt);
+		_linearDampingDt = new Vector<float>(MathF.Pow(MathHelper.Clamp(1 - LinearDamping, 0, 1), dt));
+		_angularDampingDt = new Vector<float>(MathF.Pow(MathHelper.Clamp(1 - AngularDamping, 0, 1), dt));
 	}
 
-	public void IntegrateVelocity(int bodyIndex, in RigidPose pose, in BodyInertia localInertia, int workerIndex,
-		ref BodyVelocity velocity)
+	public void IntegrateVelocity(Vector<int> bodyIndices, Vector3Wide position, QuaternionWide orientation,
+		BodyInertiaWide localInertia, Vector<int> integrationMask, int workerIndex, Vector<float> dt,
+		ref BodyVelocityWide velocity)
 	{
-		if (localInertia.InverseMass > 0)
-		{
-			velocity.Linear = (velocity.Linear + _gravityDt) * _linearDampingDt;
-			velocity.Angular = velocity.Angular * _angularDampingDt;
-		}
+		velocity.Linear = (velocity.Linear + _gravityDt) * _linearDampingDt;
+		velocity.Angular *= _angularDampingDt;
 	}
 }
