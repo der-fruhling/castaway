@@ -97,13 +97,21 @@ public class Level : IDisposable
 			var n = on as XmlNode;
 			try
 			{
-				var f = t.GetFields().Single(field =>
+				var memberInfo = t.GetFields().Concat<MemberInfo>(t.GetProperties()).Single(m =>
 				{
-					var a = field.GetCustomAttribute<LevelSerializedAttribute>();
+					var a = m.GetCustomAttribute<LevelSerializedAttribute>();
 					if (a == null) return false;
 					return a.Name == n!.Name;
 				});
-				f.SetValue(inst, Load(f.FieldType, n!.InnerText));
+				switch (memberInfo)
+				{
+					case FieldInfo fieldInfo:
+						fieldInfo.SetValue(inst, Load(fieldInfo.FieldType, n!.InnerText));
+						break;
+					case PropertyInfo propertyInfo:
+						propertyInfo.SetValue(inst, Load(propertyInfo.PropertyType, n!.InnerText));
+						break;
+				}
 			}
 			catch (InvalidOperationException exc)
 			{
