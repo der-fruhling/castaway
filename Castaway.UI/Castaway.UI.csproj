@@ -22,9 +22,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Input\Castaway.Input.csproj"/>
+        <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj"/>
     </ItemGroup>
 
 </Project>

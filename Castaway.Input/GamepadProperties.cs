@@ -2,6 +2,6 @@
 
 public struct GamepadProperties
 {
-    public bool Locked;
-    public GamepadType Type;
+	public bool Locked;
+	public GamepadType Type;
 }

@@ -5,10 +5,10 @@ namespace Castaway.Assets;
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class LoadsAttribute : Attribute
 {
-    public string[] Extensions;
+	public string[] Extensions;
 
-    public LoadsAttribute(params string[] extensions)
-    {
-        Extensions = extensions;
-    }
+	public LoadsAttribute(params string[] extensions)
+	{
+		Extensions = extensions;
+	}
 }

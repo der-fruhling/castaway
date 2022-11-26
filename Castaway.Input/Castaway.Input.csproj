@@ -22,13 +22,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj" />
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj"/>
+        <ProjectReference Include="..\Castaway.Rendering\Castaway.Rendering.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="glfw-net" Version="3.3.1" />
+        <PackageReference Include="glfw-net" Version="3.3.1"/>
     </ItemGroup>
 
 </Project>

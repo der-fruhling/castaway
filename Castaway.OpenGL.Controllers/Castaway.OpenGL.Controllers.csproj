@@ -21,9 +21,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj" />
-      <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj" />
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj"/>
+        <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj"/>
     </ItemGroup>
 
 </Project>

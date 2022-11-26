@@ -9,11 +9,11 @@ namespace Castaway.Components;
 [AttributeUsage(Assembly)]
 public class IncludedComponentAttribute : Attribute
 {
-    public string Id, ReadableName;
+	public string Id, ReadableName;
 
-    public IncludedComponentAttribute(string id, string readableName)
-    {
-        Id = id;
-        ReadableName = readableName;
-    }
+	public IncludedComponentAttribute(string id, string readableName)
+	{
+		Id = id;
+		ReadableName = readableName;
+	}
 }

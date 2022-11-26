@@ -2,5 +2,5 @@
 
 public enum GamepadType
 {
-    Generic
+	Generic
 }

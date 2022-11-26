@@ -11,19 +11,19 @@
             <GenericPlayer/>
         </Controllers>
     </Object>
-    
+
     <Object>
         <Name>Light</Name>
-        
+
         <Position>0,0,-2</Position>
-        
+
         <Controllers>
             <Light>
                 <Type>Point</Type>
             </Light>
         </Controllers>
     </Object>
-    
+
     <Object>
         <Name>Object 1</Name>
 

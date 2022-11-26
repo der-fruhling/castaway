@@ -22,14 +22,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj" />
-      <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj" />
-      <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj" />
-      <ProjectReference Include="..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj" />
+        <ProjectReference Include="..\Castaway.Assets\Castaway.Assets.csproj"/>
+        <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
+        <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj"/>
+        <ProjectReference Include="..\Castaway.OpenGL.Native\Castaway.OpenGL.Native.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
     </ItemGroup>
 
 </Project>

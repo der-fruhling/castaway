@@ -5,8 +5,8 @@ namespace Castaway.Components;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public enum VersionStream
 {
-    None,
-    RL,
-    PR,
-    PG
+	None,
+	RL,
+	PR,
+	PG
 }

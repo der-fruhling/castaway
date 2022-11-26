@@ -5,10 +5,10 @@ namespace Castaway.Level;
 [AttributeUsage(AttributeTargets.Field)]
 public class LevelSerializedAttribute : Attribute
 {
-    public string Name;
+	public string Name;
 
-    public LevelSerializedAttribute(string name)
-    {
-        Name = name;
-    }
+	public LevelSerializedAttribute(string name)
+	{
+		Name = name;
+	}
 }

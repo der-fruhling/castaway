@@ -5,10 +5,10 @@ namespace Castaway.Rendering;
 [AttributeUsage(AttributeTargets.Class)]
 public class ImplementsAttribute : Attribute
 {
-    public string Name;
+	public string Name;
 
-    public ImplementsAttribute(string name)
-    {
-        Name = name;
-    }
+	public ImplementsAttribute(string name)
+	{
+		Name = name;
+	}
 }

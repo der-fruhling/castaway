@@ -2,6 +2,6 @@
 
 public enum ShaderStage
 {
-    Vertex,
-    Fragment
+	Vertex,
+	Fragment
 }

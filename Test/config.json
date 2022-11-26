@@ -1,6 +1,8 @@
 {
   "assets": {
-    "discover": ["Assets"]
+    "discover": [
+      "Assets"
+    ]
   },
   "log": {
     "level": "debug"
