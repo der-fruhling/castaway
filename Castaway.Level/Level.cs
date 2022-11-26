@@ -39,7 +39,7 @@ public class Level : IDisposable
 
 	public Level(Asset asset) : this()
 	{
-		var doc = asset.Type.To<XmlDocument>(asset);
+		var doc = asset.Type.Read<XmlDocument>(asset);
 		var root = doc.DocumentElement;
 
 		var node = root!.FirstChild;

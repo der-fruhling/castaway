@@ -62,7 +62,7 @@ internal class BuiltinShaders : IShaderProvider
 		var asm = Assembly.GetExecutingAssembly();
 		using var stream = asm.GetManifestResourceStream($"Castaway.OpenGL._shaders.{path}");
 		var reader = new StreamReader(stream!);
-		return ShaderAssetType.LoadOpenGL(reader.ReadToEnd(),
+		return ShaderAssetType.LoadOpenGl(reader.ReadToEnd(),
 			$"manifest:Castaway.OpenGL:Castaway.OpenGL._shaders.{path}");
 	}
 }

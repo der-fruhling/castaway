@@ -115,8 +115,9 @@ public static class CastawayGlobal
 					application.Render();
 					application.Update();
 					var r = stopwatch.Elapsed.TotalSeconds;
+					// TODO Custom FPS targets
+					Thread.Sleep(TimeSpan.FromMilliseconds(Math.Max(15.0 - r, 0)));
 					application.EndFrame();
-					Thread.Sleep((int)Math.Max(16 - stopwatch.ElapsedMilliseconds, 0));
 					RealFrameTime = r;
 					FrameTime = stopwatch.Elapsed.TotalSeconds;
 #if RELEASE

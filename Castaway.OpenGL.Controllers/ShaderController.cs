@@ -65,7 +65,7 @@ public class ShaderController : Controller
 
 	private void ResolveNormally()
 	{
-		Shader = AssetLoader.Loader!.GetAssetByName(AssetName).To<ShaderObject>();
+		Shader = AssetLoader.Loader!.GetAssetByName(AssetName).Read<ShaderObject>();
 		Logger.Debug("Resolved shader with asset at {Path}", AssetName);
 	}
 

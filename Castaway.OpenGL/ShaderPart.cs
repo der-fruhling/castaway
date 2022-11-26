@@ -38,7 +38,7 @@ internal sealed class ShaderPart : SeparatedShaderObject
 		if (!CompileSuccess) throw new GraphicsException($"Failed to compile {stage} shader");
 	}
 
-	public ShaderPart(ShaderStage stage, Asset asset) : this(stage, asset.To<string>(), asset.Index)
+	public ShaderPart(ShaderStage stage, Asset asset) : this(stage, asset.Read<string>(), asset.Index)
 	{
 	}
 

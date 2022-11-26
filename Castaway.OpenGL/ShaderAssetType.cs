@@ -48,22 +48,22 @@ public class ShaderAssetType : XmlAssetType
 		[VertexInputType.TextureSTV] = "vec3"
 	};
 
-	public override T To<T>(Asset a)
+	public override object Read(Asset a)
 	{
-		if (typeof(T) == typeof(ShaderObject))
-			return (T)(dynamic)LoadOpenGL(base.To<XmlDocument>(a), a.Index);
-		return base.To<T>(a);
+		return LoadOpenGl(
+			base.Read(a) as XmlDocument ?? throw new ArgumentException("Asset is not an XML document", nameof(a)),
+			a.Index);
 	}
 
-	public static ShaderObject LoadOpenGL(string str, string path)
+	public static ShaderObject LoadOpenGl(string str, string path)
 	{
 		Logger.Debug("Loading shader from {Path}", path);
 		var doc = new XmlDocument();
 		doc.LoadXml(str);
-		return LoadOpenGL(doc, path);
+		return LoadOpenGl(doc, path);
 	}
 
-	public static ShaderObject LoadOpenGL(XmlDocument doc, string path)
+	public static ShaderObject LoadOpenGl(XmlDocument doc, string path)
 	{
 		var g = Graphics.Current;
 		var root = doc.DocumentElement;
