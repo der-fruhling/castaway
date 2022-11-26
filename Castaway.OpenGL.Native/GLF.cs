@@ -1,5 +1,8 @@
+using System;
+
 namespace Castaway.OpenGL.Native;
 
+[Obsolete]
 public enum GLF : ushort
 {
     glAccum,

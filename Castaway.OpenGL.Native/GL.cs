@@ -1,5 +1,8 @@
+using System;
+
 namespace Castaway.OpenGL.Native;
 
+[Obsolete]
 public static partial class GL
 {
     public enum BufferTarget
