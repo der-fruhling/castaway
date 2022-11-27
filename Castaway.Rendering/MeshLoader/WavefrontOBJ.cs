@@ -10,7 +10,7 @@ using Serilog;
 
 namespace Castaway.Rendering.MeshLoader;
 
-public static class WavefrontOBJ
+public static class WavefrontObj
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 

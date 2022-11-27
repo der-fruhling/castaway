@@ -42,7 +42,7 @@ public abstract class Graphics : RenderObject
 	protected internal static void BindWindow(Window window)
 	{
 		if (CurrentlyBound.Value == window) return;
-		window.IBind();
+		window.BindInternal();
 		CurrentlyBound.Value = window;
 	}
 

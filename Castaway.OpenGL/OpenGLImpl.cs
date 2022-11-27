@@ -50,6 +50,7 @@ public class OpenGLImpl : Graphics
 		GL.Enable(EnableCap.DepthTest);
 		GL.Enable(EnableCap.CullFace);
 		window.WindowResize += (w, h) => GL.Viewport(0, 0, w, h);
+		Logger.Debug("Initialized window context for use with the OpenGL renderer");
 	}
 
 	public override BufferObject NewBuffer(CBufferTarget target, float[]? data = null)
@@ -181,7 +182,7 @@ public class OpenGLImpl : Graphics
 
 		if (buffer is VertexArrayDrawable vaoDraw)
 		{
-			GL.BindVertexArray(vaoDraw.VAO);
+			GL.BindVertexArray(vaoDraw.VertexArrayObject);
 			if (!vaoDraw.SetUp)
 			{
 				buffer.VertexArray.Bind();
@@ -193,7 +194,7 @@ public class OpenGLImpl : Graphics
 				GL.DrawElements(PrimitiveType.Triangles, buffer.VertexCount, DrawElementsType.UnsignedInt, 0);
 			else
 				GL.DrawArrays(PrimitiveType.Triangles, 0, buffer.VertexCount);
-			GL.BindVertexArray(vaoDraw.VAO);
+			GL.BindVertexArray(vaoDraw.VertexArrayObject);
 		}
 		else
 		{

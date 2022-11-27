@@ -17,12 +17,12 @@ public class ColliderCylinderController : Controller, ICollider
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
-		Shape = parent.Level.PhysicsSimulation.Shapes.Add(Cylinder);
+		Shape = parent.Level.PhysicsSimulation.Shapes!.Add(Cylinder);
 	}
 
 	public override void OnDestroy(LevelObject parent)
 	{
 		base.OnDestroy(parent);
-		parent.Level.PhysicsSimulation.Shapes.Remove(Shape);
+		parent.Level.PhysicsSimulation.Shapes!.Remove(Shape);
 	}
 }

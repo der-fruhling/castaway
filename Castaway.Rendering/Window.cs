@@ -17,7 +17,6 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	// ReSharper disable once InconsistentNaming
 	public readonly Graphics GL;
 	private Vector2? _sizeBeforeFullscreen, _positionBeforeFullscreen;
-	private GLFWCallbacks.WindowSizeCallback _sizeCallback;
 
 	private string _title;
 	private bool _visible, _vsync;
@@ -63,10 +62,10 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 		VSync = false;
 		unsafe
 		{
-			GLFW.SetWindowSizeCallback(Native, _sizeCallback = (_, w, h) =>
+			GLFW.SetWindowSizeCallback(Native!, (_, newWidth, newHeight) =>
 			{
-				WindowResize(w, h);
-				Logger.Verbose("Resized {Window} to {Width}x{Height}", Title, w, h);
+				WindowResize(newWidth, newHeight);
+				Logger.Verbose("Resized {Window} to {Width}x{Height}", Title, newWidth, newHeight);
 			});
 		}
 
@@ -94,7 +93,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 		{
 			unsafe
 			{
-				GLFW.SetWindowTitle(Native, _title = value);
+				GLFW.SetWindowTitle(Native!, _title = value);
 				Logger.Debug("Successfully changed window state ({Name}={Value})", nameof(Title), Title);
 			}
 		}
@@ -106,14 +105,14 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 		{
 			unsafe
 			{
-				return GLFW.WindowShouldClose(Native);
+				return GLFW.WindowShouldClose(Native!);
 			}
 		}
 		set
 		{
 			unsafe
 			{
-				GLFW.SetWindowShouldClose(Native, value);
+				GLFW.SetWindowShouldClose(Native!, value);
 				Logger.Debug("Successfully changed window state ({Name}={Value})", nameof(ShouldClose), ShouldClose);
 			}
 		}
@@ -127,8 +126,8 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 			unsafe
 			{
 				// ReSharper disable once AssignmentInConditionalExpression
-				if (_visible = value) GLFW.ShowWindow(Native);
-				else GLFW.HideWindow(Native);
+				if (_visible = value) GLFW.ShowWindow(Native!);
+				else GLFW.HideWindow(Native!);
 				Logger.Debug("Successfully changed window state ({Name}={Value})", nameof(Visible), Visible);
 			}
 		}
@@ -151,7 +150,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 		{
 			unsafe
 			{
-				return GLFW.GetWindowMonitor(Native) != null;
+				return GLFW.GetWindowMonitor(Native!) != null;
 			}
 		}
 		set
@@ -160,10 +159,11 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 			{
 				Logger.Information("{EnterOrExit} fullscreen...", value ? "Entering" : "Exiting");
 				var mon = GLFW.GetPrimaryMonitor();
+				if (mon == null) throw new InvalidOperationException("No monitors found");
 				var vid = GLFW.GetVideoMode(mon);
 				int x, y, w, h;
 				GetSize(out var ow, out var oh);
-				GLFW.GetWindowPos(Native, out var ox, out var oy);
+				GLFW.GetWindowPos(Native!, out var ox, out var oy);
 				if (value)
 				{
 					_sizeBeforeFullscreen = new Vector2(ow, oh);
@@ -201,8 +201,8 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 					_sizeBeforeFullscreen = null;
 				}
 
-				if (value) GLFW.SetWindowMonitor(Native, mon, 0, 0, vid->Width, vid->Height, GLFW.DontCare);
-				else GLFW.SetWindowMonitor(Native, null, x, y, w, h, GLFW.DontCare);
+				if (value) GLFW.SetWindowMonitor(Native!, mon, 0, 0, vid->Width, vid->Height, GLFW.DontCare);
+				else GLFW.SetWindowMonitor(Native!, null, x, y, w, h, GLFW.DontCare);
 
 				Logger.Debug("Successfully changed monitor state ({Name}={Value})", nameof(Fullscreen), Fullscreen);
 			}
@@ -220,7 +220,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 		{
 			Logger.Information("Destroyed window {Window}", Title);
 			GL.Dispose();
-			GLFW.DestroyWindow(Native);
+			GLFW.DestroyWindow(Native!);
 		}
 	}
 
@@ -237,11 +237,11 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 
 	public event ResizeEventHandler WindowResize = delegate { };
 
-	internal void IBind()
+	internal void BindInternal()
 	{
 		unsafe
 		{
-			GLFW.MakeContextCurrent(Native);
+			GLFW.MakeContextCurrent(Native!);
 		}
 	}
 
@@ -254,7 +254,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	{
 		unsafe
 		{
-			GLFW.GetWindowSize(Native, out x, out y);
+			GLFW.GetWindowSize(Native!, out x, out y);
 		}
 	}
 
@@ -262,7 +262,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	{
 		unsafe
 		{
-			GLFW.SetWindowSize(Native, x, y);
+			GLFW.SetWindowSize(Native!, x, y);
 		}
 	}
 
@@ -270,7 +270,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	{
 		unsafe
 		{
-			GLFW.GetFramebufferSize(Native, out x, out y);
+			GLFW.GetFramebufferSize(Native!, out x, out y);
 		}
 	}
 
@@ -278,7 +278,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	{
 		unsafe
 		{
-			GLFW.SwapBuffers(Native);
+			GLFW.SwapBuffers(Native!);
 		}
 	}
 
@@ -291,7 +291,7 @@ public sealed class Window : IDisposable, IAsyncDisposable, IEquatable<Window>
 	{
 		unsafe
 		{
-			return HashCode.Combine(_title, _visible, _vsync, (nuint)Native);
+			return ((nuint)Native).GetHashCode();
 		}
 	}
 

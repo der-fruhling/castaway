@@ -24,7 +24,7 @@ public class PhysicsController : Controller
 			{
 				case PhysicsMode.Dynamic:
 				{
-					_simulation.Bodies.GetDescription(Body, out var desc);
+					_simulation.Bodies!.GetDescription(Body, out var desc);
 					desc.Pose.Position =
 						new System.Numerics.Vector3((float)value.X, (float)value.Y, (float)value.Z);
 					_simulation.Bodies.ApplyDescription(Body, desc);
@@ -32,7 +32,7 @@ public class PhysicsController : Controller
 				}
 				case PhysicsMode.Static:
 				{
-					_simulation.Statics.GetDescription(Static, out var desc);
+					_simulation.Statics!.GetDescription(Static, out var desc);
 					desc.Pose.Position =
 						new System.Numerics.Vector3((float)value.X, (float)value.Y, (float)value.Z);
 					_simulation.Statics.ApplyDescription(Static, desc);
@@ -53,7 +53,7 @@ public class PhysicsController : Controller
 			{
 				case PhysicsMode.Dynamic:
 				{
-					_simulation.Bodies.GetDescription(Body, out var desc);
+					_simulation.Bodies!.GetDescription(Body, out var desc);
 					desc.Pose.Orientation = new System.Numerics.Quaternion(
 						(float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
 					_simulation.Bodies.ApplyDescription(Body, desc);
@@ -61,7 +61,7 @@ public class PhysicsController : Controller
 				}
 				case PhysicsMode.Static:
 				{
-					_simulation.Statics.GetDescription(Static, out var desc);
+					_simulation.Statics!.GetDescription(Static, out var desc);
 					desc.Pose.Orientation = new System.Numerics.Quaternion(
 						(float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
 					_simulation.Statics.ApplyDescription(Static, desc);
@@ -101,7 +101,7 @@ public class PhysicsController : Controller
 					inertia,
 					new CollidableDescription(shape, 0.1f),
 					new BodyActivityDescription(0.01f));
-				Body = sim.Bodies.Add(desc);
+				Body = sim.Bodies!.Add(desc);
 				break;
 			}
 			case PhysicsMode.Static:
@@ -118,7 +118,7 @@ public class PhysicsController : Controller
 						(float)rot.W),
 					shape,
 					ContinuousDetection.Passive);
-				Static = sim.Statics.Add(desc);
+				Static = sim.Statics!.Add(desc);
 				break;
 			}
 			default:
@@ -153,7 +153,7 @@ public class PhysicsController : Controller
 		{
 			case PhysicsMode.Dynamic:
 			{
-				sim.Bodies.GetDescription(Body, out var desc);
+				sim.Bodies!.GetDescription(Body, out var desc);
 				p = desc.Pose.Position;
 				parent.Position = new Vector3(p.X, p.Y, p.Z);
 				var r = desc.Pose.Orientation;
@@ -162,7 +162,7 @@ public class PhysicsController : Controller
 			}
 			case PhysicsMode.Static:
 			{
-				sim.Statics.GetDescription(Static, out var desc);
+				sim.Statics!.GetDescription(Static, out var desc);
 				p = desc.Pose.Position;
 				parent.Position = new Vector3(p.X, p.Y, p.Z);
 				var r = desc.Pose.Orientation;

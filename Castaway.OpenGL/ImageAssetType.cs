@@ -10,6 +10,6 @@ public class ImageAssetType : IAssetType
 	public object Read(Asset a)
 	{
 		using var s = new MemoryStream(a.GetBytes());
-		return Image.Load(s);
+		return Image.Load(s)!;
 	}
 }

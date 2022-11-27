@@ -44,23 +44,23 @@ public class DrawBatch
 
 	public readonly struct State
 	{
-		public readonly Graphics GL;
+		public readonly Graphics G;
 		public readonly ShaderObject? Shader;
 		public readonly IReadOnlyDictionary<BufferTarget, BufferObject?> Buffers;
 		public readonly TextureObject?[] Textures;
 
 		public State(Graphics g)
 		{
-			GL = g;
+			G = g;
 			Shader = g.BoundShader;
 			Buffers = g.BoundBuffers;
 			Textures = g.BoundTextures;
 		}
 
-		public State(Graphics gl, ShaderObject? shader, IReadOnlyDictionary<BufferTarget, BufferObject?> buffers,
+		public State(Graphics g, ShaderObject? shader, IReadOnlyDictionary<BufferTarget, BufferObject?> buffers,
 			TextureObject?[] textures)
 		{
-			GL = gl;
+			G = g;
 			Shader = shader;
 			Buffers = buffers;
 			Textures = textures;

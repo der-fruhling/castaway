@@ -4,11 +4,11 @@ namespace Castaway.Input;
 
 public abstract class GamepadTypeImpl
 {
-	protected readonly int[] Joysticks;
+	protected readonly int Joystick;
 
-	protected GamepadTypeImpl(params int[] joysticks)
+	protected GamepadTypeImpl(int joystick)
 	{
-		Joysticks = joysticks;
+		Joystick = joystick;
 	}
 
 	protected abstract float DeadZone { get; }

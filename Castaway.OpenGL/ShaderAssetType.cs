@@ -65,7 +65,6 @@ public class ShaderAssetType : XmlAssetType
 
 	public static ShaderObject LoadOpenGl(XmlDocument doc, string path)
 	{
-		var g = Graphics.Current;
 		var root = doc.DocumentElement;
 		if (root == null) throw new InvalidOperationException("Document needs root element.");
 		if (root.GetElementsByTagName("vertex").Count < 1)

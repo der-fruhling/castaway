@@ -34,7 +34,7 @@ public class Level : IDisposable
 			_bufferPool,
 			new NarrowPhase(),
 			new PoseIntegrator(new Vector3(0, -10, 0)),
-			new SolveDescription(8, 1));
+			new SolveDescription(8, 1))!;
 	}
 
 	public Level(Asset asset) : this()

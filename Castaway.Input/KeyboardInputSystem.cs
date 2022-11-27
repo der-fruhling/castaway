@@ -30,7 +30,7 @@ public class KeyboardInputSystem
 		unsafe
 		{
 			var window = Graphics.Current.Window!.Native;
-			GLFW.SetKeyCallback(window, _callback);
+			GLFW.SetKeyCallback(window!, _callback);
 		}
 	}
 

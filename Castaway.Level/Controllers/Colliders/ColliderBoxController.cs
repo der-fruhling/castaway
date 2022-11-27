@@ -17,12 +17,12 @@ public class ColliderBoxController : Controller, ICollider
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
-		Shape = parent.Level.PhysicsSimulation.Shapes.Add(Box);
+		Shape = parent.Level.PhysicsSimulation.Shapes!.Add(Box);
 	}
 
 	public override void OnDestroy(LevelObject parent)
 	{
 		base.OnDestroy(parent);
-		parent.Level.PhysicsSimulation.Shapes.Remove(Shape);
+		parent.Level.PhysicsSimulation.Shapes!.Remove(Shape);
 	}
 }

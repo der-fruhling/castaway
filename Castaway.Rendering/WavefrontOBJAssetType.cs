@@ -9,7 +9,7 @@ public class WavefrontObjAssetType : IAssetType
 {
 	public object Read(Asset a)
 	{
-		return WavefrontOBJ.ReadMesh(
+		return WavefrontObj.ReadMesh(
 				Encoding.UTF8.GetString(a.GetBytes()).Split('\n'))
 			.Result;
 	}

@@ -24,7 +24,6 @@ internal class GenericGamepadType : GamepadTypeImpl
 		ButtonRightBumper = 5,
 		ButtonSelect = 6,
 		ButtonStart = 7,
-		ButtonGuide = 8,
 		ButtonLeftStick = 9,
 		ButtonRightStick = 10,
 		ButtonDUp = 11,
@@ -35,7 +34,7 @@ internal class GenericGamepadType : GamepadTypeImpl
 	private float[] _axes = new float[6];
 	private bool[] _buttons = new bool[15];
 
-	public GenericGamepadType(params int[] joysticks) : base(joysticks)
+	public GenericGamepadType(int joystick) : base(joystick)
 	{
 	}
 
@@ -66,9 +65,9 @@ internal class GenericGamepadType : GamepadTypeImpl
 
 	internal override void Read()
 	{
-		if (!GLFW.JoystickIsGamepad(Joysticks[0]))
-			throw new InvalidOperationException($"Joystick {Joysticks[0]} is not a gamepad.");
-		if (!GLFW.GetGamepadState(Joysticks[0], out var state))
+		if (!GLFW.JoystickIsGamepad(Joystick))
+			return;
+		if (!GLFW.GetGamepadState(Joystick, out var state))
 			throw new InvalidOperationException("Failed to get gamepad state.");
 
 		unsafe

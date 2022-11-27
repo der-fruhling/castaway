@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
@@ -107,6 +108,7 @@ internal sealed class Buffer : BufferObject
 		return obj is Buffer other && Equals(other);
 	}
 
+	[SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
 	public override int GetHashCode()
 	{
 		return HashCode.Combine(SetupProgram, (int)Target, Destroyed, Number);

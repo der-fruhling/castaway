@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castaway.Base;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Shaders;
 using Castaway.Rendering.Structures;
-using Serilog;
 
 namespace Castaway.OpenGL;
 
 public static class OpenGLEx
 {
-	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
-
 	#region Mesh
 
 	private static float[] ConstructVertexArray(this Mesh mesh, ShaderObject shader)

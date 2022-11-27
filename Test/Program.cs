@@ -3,7 +3,6 @@ using Castaway.Assets;
 using Castaway.Base;
 using Castaway.Input;
 using Castaway.Level;
-using Castaway.Math;
 using Castaway.OpenGL;
 using Castaway.OpenGL.Controllers;
 using Castaway.Rendering;
@@ -94,10 +93,5 @@ internal class Program : IApplication
 	private static int Main()
 	{
 		return CastawayGlobal.Run<Program>();
-	}
-
-	private Vector3 ProcessDance(Vector3 orig, double value)
-	{
-		return new(orig.X, value, orig.Z);
 	}
 }

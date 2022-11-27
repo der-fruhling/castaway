@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using OpenTK.Graphics.OpenGL;
@@ -24,7 +25,7 @@ public sealed class Texture : TextureObject
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
 			(int)TextureMinFilter.NearestMipmapNearest);
 		GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb,
-			PixelType.Float, data);
+			PixelType.Float, data!);
 		GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 		Number = t;
 	}
@@ -52,6 +53,7 @@ public sealed class Texture : TextureObject
 		return obj is Texture other && Equals(other);
 	}
 
+	[SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
 	public override int GetHashCode()
 	{
 		return HashCode.Combine(Destroyed, Number);

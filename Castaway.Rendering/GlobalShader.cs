@@ -28,10 +28,7 @@ public static class GlobalShader
 		logger.Debug("Starting initializing global shader set");
 		var g = Graphics.Current;
 
-		// (The code looks cleaner this way)
-		// ReSharper disable once InlineOutVariableDeclaration
-		Func<Graphics, ShaderObject>? m;
-		var p = Provider(g);
+		var p = Provider();
 		Default = p.CreateDefault(g);
 		DefaultTextured = p.CreateDefaultTextured(g);
 		Direct = p.CreateDirect(g);
@@ -43,7 +40,7 @@ public static class GlobalShader
 		logger.Debug("Finished initializing global shader set");
 	}
 
-	private static IShaderProvider Provider(Graphics g)
+	private static IShaderProvider Provider()
 	{
 		return Activator.CreateInstance(AppDomain.CurrentDomain
 				       .GetAssemblies()

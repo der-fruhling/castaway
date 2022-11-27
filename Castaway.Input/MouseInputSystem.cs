@@ -41,16 +41,16 @@ public class MouseInputSystem
 				_rawInput = value;
 				var w = GLFW.GetCurrentContext();
 
-				GLFW.GetWindowSize(w, out var wid, out var hei);
+				GLFW.GetWindowSize(w!, out var wid, out var hei);
 				CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
 				_lastCursorPos = CursorPosition;
 
 				if (GLFW.RawMouseMotionSupported())
-					GLFW.SetInputMode(w, RawMouseMotionAttribute.RawMouseMotion, value);
+					GLFW.SetInputMode(w!, RawMouseMotionAttribute.RawMouseMotion, value);
 				else
 					_fakeRaw = value;
 
-				GLFW.SetInputMode(w, CursorStateAttribute.Cursor,
+				GLFW.SetInputMode(w!, CursorStateAttribute.Cursor,
 					value ? CursorModeValue.CursorDisabled : CursorModeValue.CursorNormal);
 			}
 		}
@@ -65,7 +65,7 @@ public class MouseInputSystem
 				var v = CursorPosition - _lastCursorPos;
 
 				if (!_fakeRaw) return v;
-				GLFW.GetWindowSize(GLFW.GetCurrentContext(), out var wid, out var hei);
+				GLFW.GetWindowSize(GLFW.GetCurrentContext()!, out var wid, out var hei);
 				CursorPosition = new Vector2(wid / 2.0, hei / 2.0);
 
 				return v;
@@ -107,8 +107,8 @@ public class MouseInputSystem
 		unsafe
 		{
 			var w = Graphics.Current.Window!.Native;
-			GLFW.SetMouseButtonCallback(w, _mouseButtonCallback);
-			GLFW.SetCursorEnterCallback(w, _mouseEnterCallback);
+			GLFW.SetMouseButtonCallback(w!, _mouseButtonCallback);
+			GLFW.SetCursorEnterCallback(w!, _mouseEnterCallback);
 			_lastCursorPos = CursorPosition;
 		}
 	}

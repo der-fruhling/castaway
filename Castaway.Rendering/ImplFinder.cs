@@ -61,8 +61,8 @@ public class ImplFinder
 
 		unsafe
 		{
-			major = GLFW.GetWindowAttrib(window.Native, WindowAttributeGetInt.ContextVersionMajor);
-			minor = GLFW.GetWindowAttrib(window.Native, WindowAttributeGetInt.ContextVersionMinor);
+			major = GLFW.GetWindowAttrib(window.Native!, WindowAttributeGetInt.ContextVersionMajor);
+			minor = GLFW.GetWindowAttrib(window.Native!, WindowAttributeGetInt.ContextVersionMinor);
 		}
 
 		if (Supports(major, minor, 4, 2)) return await Find("OpenGL-4.2");

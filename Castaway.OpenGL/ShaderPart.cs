@@ -28,10 +28,10 @@ internal sealed class ShaderPart : SeparatedShaderObject
 		GL.CompileShader(Number);
 
 		GL.GetShaderInfoLog(Number, out var log);
-		if (log.Any())
+		if (log!.Any())
 		{
 			Logger.Warning("Shader Log ({Stage} @ {Location})", stage, sourceLocation);
-			var lines = log.Split('\n');
+			var lines = log!.Split('\n');
 			foreach (var l in lines) Logger.Warning("{Line}", l.Trim());
 		}
 
@@ -62,7 +62,7 @@ internal sealed class ShaderPart : SeparatedShaderObject
 		get
 		{
 			GL.GetShaderInfoLog(Number, out var ret);
-			return ret;
+			return ret!;
 		}
 	}
 

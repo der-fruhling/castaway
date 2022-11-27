@@ -40,7 +40,7 @@ internal sealed class Shader : ShaderObject
 		get
 		{
 			GL.GetProgramInfoLog(Number, out var ret);
-			return ret;
+			return ret!;
 		}
 	}
 

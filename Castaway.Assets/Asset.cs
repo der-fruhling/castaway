@@ -38,5 +38,5 @@ public class Asset
 		return _bytes ?? throw new InvalidOperationException("Not loaded.");
 	}
 
-	public T? Read<T>() where T : class => Type.Read<T>(this);
+	public T Read<T>() where T : class => Type.Read<T>(this);
 }

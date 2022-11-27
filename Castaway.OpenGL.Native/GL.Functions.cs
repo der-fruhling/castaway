@@ -16,7 +16,7 @@ public static unsafe partial class GL
 	private static IntPtr Load(GLF f)
 	{
 		return !Fn.ContainsKey(f) || Fn[f] == IntPtr.Zero
-			? Fn[f] = GLFW.GetProcAddress(Enum.GetName(f))
+			? Fn[f] = GLFW.GetProcAddress(Enum.GetName(f)!)
 			: Fn[f];
 	}
 
@@ -614,7 +614,7 @@ public static unsafe partial class GL
 		if (bytes == (void*)0) return string.Empty;
 		var str = "";
 		var i = 0;
-		while (bytes[i] != 0) str += Encoding.UTF8.GetString(new[] { bytes[i++] });
+		while (bytes![i] != 0) str += Encoding.UTF8.GetString(new[] { bytes[i++] });
 		return str;
 	}
 

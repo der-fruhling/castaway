@@ -50,15 +50,15 @@ public class ColliderMeshController : Controller, ICollider
 		}).ToArray();
 
 		var sim = parent.Level.PhysicsSimulation;
-		sim.BufferPool.Take(tris.Length, out Buffer<Triangle> buf);
+		sim.BufferPool!.Take(tris.Length, out Buffer<Triangle> buf);
 		buf.CopyFrom(tris, 0, 0, tris.Length);
 		Mesh = new Mesh(buf, Vector3.One, sim.BufferPool);
-		Shape = parent.Level.PhysicsSimulation.Shapes.Add(Mesh);
+		Shape = parent.Level.PhysicsSimulation.Shapes!.Add(Mesh);
 	}
 
 	public override void OnDestroy(LevelObject parent)
 	{
 		base.OnDestroy(parent);
-		parent.Level.PhysicsSimulation.Shapes.Remove(Shape);
+		parent.Level.PhysicsSimulation.Shapes!.Remove(Shape);
 	}
 }
