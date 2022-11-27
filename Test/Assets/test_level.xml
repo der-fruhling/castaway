@@ -63,9 +63,7 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Mesh>
-                <Openness>Open</Openness>
-            </Collider.Mesh>
+            <Collider.Mesh/>
             <Physics>
                 <Mode>Static</Mode>
             </Physics>
