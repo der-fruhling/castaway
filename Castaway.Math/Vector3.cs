@@ -198,4 +198,6 @@ public struct Vector3 : IEquatable<Vector3>
 	{
 		return !left.Equals(right);
 	}
+
+	public static explicit operator System.Numerics.Vector3(Vector3 v) => new((float)v.X, (float)v.Y, (float)v.Z);
 }

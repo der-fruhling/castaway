@@ -1,23 +1,22 @@
 using BepuPhysics;
 using BepuPhysics.Collidables;
-using Castaway.Math;
 
 namespace Castaway.Level.Controllers.Colliders;
 
-[ControllerName("Collider.Box")]
-public class ColliderBoxController : Controller, ICollider
+[ControllerName("Collider.Sphere")]
+public class ColliderSphereController : Controller, ICollider
 {
 	[LevelSerialized("Mass")] public float Mass = 1f;
-	[LevelSerialized("Size")] public Vector3 Size = new(1, 1, 1);
+	[LevelSerialized("Radius")] public float Radius = 0.5f;
 
-	private Box Box => new((float)Size.X, (float)Size.Y, (float)Size.Z);
+	private Sphere Sphere => new(Radius);
 	public TypedIndex Shape { get; private set; }
-	public BodyInertia Inertia => Box.ComputeInertia(Mass);
+	public BodyInertia Inertia => Sphere.ComputeInertia(Mass);
 
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
-		Shape = parent.Level.PhysicsSimulation.Shapes.Add(Box);
+		Shape = parent.Level.PhysicsSimulation.Shapes.Add(Sphere);
 	}
 
 	public override void OnDestroy(LevelObject parent)
