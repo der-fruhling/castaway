@@ -30,6 +30,11 @@ public class ColliderMeshController : Controller, ICollider
 		_ => throw new ArgumentOutOfRangeException()
 	};
 
+	private static float Ccw(Vector3 a, Vector3 b, Vector3 c)
+	{
+		return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+	}
+
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
@@ -38,8 +43,10 @@ public class ColliderMeshController : Controller, ICollider
 		var mesh = cont.Mesh!.Value;
 		var tris = mesh.Elements.Chunk(3).Select(idxs =>
 		{
-			var vtx = idxs.Select(idx => mesh.Vertices[idx]).ToArray();
-			return new Triangle((Vector3)vtx[0].Position, (Vector3)vtx[1].Position, (Vector3)vtx[2].Position);
+			var vtx = idxs.Reverse().Select(idx => (Vector3)mesh.Vertices[idx].Position).ToArray();
+			if (Ccw(vtx[0], vtx[1], vtx[2]) < 0) vtx = vtx.Reverse().ToArray();
+			Ccw(vtx[0], vtx[1], vtx[2]);
+			return new Triangle(vtx[0], vtx[1], vtx[2]);
 		}).ToArray();
 
 		var sim = parent.Level.PhysicsSimulation;

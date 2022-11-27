@@ -29,7 +29,7 @@
 
         <Position>0,10,-3</Position>
         <Scale>1,1,1</Scale>
-        <Rotation>45,45,45</Rotation>
+        <Rotation>0,0,0</Rotation>
 
         <Controllers>
             <Shader>
@@ -39,7 +39,9 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Sphere/>
+            <Collider.Box>
+                <Size>2,2,2</Size>
+            </Collider.Box>
             <Physics>
                 <Mode>Dynamic</Mode>
             </Physics>
@@ -51,7 +53,7 @@
 
         <Position>0,0,-3</Position>
         <Scale>1,1,1</Scale>
-        <Rotation>5,0,0</Rotation>
+        <Rotation>0,0,0</Rotation>
 
         <Controllers>
             <Shader>
@@ -61,7 +63,9 @@
                 <AssetPath>/cube.obj</AssetPath>
             </LoadedMesh>
             <MeshRenderer/>
-            <Collider.Box/>
+            <Collider.Mesh>
+                <Openness>Open</Openness>
+            </Collider.Mesh>
             <Physics>
                 <Mode>Static</Mode>
             </Physics>
