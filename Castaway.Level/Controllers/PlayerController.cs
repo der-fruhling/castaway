@@ -9,76 +9,83 @@ namespace Castaway.Level.Controllers;
 [ControllerName("Player")]
 public class PlayerController : Controller
 {
-	private double _rx, _ry;
-	[LevelSerialized("Lock.Depth")] public bool DepthLocked = false;
-	[LevelSerialized("MouseSensitivity")] public double MouseSensitivity = 0.075;
-	[LevelSerialized("Lock.Movement")] public bool MovementLocked = false;
+	protected double CurrentRotationX, CurrentRotationY;
+	[LevelSerialized("Lock.Depth")] public bool DepthLocked { get; set; } = false;
+	[LevelSerialized("MouseSensitivity")] public double MouseSensitivity { get; set; } = 0.075;
+	[LevelSerialized("Lock.Movement")] public bool MovementLocked { get; set; } = false;
 
-	[LevelSerialized("MovementSpeed")] public double MovementSpeed = 0.35;
-	[LevelSerialized("Lock.X")] public bool MovementXLocked = false;
-	[LevelSerialized("Lock.Y")] public bool MovementYLocked = false;
-	[LevelSerialized("Lock.Z")] public bool MovementZLocked = false;
-	[LevelSerialized("Lock.Rotation")] public bool RotationLocked = false;
-	[LevelSerialized("RotationSpeed")] public double RotationSpeed = 5;
+	[LevelSerialized("MovementSpeed")] public double MovementSpeed { get; set; } = 0.35;
+	[LevelSerialized("Lock.X")] public bool MovementXLocked { get; set; } = false;
+	[LevelSerialized("Lock.Y")] public bool MovementYLocked { get; set; } = false;
+	[LevelSerialized("Lock.Z")] public bool MovementZLocked { get; set; } = false;
+	[LevelSerialized("Lock.Rotation")] public bool RotationLocked { get; set; } = false;
+	[LevelSerialized("RotationSpeed")] public double RotationSpeed { get; set; } = 5;
 
 	public override void OnUpdate(LevelObject parent)
 	{
 		base.OnUpdate(parent);
-		var g = Graphics.Current;
-		var rotateSpeed = MathEx.ToRadians(RotationSpeed);
 		var move = new Vector3(0, 0, 0);
 
-		// Gamepad
-		if (InputSystem.Gamepad.Valid)
-		{
-			if (!MovementLocked)
-			{
-				var moveGamepad = InputSystem.Gamepad.LeftStick * MovementSpeed * g.FrameChange;
-				if (!MovementXLocked) move.X += moveGamepad.X;
-				if (DepthLocked && !MovementYLocked) move.Y += moveGamepad.Y;
-				else if (!MovementZLocked) move.Z += moveGamepad.Y;
-			}
-
-			var rotateGamepad = -InputSystem.Gamepad.RightStick * rotateSpeed * g.FrameChange;
-			_rx += (float)rotateGamepad.X;
-			_ry += (float)rotateGamepad.Y;
-		}
-
-
 		// Keyboard
-		if (!MovementLocked)
-		{
-			if (InputSystem.Keyboard.IsDown(Keys.A)) move.X -= MovementSpeed * g.FrameChange;
-			if (InputSystem.Keyboard.IsDown(Keys.D)) move.X += MovementSpeed * g.FrameChange;
-			if (InputSystem.Keyboard.IsDown(Keys.W)) move.Z -= MovementSpeed * g.FrameChange;
-			if (InputSystem.Keyboard.IsDown(Keys.S)) move.Z += MovementSpeed * g.FrameChange;
-			if (InputSystem.Keyboard.IsDown(Keys.LeftShift)) move.Y -= MovementSpeed * g.FrameChange;
-			if (InputSystem.Keyboard.IsDown(Keys.Space)) move.Y += MovementSpeed * g.FrameChange;
-		}
+		if (!MovementLocked) move = GetMovementVector();
+		if (!RotationLocked) UpdateRotation();
 
-		if (InputSystem.Keyboard.IsDown(Keys.Up)) _ry += rotateSpeed * g.FrameChange;
-		if (InputSystem.Keyboard.IsDown(Keys.Down)) _ry -= rotateSpeed * g.FrameChange;
-		if (InputSystem.Keyboard.IsDown(Keys.Left)) _rx += rotateSpeed * g.FrameChange;
-		if (InputSystem.Keyboard.IsDown(Keys.Right)) _rx -= rotateSpeed * g.FrameChange;
-
-		if (InputSystem.Mouse.RawInput)
-		{
-			var pos = InputSystem.Mouse.CursorMovement;
-			var x = MathEx.ToRadians(pos.X * MouseSensitivity * g.FrameChange);
-			var y = MathEx.ToRadians(pos.Y * MouseSensitivity * g.FrameChange);
-			_rx -= x;
-			_ry -= y;
-		}
-
-		_ry = MathEx.Clamp(_ry, MathF.PI / -2, MathF.PI / 2);
+		CurrentRotationY = MathEx.Clamp(CurrentRotationY, MathF.PI / -2, MathF.PI / 2);
 
 		var rotate = new Quaternion(1, 0, 0, 0);
-		rotate *= Quaternion.Rotation(Vector3.Up, _rx);
-		rotate *= Quaternion.Rotation(Vector3.Right, _ry);
+		rotate *= Quaternion.Rotation(Vector3.Up, CurrentRotationX);
+		rotate *= Quaternion.Rotation(Vector3.Right, CurrentRotationY);
 		var parentPos = parent.Position;
-		parentPos += rotate * new Vector3(move.X, 0, move.Z);
-		parentPos.Y += move.Y;
+		parentPos += rotate * move;
 		parent.Position = parentPos;
 		parent.Rotation = rotate;
+	}
+
+	public virtual Vector3 GetMovementVector()
+	{
+		var g = Graphics.Current;
+		Vector3 vec = new(0, 0, 0);
+
+		if (InputSystem.Gamepad.Valid)
+		{
+			var moveGamepad = InputSystem.Gamepad.LeftStick * MovementSpeed * g.FrameChange;
+			if (!MovementXLocked) vec.X += moveGamepad.X;
+			if (DepthLocked && !MovementYLocked) vec.Y += moveGamepad.Y;
+			else if (!MovementZLocked) vec.Z += moveGamepad.Y;
+		}
+
+		if (InputSystem.Keyboard.IsDown(Keys.A)) vec.X -= MovementSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.D)) vec.X += MovementSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.W)) vec.Z -= MovementSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.S)) vec.Z += MovementSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.LeftShift)) vec.Y -= MovementSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.Space)) vec.Y += MovementSpeed * g.FrameChange;
+
+		return vec;
+	}
+
+	public virtual void UpdateRotation()
+	{
+		var g = Graphics.Current;
+		var rotateSpeed = MathEx.ToRadians(RotationSpeed);
+
+		if (InputSystem.Gamepad.Valid)
+		{
+			var rotateGamepad = -InputSystem.Gamepad.RightStick * rotateSpeed * g.FrameChange;
+			CurrentRotationX += (float)rotateGamepad.X;
+			CurrentRotationY += (float)rotateGamepad.Y;
+		}
+
+		if (InputSystem.Keyboard.IsDown(Keys.Up)) CurrentRotationY += rotateSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.Down)) CurrentRotationY -= rotateSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.Left)) CurrentRotationX += rotateSpeed * g.FrameChange;
+		if (InputSystem.Keyboard.IsDown(Keys.Right)) CurrentRotationX -= rotateSpeed * g.FrameChange;
+
+		if (!InputSystem.Mouse.RawInput) return;
+		var pos = InputSystem.Mouse.CursorMovement;
+		var x = MathEx.ToRadians(pos.X * MouseSensitivity * g.FrameChange);
+		var y = MathEx.ToRadians(pos.Y * MouseSensitivity * g.FrameChange);
+		CurrentRotationX -= x;
+		CurrentRotationY -= y;
 	}
 }
