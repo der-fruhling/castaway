@@ -6,8 +6,8 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Castaway.Level.Controllers;
 
-[ControllerName("GenericPlayer")]
-public class GenericPlayerController : Controller
+[ControllerName("Player")]
+public class PlayerController : Controller
 {
 	private double _rx, _ry;
 	[LevelSerialized("Lock.Depth")] public bool DepthLocked = false;
