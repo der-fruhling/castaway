@@ -1,11 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-
         <IsPackable>false</IsPackable>
-
         <RootNamespace>Castaway.Base.Tests</RootNamespace>
+
+        <!-- Common -->
+        <PackageVersion>0.1.0-alpha3</PackageVersion>
+        <AssemblyVersion>0.0.0.3</AssemblyVersion>
+        <FileVersion>2022.1</FileVersion>
+        <TargetFramework>net6.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>liam_lightchild</Authors>
+        <RepositoryUrl>https://github.com/Liam-LightChild/castaway</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <Nullable>enable</Nullable>
+        <Copyright>[c] liam_lightchild 2022</Copyright>
+        <PackageProjectUrl>https://github.com/Liam-LightChild/castaway</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
