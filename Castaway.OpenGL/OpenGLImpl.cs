@@ -28,14 +28,6 @@ public class OpenGLImpl : Graphics
 
 	private readonly Stopwatch _stopwatch = new();
 
-	public OpenGLImpl()
-	{
-		// just in case
-#pragma warning disable CS0612
-		Native.GL.Init();
-#pragma warning restore CS0612
-	}
-
 	public override string Name => "OpenGL-3.2";
 
 	public override void Dispose()
