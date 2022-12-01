@@ -53,10 +53,22 @@ public class OpenGLImpl : Graphics
 		Logger.Debug("Initialized window context for use with the OpenGL renderer");
 	}
 
-	public override BufferObject NewBuffer(CBufferTarget target, float[]? data = null)
+	public override BufferObject NewBuffer(CBufferTarget target)
 	{
 		BindWindow();
-		return new Buffer(target, data ?? Array.Empty<float>());
+		return new Buffer(target);
+	}
+
+	public override BufferObject NewBuffer(CBufferTarget target, float[] data)
+	{
+		BindWindow();
+		return new Buffer(target, data);
+	}
+
+	public override BufferObject NewBuffer(CBufferTarget target, uint[] data)
+	{
+		BindWindow();
+		return new Buffer(target, data);
 	}
 
 	public override TextureObject NewTexture(int width, int height, Color color)
@@ -440,6 +452,11 @@ public class OpenGLImpl : Graphics
 	{
 		BindWindow();
 		GL.UseProgram(0);
+	}
+
+	public override Drawable NewDrawable(int vertexCount, BufferObject vertexArray, BufferObject indexArray)
+	{
+		return new VertexArrayDrawable(vertexCount, vertexArray, indexArray);
 	}
 
 	private class BindingsContext : IBindingsContext

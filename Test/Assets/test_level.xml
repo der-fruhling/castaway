@@ -8,14 +8,14 @@
                 <ID>0</ID>
                 <VerticalFOV>90</VerticalFOV>
             </PerspCamera>
-            <GenericPlayer/>
+            <Player/>
         </Controllers>
     </Object>
 
     <Object>
         <Name>Light</Name>
 
-        <Position>0,0,-2</Position>
+        <Position>0,0,0</Position>
 
         <Controllers>
             <Light>

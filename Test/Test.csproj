@@ -10,7 +10,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Castaway.Base\Castaway.Base.csproj"/>
         <ProjectReference Include="..\Castaway.Data\Castaway.Data.csproj"/>
-        <ProjectReference Include="..\Castaway.OpenGL.Controllers\Castaway.OpenGL.Controllers.csproj"/>
         <ProjectReference Include="..\Castaway.Math\Castaway.Math.csproj"/>
         <ProjectReference Include="..\Castaway.Level\Castaway.Level.csproj"/>
         <ProjectReference Include="..\Castaway.OpenGL\Castaway.OpenGL.csproj"/>

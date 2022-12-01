@@ -1,13 +1,10 @@
 using System;
-using Castaway.Base;
-using Castaway.Level;
 using Castaway.Math;
 using Castaway.Rendering.Lighting;
 
-namespace Castaway.OpenGL.Controllers;
+namespace Castaway.Level.Controllers;
 
 [ControllerName("Light")]
-[Imports(typeof(OpenGLImpl))]
 public class LightController : Controller
 {
 	[LevelSerialized("Color")] public Vector3 Color = new(1, 1, 1);

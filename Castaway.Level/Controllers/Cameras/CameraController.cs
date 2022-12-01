@@ -1,24 +1,28 @@
 using System;
 using Castaway.Base;
-using Castaway.Level;
 using Castaway.Math;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Structures;
 using Serilog;
 
-namespace Castaway.OpenGL.Controllers;
+namespace Castaway.Level.Controllers;
 
 [ControllerBase]
-[Imports(typeof(OpenGLImpl))]
-public abstract class CameraController : Level.Controllers.CameraController
+public abstract class CameraController : Controller
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
 	private Drawable? _fullscreenDrawable;
+	[LevelSerialized("AmbientLight")] public float AmbientLight = .1f;
+	[LevelSerialized("AmbientLightColor")] public Vector3 AmbientLightColor = new(1, 1, 1);
+	[LevelSerialized("ID")] public uint CameraId;
+	[LevelSerialized("FarCutoff")] public float FarCutoff = 100;
 
 	public FramebufferObject? Framebuffer;
+	[LevelSerialized("NearCutoff")] public float NearCutoff = 0.01f;
 	public Matrix4 PerspectiveTransform;
+	[LevelSerialized("Size")] public float Size = 1;
 	public Matrix4 ViewTransform;
 
 	public override void OnInit(LevelObject parent)
