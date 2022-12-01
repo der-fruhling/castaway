@@ -56,7 +56,17 @@ public abstract class Graphics : RenderObject
 		throw new NotSupportedException();
 	}
 
-	public virtual BufferObject NewBuffer(BufferTarget target, float[]? data = null)
+	public virtual BufferObject NewBuffer(BufferTarget target)
+	{
+		throw new NotSupportedException();
+	}
+
+	public virtual BufferObject NewBuffer(BufferTarget target, float[] data)
+	{
+		throw new NotSupportedException();
+	}
+
+	public virtual BufferObject NewBuffer(BufferTarget target, uint[] data)
 	{
 		throw new NotSupportedException();
 	}
@@ -663,6 +673,11 @@ public abstract class Graphics : RenderObject
 	}
 
 	public virtual void PutImage(int i, TextureObject texture)
+	{
+		throw new NotSupportedException();
+	}
+
+	public virtual Drawable NewDrawable(int vertexCount, BufferObject vertexArray, BufferObject indexArray)
 	{
 		throw new NotSupportedException();
 	}
