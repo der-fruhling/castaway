@@ -1,17 +1,14 @@
 using System;
 using Castaway.Base;
-using Castaway.Level;
-using Castaway.Level.Controllers;
 using Castaway.Math;
 using Castaway.Rendering;
 using Castaway.Rendering.Objects;
 using Castaway.Rendering.Shaders;
 using Serilog;
 
-namespace Castaway.OpenGL.Controllers;
+namespace Castaway.Level.Controllers;
 
 [ControllerName("MeshRenderer")]
-[Imports(typeof(OpenGLImpl))]
 public class MeshRendererController : Controller
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();

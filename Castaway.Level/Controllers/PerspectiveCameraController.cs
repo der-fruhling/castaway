@@ -1,14 +1,13 @@
-using Castaway.Base;
-using Castaway.Level;
 using Castaway.Math;
 using Castaway.Rendering;
 
-namespace Castaway.OpenGL.Controllers;
+namespace Castaway.Level.Controllers;
 
-[ControllerName("OrthoCamera")]
-[Imports(typeof(OpenGLImpl))]
-public class OrthographicCameraController : CameraController
+[ControllerName("PerspCamera")]
+public class PerspectiveCameraController : CameraController
 {
+	[LevelSerialized("VerticalFOV")] public float FieldOfView;
+
 	public override void OnInit(LevelObject parent)
 	{
 		base.OnInit(parent);
@@ -27,12 +26,13 @@ public class OrthographicCameraController : CameraController
 	private void OnWindowResize(int w, int h)
 	{
 		var win = Graphics.Current.Window!;
-		PerspectiveTransform = CameraMath.Ortho(win, FarCutoff, NearCutoff, Size);
+		PerspectiveTransform = CameraMath.Persp(win, FarCutoff, NearCutoff, MathEx.ToRadians(FieldOfView), Size);
 	}
 
 	public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
 	{
 		base.PreRenderFrame(camera, parent);
-		ViewTransform = Matrix4.Translate(-camera.Position);
+		ViewTransform = camera.Rotation.Normalize().Conjugate().ToMatrix4()
+		                * Matrix4.Translate(-camera.Position);
 	}
 }
