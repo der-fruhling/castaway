@@ -65,6 +65,9 @@ public class ImplFinder
 			minor = GLFW.GetWindowAttrib(window.Native!, WindowAttributeGetInt.ContextVersionMinor);
 		}
 
+		if (Supports(major, minor, 4, 5)) return await Find("OpenGL-4.5");
+		if (Supports(major, minor, 4, 4)) return await Find("OpenGL-4.4");
+		if (Supports(major, minor, 4, 3)) return await Find("OpenGL-4.3");
 		if (Supports(major, minor, 4, 2)) return await Find("OpenGL-4.2");
 		if (Supports(major, minor, 4, 1)) return await Find("OpenGL-4.1");
 		if (Supports(major, minor, 4, 0)) return await Find("OpenGL-4.0");

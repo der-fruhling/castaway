@@ -12,6 +12,9 @@ namespace Castaway.OpenGL;
 [ProvidesShadersFor(typeof(OpenGL40))]
 [ProvidesShadersFor(typeof(OpenGL41))]
 [ProvidesShadersFor(typeof(OpenGL42))]
+[ProvidesShadersFor(typeof(OpenGL43))]
+[ProvidesShadersFor(typeof(OpenGL44))]
+[ProvidesShadersFor(typeof(OpenGL45))]
 internal class BuiltinShaders : IShaderProvider
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();

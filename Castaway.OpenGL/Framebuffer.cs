@@ -48,7 +48,7 @@ internal sealed class Framebuffer : FramebufferObject
 	{
 		GL.GenFramebuffers(1, out int a);
 		Number = a;
-		GL.BindFramebuffer(FramebufferTarget.Framebuffer, Number);
+		if (Graphics.Current is not OpenGL45) GL.BindFramebuffer(FramebufferTarget.Framebuffer, Number);
 
 		GL.GenTextures(1, out a);
 
@@ -59,18 +59,27 @@ internal sealed class Framebuffer : FramebufferObject
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Nearest);
 		GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb, PixelType.Float,
 			IntPtr.Zero);
-		GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
-			TextureTarget.Texture2D, a, 0);
+
+		if (Graphics.Current is OpenGL45)
+			GL.NamedFramebufferTexture(Number, FramebufferAttachment.ColorAttachment0, a, 0);
+		else
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
+				TextureTarget.Texture2D, a, 0);
 
 		GL.GenRenderbuffers(1, out a);
 		GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, a);
 		GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, w, h);
-		GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment,
-			RenderbufferTarget.Renderbuffer, a);
+
+		if (Graphics.Current is OpenGL45)
+			GL.NamedFramebufferRenderbuffer(Number, FramebufferAttachment.DepthStencilAttachment,
+				RenderbufferTarget.Renderbuffer, a);
+		else
+			GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment,
+				RenderbufferTarget.Renderbuffer, a);
 
 		Color = new Texture(a);
 
-		GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+		if (Graphics.Current is not OpenGL45) GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 		Log.Verbose("Updated framebuffer {Number} to size {Width}x{Height}", Number, w, h);
 	}
 

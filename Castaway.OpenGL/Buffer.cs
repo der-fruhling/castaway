@@ -131,20 +131,27 @@ internal sealed class Buffer : BufferObject
 
 	public override void Upload(IEnumerable<byte> bytes)
 	{
-		var target = Target switch
-		{
-			CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
-			CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
-			_ => throw new ArgumentOutOfRangeException()
-		};
-		GL.GetInteger(Target switch
-		{
-			CBufferTarget.VertexArray => GetPName.ArrayBufferBinding,
-			CBufferTarget.ElementArray => GetPName.ElementArrayBufferBinding,
-			_ => throw new ArgumentOutOfRangeException()
-		});
-		GL.BindBuffer(target, Number);
 		var b = bytes.ToArray();
-		GL.BufferData(target, b.Length, b, BufferUsageHint.StaticDraw);
+		if (Graphics.Current is not OpenGL45)
+		{
+			var target = Target switch
+			{
+				CBufferTarget.VertexArray => BufferTarget.ArrayBuffer,
+				CBufferTarget.ElementArray => BufferTarget.ElementArrayBuffer,
+				_ => throw new ArgumentOutOfRangeException()
+			};
+			GL.GetInteger(Target switch
+			{
+				CBufferTarget.VertexArray => GetPName.ArrayBufferBinding,
+				CBufferTarget.ElementArray => GetPName.ElementArrayBufferBinding,
+				_ => throw new ArgumentOutOfRangeException()
+			});
+			GL.BindBuffer(target, Number);
+			GL.BufferData(target, b.Length, b, BufferUsageHint.StaticDraw);
+		}
+		else
+		{
+			GL.NamedBufferData(Number, b.Length, b, BufferUsageHint.StaticDraw);
+		}
 	}
 }
