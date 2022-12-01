@@ -106,7 +106,7 @@ jobs:
       - name: Publish
         if: github.event.inputs.allow-publish == 'true'
         run: |
-          dotnet nuget add source --username LiamCoal --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/LiamCoalStudio/index.json
+          dotnet nuget add source --username Liam-LightChild --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/Liam-LightChild/index.json
           
           dotnet nuget push Castaway.Assets/bin/Debug/Castaway.Assets.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
           dotnet nuget push Castaway.Base/bin/Debug/Castaway.Base.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source github
