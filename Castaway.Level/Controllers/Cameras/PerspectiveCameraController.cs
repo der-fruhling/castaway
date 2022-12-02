@@ -6,7 +6,7 @@ namespace Castaway.Level.Controllers;
 [ControllerName("PerspCamera")]
 public class PerspectiveCameraController : CameraController
 {
-	[LevelSerialized("VerticalFOV")] public float FieldOfView;
+	[LevelSerialized("VerticalFOV")] public float FieldOfView { get; set; }
 
 	public override void OnInit(LevelObject parent)
 	{

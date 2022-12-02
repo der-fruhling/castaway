@@ -17,10 +17,10 @@ public class ShaderController : Controller
 
 	private ShaderObject? _previous;
 
-	[LevelSerialized("Asset")] public string AssetName = string.Empty;
-	[LevelSerialized("Builtin")] public string BuiltinShaderName = string.Empty;
-	[LevelSerialized("DisableCache")] public bool CacheDisabled = false;
-	public ShaderObject? Shader;
+	[LevelSerialized("Asset")] public string AssetName { get; set; } = string.Empty;
+	[LevelSerialized("Builtin")] public string BuiltinShaderName { get; set; } = string.Empty;
+	[LevelSerialized("DisableCache")] public bool CacheDisabled { get; set; } = false;
+	public ShaderObject? Shader { get; set; }
 
 	public override void OnInit(LevelObject parent)
 	{

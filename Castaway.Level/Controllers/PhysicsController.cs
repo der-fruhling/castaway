@@ -11,9 +11,9 @@ public class PhysicsController : Controller
 {
 	private Simulation? _simulation;
 
-	public BodyHandle Body;
-	[LevelSerialized("Mode")] public PhysicsMode PhysicsMode = PhysicsMode.Dynamic;
-	public StaticHandle Static;
+	[LevelSerialized("Mode")] public PhysicsMode PhysicsMode { get; set; } = PhysicsMode.Dynamic;
+	public BodyHandle Body { get; private set; }
+	public StaticHandle Static { get; private set; }
 
 	public override Vector3 Position
 	{

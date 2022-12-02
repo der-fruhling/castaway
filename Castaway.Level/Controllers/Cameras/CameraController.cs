@@ -14,16 +14,16 @@ public abstract class CameraController : Controller
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
 	private Drawable? _fullscreenDrawable;
-	[LevelSerialized("AmbientLight")] public float AmbientLight = .1f;
-	[LevelSerialized("AmbientLightColor")] public Vector3 AmbientLightColor = new(1, 1, 1);
-	[LevelSerialized("ID")] public uint CameraId;
-	[LevelSerialized("FarCutoff")] public float FarCutoff = 100;
 
 	public FramebufferObject? Framebuffer;
-	[LevelSerialized("NearCutoff")] public float NearCutoff = 0.01f;
-	public Matrix4 PerspectiveTransform;
-	[LevelSerialized("Size")] public float Size = 1;
-	public Matrix4 ViewTransform;
+	[LevelSerialized("AmbientLight")] public float AmbientLight { get; set; } = .1f;
+	[LevelSerialized("AmbientLightColor")] public Vector3 AmbientLightColor { get; set; } = new(1, 1, 1);
+	[LevelSerialized("ID")] public uint CameraId { get; set; }
+	[LevelSerialized("FarCutoff")] public float FarCutoff { get; set; } = 100;
+	[LevelSerialized("NearCutoff")] public float NearCutoff { get; set; } = 0.01f;
+	public Matrix4 PerspectiveTransform { get; protected set; }
+	[LevelSerialized("Size")] public float Size { get; set; } = 1;
+	public Matrix4 ViewTransform { get; protected set; }
 
 	public override void OnInit(LevelObject parent)
 	{

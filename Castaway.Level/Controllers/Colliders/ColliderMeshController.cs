@@ -16,9 +16,9 @@ public class ColliderMeshController : Controller, ICollider
 		Open
 	}
 
-	[LevelSerialized("Mass")] public float Mass = 1f;
-	[LevelSerialized("Openness")] public MeshOpenness Openness = MeshOpenness.Closed;
-	[LevelSerialized("Size")] public Vector3 Size = new(1, 1, 1);
+	[LevelSerialized("Mass")] public float Mass { get; set; } = 1f;
+	[LevelSerialized("Openness")] public MeshOpenness Openness { get; set; } = MeshOpenness.Closed;
+	[LevelSerialized("Size")] public Vector3 Size { get; set; } = new(1, 1, 1);
 
 	private Mesh Mesh { get; set; }
 	public TypedIndex Shape { get; private set; }

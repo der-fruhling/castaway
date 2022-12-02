@@ -6,9 +6,9 @@ namespace Castaway.Level.Controllers.Colliders;
 [ControllerName("Collider.Capsule")]
 public class ColliderCapsuleController : Controller, ICollider
 {
-	[LevelSerialized("Length")] public float Length = 2f;
-	[LevelSerialized("Mass")] public float Mass = 1f;
-	[LevelSerialized("Radius")] public float Radius = 0.5f;
+	[LevelSerialized("Length")] public float Length { get; set; } = 2f;
+	[LevelSerialized("Mass")] public float Mass { get; set; } = 1f;
+	[LevelSerialized("Radius")] public float Radius { get; set; } = 0.5f;
 
 	private Capsule Sphere => new(Radius, Length);
 	public TypedIndex Shape { get; private set; }

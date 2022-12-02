@@ -7,8 +7,8 @@ namespace Castaway.Level.Controllers.Colliders;
 [ControllerName("Collider.Box")]
 public class ColliderBoxController : Controller, ICollider
 {
-	[LevelSerialized("Mass")] public float Mass = 1f;
-	[LevelSerialized("Size")] public Vector3 Size = new(1, 1, 1);
+	[LevelSerialized("Mass")] public float Mass { get; set; } = 1f;
+	[LevelSerialized("Size")] public Vector3 Size { get; set; } = new(1, 1, 1);
 
 	private Box Box => new((float)Size.X, (float)Size.Y, (float)Size.Z);
 	public TypedIndex Shape { get; private set; }
