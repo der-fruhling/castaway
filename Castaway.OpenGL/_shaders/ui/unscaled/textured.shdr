@@ -32,7 +32,7 @@
     <fragment>
         <output name="oColor" to="0"/>
 
-        <uniform name="uTexture"/>
+        <uniform name="uTexture" from="Texture"/>
 
         <glsl><![CDATA[
             in vec3 fColor;

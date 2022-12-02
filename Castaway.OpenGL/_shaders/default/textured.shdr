@@ -49,7 +49,7 @@
         <uniform name="uPointLights[$INDEX].Color" from="PointLightColorIndexed"/>
         <uniform name="uViewPosition" from="ViewPosition"/>
         <uniform name="uSpecularStrength"/>
-        <uniform name="uTexture"/> <!-- TODO there should be from="Texture" for this -->
+        <uniform name="uTexture" from="Texture"/>
 
         <glsl><![CDATA[
             struct PointLight {
