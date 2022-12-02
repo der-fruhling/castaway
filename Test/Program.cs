@@ -65,8 +65,7 @@ internal class Program : IApplication
 		if (_window is null) return;
 		if (InputSystem.Keyboard.WasJustPressed(Keys.J))
 			CastawayGlobal.GetLogger().Debug(
-				"(Last Frame) {Time}, {FrameTime}, {Change} @ {Rate}fps",
-				CastawayGlobal.RealFrameTime,
+				"(Last Frame) {FrameTime}, {Change} @ {Rate}fps",
 				CastawayGlobal.FrameTime,
 				g.FrameChange,
 				CastawayGlobal.Framerate);

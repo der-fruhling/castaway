@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using Serilog;
@@ -30,22 +30,10 @@ public static class CastawayGlobal
 
 	public static double FrameTime { get; private set; } = 1.0 / 60.0;
 	public static double Framerate => 1 / FrameTime;
-	public static double RealFrameTime { get; private set; }
+	public static double DesiredFramerate => 60.0f;
+	public static double FrametimeFulfillment => Framerate / DesiredFramerate;
 
-	public static string Version => "1.0.0-pre1";
 	public static string Name => "Castaway";
-	public static bool IsPrerelease => Version.Contains("-pre");
-
-	public static string[] VisibleModules => AppDomain.CurrentDomain.GetAssemblies()
-		.Where(a => a.GetName().Name!.StartsWith("Castaway"))
-		.Select(a => a.GetName().Name)
-		.ToArray()!;
-
-	[Obsolete("Weird; use " + nameof(GetLogger) + "() instead")]
-	public static ILogger GetLogger(Type type)
-	{
-		return Log.Logger.ForContext(type);
-	}
 
 	/// <summary>
 	///     Creates a logger based on the calling type.
@@ -81,15 +69,8 @@ public static class CastawayGlobal
 		Thread.CurrentThread.Name = "MainThread";
 		var logger = GetLogger();
 
-		logger.Information("{Name} version {Version}", Name, Version);
-
-		if (IsPrerelease)
-		{
-			logger.Warning("This version is a pre-release version!");
-			logger.Warning("It may contain bugs or incomplete features");
-		}
-
-		logger.Information("Visible Modules: {Modules}", VisibleModules);
+		var asm = Assembly.GetExecutingAssembly();
+		logger.Information("{Name} version {Version}", Name, asm.GetName().Version);
 
 		var returnCode = 0;
 #if RELEASE
@@ -110,15 +91,14 @@ public static class CastawayGlobal
 			while (!application.ShouldStop)
 				try
 				{
-					application.StartFrame();
 					stopwatch.Restart();
+					application.StartFrame();
 					application.Render();
 					application.Update();
-					var r = stopwatch.Elapsed.TotalSeconds;
-					// TODO Custom FPS targets
-					Thread.Sleep(TimeSpan.FromMilliseconds(Math.Max(15.0 - r, 0)));
 					application.EndFrame();
-					RealFrameTime = r;
+					Thread.Sleep(
+						TimeSpan.FromMilliseconds(
+							Math.Max(1000.0 / DesiredFramerate - stopwatch.Elapsed.TotalMilliseconds, 0)));
 					FrameTime = stopwatch.Elapsed.TotalSeconds;
 #if RELEASE
                         _ok = true;
