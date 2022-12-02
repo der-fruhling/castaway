@@ -394,14 +394,15 @@ public class OpenGLImpl : Graphics
 	}
 
 	/// <summary>
-	///     Clears the color, depth, and stencil buffers in the current render
+	///     Clears the color, depth, and (optionally) stencil buffers in the current render
 	///     target.
 	/// </summary>
-	// TODO Maybe don't clear the stencil buffer unless the caller actually wants that?
-	public override void Clear()
+	/// <param name="clearStencilBuffer"></param>
+	public override void Clear(bool clearStencilBuffer = false)
 	{
 		BindWindow();
-		GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+		GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit |
+		         (clearStencilBuffer ? ClearBufferMask.StencilBufferBit : ClearBufferMask.None));
 	}
 
 	/// <summary>

@@ -662,7 +662,7 @@ public abstract class Graphics : RenderObject
 		SetSamplerUniform(p, p.GetUniform(name, i)!, t);
 	}
 
-	public virtual void Clear()
+	public virtual void Clear(bool clearStencilBuffer = false)
 	{
 		throw new NotSupportedException();
 	}
