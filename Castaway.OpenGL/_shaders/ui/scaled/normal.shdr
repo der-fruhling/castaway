@@ -3,37 +3,41 @@
   - Castaway Builtin Shader
   - `scaled-normal`
   -->
-<shader>
+<shader version="2">
     <vertex>
-        <glsl order="Version">#version 150 core</glsl>
-
         <input name="vPosition" from="PositionXYZ"/>
         <input name="vColor" from="ColorRGB"/>
 
-        <output name="fColor" type="vec3"/>
+        <uniform name="uFramebufferSize" from="FramebufferSize"/>
+        <uniform name="uScale" from="UIScale"/>
 
-        <uniform name="uFramebufferSize" type="ivec2" from="FramebufferSize"/>
-        <uniform name="uScale" type="int" from="UIScale"/>
+        <glsl><![CDATA[
+            in vec3 vPosition;
+            in vec3 vColor;
 
-        <function name="main"><![CDATA[
+            out vec3 fColor;
+
+            uniform ivec2 uFramebufferSize;
+            uniform int uScale;
+
             void main() {
                 gl_Position = vec4(vPosition / vec3(uFramebufferSize / uScale, 0), 1);
                 fColor = vColor;
             }
-        ]]></function>
+            ]]></glsl>
     </vertex>
 
     <fragment>
-        <glsl order="Version">#version 150 core</glsl>
-
-        <input name="fColor" type="vec3"/>
-
         <output name="oColor" to="0"/>
 
-        <function name="main"><![CDATA[
+        <glsl><![CDATA[
+            in vec3 fColor;
+
+            out vec4 oColor;
+
             void main() {
                 oColor = vec4(fColor, 1);
             }
-        ]]></function>
+            ]]></glsl>
     </fragment>
 </shader>

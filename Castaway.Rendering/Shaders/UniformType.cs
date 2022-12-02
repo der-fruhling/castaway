@@ -6,6 +6,7 @@ namespace Castaway.Rendering.Shaders;
 public enum UniformType
 {
 	Custom,
+	Texture,
 	TransformPerspective,
 	TransformView,
 	TransformModel,

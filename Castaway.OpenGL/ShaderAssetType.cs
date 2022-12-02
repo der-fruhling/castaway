@@ -72,6 +72,21 @@ public class ShaderAssetType : XmlAssetType
 		if (root.GetElementsByTagName("fragment").Count < 1)
 			throw new InvalidOperationException("Need at least one fragment shader.");
 
+		var version = root.GetAttribute("version");
+		switch (version)
+		{
+			case "2":
+				return LoadOpenGlShaderV2(path, root);
+			case "1":
+			case "":
+				Logger.Warning("{Path} is using old shader version {Version}", path, 1);
+				return LoadOpenGlShaderV1(path, root);
+			default: throw new InvalidOperationException($"{path}: invalid shader version");
+		}
+	}
+
+	private static ShaderObject LoadOpenGlShaderV1(string path, XmlElement root)
+	{
 		var shaders = new List<ShaderPart>();
 		var inputs = new Dictionary<string, VertexInputType>();
 		var uniforms = new Dictionary<string, UniformType>();
@@ -280,6 +295,116 @@ public class ShaderAssetType : XmlAssetType
 					tempPath);
 			}
 		}
+
+		foreach (var (n, t) in transforms)
+			uniforms[n] = t switch
+			{
+				Transform.Perspective => UniformType.TransformPerspective,
+				Transform.View => UniformType.TransformView,
+				Transform.Model => UniformType.TransformModel,
+				_ => throw new ArgumentOutOfRangeException()
+			};
+
+		var program = new Shader(shaders.Cast<SeparatedShaderObject>().ToArray());
+		foreach (var (n, v) in inputs) program.RegisterInput(n, v);
+		foreach (var (n, c) in outputs) program.RegisterOutput(n, c);
+		foreach (var (n, u) in uniforms) program.RegisterUniform(n, u);
+		program.Link();
+
+		return program;
+	}
+
+	private static ShaderObject LoadOpenGlShaderV2(string path, XmlElement root)
+	{
+		var shaders = new List<ShaderPart>();
+		var inputs = new Dictionary<string, VertexInputType>();
+		var uniforms = new Dictionary<string, UniformType>();
+		var transforms = new Dictionary<string, Transform>();
+		var outputs = new Dictionary<string, uint>();
+
+		var enumerator = root.ChildNodes;
+		for (int i = 0; i < enumerator.Count; i++)
+		{
+			if (enumerator.Item(i) is not XmlElement shaderElement) continue;
+
+			var shaderEnumerator = shaderElement.ChildNodes;
+			for (var j = 0; j < shaderEnumerator.Count; j++)
+			{
+				var stringBuilder = new StringBuilder();
+				stringBuilder.AppendLine("#version 150 core");
+				stringBuilder.AppendLine($"// {path}: <{shaderElement.Name}>");
+
+				if (shaderEnumerator.Item(j) is not XmlElement nodeElement) continue;
+				switch (nodeElement.LocalName)
+				{
+					case "input" when shaderElement.Name == "vertex":
+					{
+						var fromStr = nodeElement.GetAttribute("from");
+						var nameStr = nodeElement.GetAttribute("name");
+						if (!fromStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <input> needs from=string attribute");
+						if (!nameStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <input> needs name=string attribute");
+						var vtx = Enum.Parse<VertexInputType>(fromStr);
+						inputs[nameStr] = vtx;
+						break;
+					}
+
+					case "output" when shaderElement.Name == "fragment":
+					{
+						var toStr = nodeElement.GetAttribute("to");
+						var nameStr = nodeElement.GetAttribute("name");
+						if (!toStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <output> needs to=uint attribute");
+						if (!nameStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <output> needs name=string attribute");
+						outputs[nameStr] = uint.Parse(toStr);
+						break;
+					}
+
+					case "uniform":
+					{
+						var nameStr = nodeElement.GetAttribute("name");
+						var fromStr = nodeElement.GetAttribute("from");
+						if (!nameStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <uniform> needs name=string attribute");
+						uniforms[nameStr] = fromStr.Any() ? Enum.Parse<UniformType>(fromStr) : UniformType.Custom;
+						break;
+					}
+
+					case "transform":
+					{
+						var nameStr = nodeElement.GetAttribute("name");
+						var matrixStr = nodeElement.GetAttribute("matrix");
+						if (!nameStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <transform> needs name=string attribute");
+						if (!matrixStr.Any())
+							throw new InvalidOperationException(
+								$"{path}: <{shaderElement.Name}> <transform> needs matrix=transform_matrix_name attribute");
+						transforms[nameStr] = Enum.Parse<Transform>(matrixStr);
+						break;
+					}
+
+					case "glsl":
+						stringBuilder.AppendLine(nodeElement.InnerText);
+						break;
+				}
+
+				shaders.Add(new ShaderPart(shaderElement.Name switch
+				{
+					"vertex" => ShaderStage.Vertex,
+					"fragment" => ShaderStage.Fragment,
+					_ => throw new InvalidOperationException($"{path}: <{shaderElement.Name}> invalid shader type")
+				}, stringBuilder.ToString(), path));
+			}
+		}
+
 
 		foreach (var (n, t) in transforms)
 			uniforms[n] = t switch
