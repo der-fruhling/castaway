@@ -10,10 +10,10 @@ public class MeshController : Controller
 {
 	private static readonly ILogger Logger = CastawayGlobal.GetLogger();
 
-	[LevelSerialized("AssetPath")] public Asset? Asset;
-	[LevelSerialized("DisableCache")] public bool CacheDisabled = false;
-
 	public Mesh? Mesh;
+
+	[LevelSerialized("AssetPath")] public Asset? Asset { get; set; }
+	[LevelSerialized("DisableCache")] public bool CacheDisabled { get; set; } = false;
 
 	public override void OnInit(LevelObject parent)
 	{

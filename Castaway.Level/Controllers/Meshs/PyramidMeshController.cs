@@ -6,8 +6,8 @@ namespace Castaway.Level.Controllers;
 [ControllerName("PyramidMesh")]
 public class PyramidMeshController : MeshController
 {
-	[LevelSerialized("Color")] public Vector4 Color;
-	[LevelSerialized("Size")] public Vector3 Size;
+	[LevelSerialized("Color")] public Vector4 Color { get; set; }
+	[LevelSerialized("Size")] public Vector3 Size { get; set; }
 
 	public override void OnInit(LevelObject parent)
 	{

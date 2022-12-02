@@ -6,8 +6,8 @@ namespace Castaway.Level.Controllers;
 [ControllerName("PlaneMesh")]
 public class PlaneMeshController : MeshController
 {
-	[LevelSerialized("Color")] public Vector4 Color = new(1, 1, 1, 1);
-	[LevelSerialized("Size")] public Vector2 Size = new(1, 1);
+	[LevelSerialized("Color")] public Vector4 Color { get; set; } = new(1, 1, 1, 1);
+	[LevelSerialized("Size")] public Vector2 Size { get; set; } = new(1, 1);
 
 	public override void OnInit(LevelObject parent)
 	{

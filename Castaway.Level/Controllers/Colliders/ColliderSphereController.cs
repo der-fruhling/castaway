@@ -6,8 +6,8 @@ namespace Castaway.Level.Controllers.Colliders;
 [ControllerName("Collider.Sphere")]
 public class ColliderSphereController : Controller, ICollider
 {
-	[LevelSerialized("Mass")] public float Mass = 1f;
-	[LevelSerialized("Radius")] public float Radius = 0.5f;
+	[LevelSerialized("Mass")] public float Mass { get; set; } = 1f;
+	[LevelSerialized("Radius")] public float Radius { get; set; } = 0.5f;
 
 	private Sphere Sphere => new(Radius);
 	public TypedIndex Shape { get; private set; }

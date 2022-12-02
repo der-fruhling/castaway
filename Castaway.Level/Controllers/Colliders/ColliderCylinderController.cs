@@ -6,9 +6,9 @@ namespace Castaway.Level.Controllers.Colliders;
 [ControllerName("Collider.Cylinder")]
 public class ColliderCylinderController : Controller, ICollider
 {
-	[LevelSerialized("Length")] public float Length;
-	[LevelSerialized("Mass")] public float Mass;
-	[LevelSerialized("Radius")] public float Radius;
+	[LevelSerialized("Length")] public float Length { get; set; }
+	[LevelSerialized("Mass")] public float Mass { get; set; }
+	[LevelSerialized("Radius")] public float Radius { get; set; }
 
 	private Cylinder Cylinder => new(Radius, Length);
 	public TypedIndex Shape { get; private set; }

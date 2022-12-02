@@ -7,8 +7,8 @@ namespace Castaway.Level.Controllers;
 [ControllerName("Light")]
 public class LightController : Controller
 {
-	[LevelSerialized("Color")] public Vector3 Color = new(1, 1, 1);
-	[LevelSerialized("Type")] public LightType Type;
+	[LevelSerialized("Color")] public Vector3 Color { get; set; } = new(1, 1, 1);
+	[LevelSerialized("Type")] public LightType Type { get; set; }
 
 	public override void PreRenderFrame(LevelObject camera, LevelObject? parent)
 	{
