@@ -3,34 +3,35 @@
   - Castaway Builtin Shader
   - `direct`
   -->
-<shader>
+<shader version="2">
     <vertex>
-        <glsl order="Version">#version 150 core</glsl>
-
         <input name="vPosition" from="PositionXYZ"/>
         <input name="vColor" from="ColorRGB"/>
 
-        <output name="fColor" type="vec3"/>
+        <glsl><![CDATA[
+            in vec3 vPosition;
+            in vec3 vColor;
 
-        <function name="main"><![CDATA[
+            out vec3 fColor;
+
             void main() {
                 gl_Position = vec4(vPosition, 1);
                 fColor = vColor;
             }
-        ]]></function>
+            ]]></glsl>
     </vertex>
 
     <fragment>
-        <glsl order="Version">#version 150 core</glsl>
-
-        <input name="fColor" type="vec3"/>
-
         <output name="oColor" to="0"/>
 
-        <function name="main"><![CDATA[
+        <glsl><![CDATA[
+            in vec3 fColor;
+
+            out vec4 oColor;
+
             void main() {
                 oColor = vec4(fColor, 1);
             }
-        ]]></function>
+            ]]></glsl>
     </fragment>
 </shader>
