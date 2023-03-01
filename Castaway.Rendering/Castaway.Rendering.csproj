@@ -29,7 +29,7 @@
 
     <ItemGroup>
         <PackageReference Include="OpenTK.Windowing.GraphicsLibraryFramework" Version="4.7.5"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.0"/>
     </ItemGroup>
 
 </Project>
